@@ -4,7 +4,6 @@ import { StyleSheet, View, Image } from 'react-native';
 import ImageViewer from './components/ImageViewer';
 import Button from './components/Buttons';
 
-// PlaceholderImage is the image that we imported
 const PlaceholderImage = require('./assets/images/background-image.png');
 
 export default function App() {
@@ -13,17 +12,21 @@ export default function App() {
       <View style={styles.imageContainer}>
         <ImageViewer placeholderImageSource={PlaceholderImage} />
       </View>
+      <View style={styles.footerContainer}>
+        <Button theme="primary" label="Choose a photo " />
+        <Button label="Use this photo" />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
 }
 
-// Styles for the app
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#25292e',
-    // # 25292e is the color of the background
     alignItems: 'center',
   },
   imageContainer: {
@@ -34,5 +37,9 @@ const styles = StyleSheet.create({
     width: 320,
     height: 440,
     borderRadius: 18,
+  },
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
   },
 });
