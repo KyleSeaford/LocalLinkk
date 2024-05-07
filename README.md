@@ -8,6 +8,8 @@ Have you ever seen a local people's magazine with adverts and information about 
 
 ## TODO
 - [ ] desgin pages on figma
+- [ ] [pages](https://www.figma.com/file/H6Vf0qAvW7J79sxNoyMbnG/locallink?type=design&node-id=0%3A1&mode=design&t=bOsYYqajKmtHsTHo-1)
+- [ ] [colours](https://colorhunt.co/palette/222222045757044343e4e4e4) 
 ### pages needes 
 - [ ] home page
 - [ ] profile page
