@@ -4,23 +4,31 @@ Have you ever seen a local people's magazine with adverts and information about 
 ## Features
 - Easily browse through local events, news, and businesses in your area
 - Receive notifications about upcoming events and promotions
-- Seamlessly connect with local businesses and service providers
+- Seamlessly connect with local businesses and service providers.
 
-## TODO
-- [ ] desgin pages on figma
-- [ ] [pages](https://www.figma.com/file/H6Vf0qAvW7J79sxNoyMbnG/locallink?type=design&node-id=0%3A1&mode=design&t=bOsYYqajKmtHsTHo-1)
-- [ ] [colours](https://colorhunt.co/palette/222222045757044343e4e4e4) 
-### pages needes 
-- [ ] home page
-- [ ] profile page
-- [ ] checkoutpage
-- [ ] search area
-
-### more 
-- [ ] make / get logos
-- [ ] make pages
+## THE WHOLE TO-DO LIST 
+- [x] Make the logos
+- [x] Design pages  
+- [ ] Make the app
+- [ ] Finalize app design and functionality
+- [ ] Test Launch
+- [ ] Get the domain name - I want [LocalLinkk.tech](http://locallinkk.tech/)
+- [ ] Get the trademark
+- [ ] Finalize app design and functionality
 - [ ] Show a basic but good demo
-- [ ] get domain - i want [LocalLink.tech](http://locallinkk.tech/)
-- [ ] get investors
-- [ ] get trademark / make it mine 
-- [ ] make millions
+- [ ] Find some investors
+- [ ] Higher Graphic Designers for the adverts requested through the app
+- [ ] Make millions
+- [ ] Run LocalLinkk
+
+## Designing the app 
+- [x] design pages on figma
+- [x] [pages](LocalLinkk\images\pageDesgins\locallink.pdf)
+- [x] [colors](https://colorhunt.co/palette/222222045757044343e4e4e4) 
+### pages to design  
+- [x] home page
+- [x] profile page
+- [x] checkout page
+- [x] search area
+
+## Making the app 
