@@ -23,7 +23,7 @@ Have you ever seen a local people's magazine with adverts and information about 
 
 ## Designing the app 
 - [x] design pages on figma
-- [x] [pages](LocalLinkk\images\pageDesgins\locallink.pdf)
+- [x] [pages](images/pageDesgins/locallink.pdf)
 - [x] [colors](https://colorhunt.co/palette/222222045757044343e4e4e4) 
 ### pages to design  
 - [x] home page
