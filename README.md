@@ -34,12 +34,11 @@ LocalLinkk is an app with the ability connect an unlimited number of people togh
 - [x] Search area
 
 ## Research TODO list:
-- [ ] Find prices for posts
-- [ ] Find potential Customers
+- [x] Find prices for posts - Might Change
+
+- [x] Target Audience
+
 - [ ] Look at deployment options
 - [ ] Look at deployment storage
-- [ ] Target Audience
-- [ ] Monetization Strategy
-- [ ] Markerting
 
 ## Make the app TODO list:
