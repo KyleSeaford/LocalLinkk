@@ -1,0 +1,39 @@
+The Prices of LocalLinkk:
+
+Post Sizes:
+    Text - Extra Small (free for a few days)
+    Small
+    Medium
+    Large
+    Extra Large
+
+Base Prices for Each Size:
+    Text - Extra Small: Free for the first 3 days, then £1 per day
+    Small: £2 per day
+    Medium: £5 per day
+    Large: £10 per day
+    Extra Large: £20 per day
+
+Calculate Total Cost:
+    Total Cost = Size Price X Number of Days
+
+    If a user chooses a Medium post for 5 days:
+    Total Cost = £5 × 5 days = £ 25
+
+
+Post Size	Price Per Day	Free Period (days)	Example Total for 5 Days
+Extra Small     £1	                3	                £2 (3 free + 2 paid)
+  Small	        £2	                0	                £10
+  Medium	    £5	                0	                £25
+  Large	        £10	                0	                £50
+Extra Large	    £20	                0	                £100
+
+
+
+Sample Calculation for Your Scenario:
+    A user wants a Large post for 7 days:
+
+    Base price for Large: £10 per day
+    Duration: 7 days
+
+    Total Cost = £10 × 7 = £70
