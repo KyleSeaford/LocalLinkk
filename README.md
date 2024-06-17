@@ -1,5 +1,5 @@
 # LocalLinkk
-Have you ever seen a local people's magazine with adverts and information about the local area? They typically reach 10,000 to 25,000 people. LocalLinkk is an app with the same ability that can reach an unlimited number of people - as long as they have a phone or a computer, they have access to the information and advertisements on LocalLinkk.
+LocalLinkk is an app with the ability connect an unlimited number of people toghether
 
 ## Features
 - Easily browse through local events, news, and businesses in your area
@@ -8,14 +8,14 @@ Have you ever seen a local people's magazine with adverts and information about 
 
 ## THE WHOLE TO-DO LIST 
 - [x] Make the logos
-- [x] Design pages  
+- [x] Design pages
+- [ ] Research
 - [ ] Make the app
 - [ ] Finalize app design and functionality
 - [ ] Test Launch
-- [ ] Get the domain name - I want [LocalLinkk.tech](http://locallinkk.tech/)
-- [ ] Get the trademark
+- [ ] Get the domain name - I want [LocalLinkk.com](https://www.namecheap.com/domains/registration/results/?domain=locallinkk)
 - [ ] Finalize app design and functionality
-- [ ] Show a basic but good demo
+- [ ] Show a demo
 - [ ] Find some investors
 - [ ] Higher Graphic Designers for the adverts requested through the app
 - [ ] Make millions
@@ -24,11 +24,22 @@ Have you ever seen a local people's magazine with adverts and information about 
 ## Designing the app 
 - [x] design pages on figma
 - [x] [pages](images/pageDesgins/locallink.pdf)
-- [x] [colors](https://colorhunt.co/palette/222222045757044343e4e4e4) 
-### pages to design  
-- [x] home page
-- [x] profile page
-- [x] checkout page
-- [x] search area
+- [x] [colors](https://colorhunt.co/palette/222222045757044343e4e4e4)
+- [ ] Finalize app design 
 
-## Making the app 
+### Pages to design  
+- [x] Home page
+- [x] Profile page
+- [x] Checkout page
+- [x] Search area
+
+## Research TODO list:
+- [ ] Find prices for posts
+- [ ] Find potential Customers
+- [ ] Look at deployment options
+- [ ] Look at deployment storage
+- [ ] Target Audience
+- [ ] Monetization Strategy
+- [ ] Markerting
+
+## Make the app TODO list:
