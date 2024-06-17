@@ -9,7 +9,7 @@ LocalLinkk is an app with the ability connect an unlimited number of people togh
 ## THE WHOLE TO-DO LIST 
 - [x] Make the logos
 - [x] Design pages
-- [ ] Research
+- [x] Research
 - [ ] Make the app
 - [ ] Finalize app design and functionality
 - [ ] Test Launch
@@ -22,8 +22,8 @@ LocalLinkk is an app with the ability connect an unlimited number of people togh
 - [ ] Run LocalLinkk
 
 ## Designing the app 
-- [x] design pages on figma
-- [x] [pages](images/pageDesgins/locallink.pdf)
+- [x] design pages on Figma
+- [x] [pages](Logos-And-Pages/locallinkkPages.pdf)
 - [x] [colors](https://colorhunt.co/palette/222222045757044343e4e4e4)
 - [ ] Finalize app design 
 
@@ -36,7 +36,7 @@ LocalLinkk is an app with the ability connect an unlimited number of people togh
 ## Research TODO list:
 - [x] Find prices for posts - Might Change
 - [x] Target Audience
-- [ ] Look at deployment options
-- [ ] Look at deployment storage
+- [x] Look at deployment options
+- [x] Look at deployment storage
 
 ## Make the app TODO list:
