@@ -24,10 +24,10 @@ Calculate Total Cost:
 Table for 5 days: 
 
 Post Size	Price Per Day	Free Period (days)	Example Total for 5 Days
-Extra Small     £1	                3	                £2 (3 free + 2 paid)
-  Small	        £2	                0	                £10
+Extra Small         £1	                3	                £2 (3 free + 2 paid)
+  Small	            £2	                0	                £10
   Medium	    £5	                0	                £25
-  Large	        £10	                0	                £50
+  Large	            £10	                0	                £50
 Extra Large	    £20	                0	                £100
 
 

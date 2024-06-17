@@ -35,9 +35,7 @@ LocalLinkk is an app with the ability connect an unlimited number of people togh
 
 ## Research TODO list:
 - [x] Find prices for posts - Might Change
-
 - [x] Target Audience
-
 - [ ] Look at deployment options
 - [ ] Look at deployment storage
 
