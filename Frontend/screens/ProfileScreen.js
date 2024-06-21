@@ -2,13 +2,15 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbar';
+import Profile from '../components/profile';
 
 
-const HomeScreen = () => {
+const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View>
         <Navbar />
+        <Profile />
       </View>
     </View>
   );
@@ -22,4 +24,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default HomeScreen;
+export default ProfileScreen;
