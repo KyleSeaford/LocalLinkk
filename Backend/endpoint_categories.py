@@ -1,7 +1,11 @@
+import logging
 from flask_restx import Api, Namespace, Resource, reqparse
 from flask import Flask
 from database_extensions import database_extensions
 
+logging.basicConfig(level=logging.DEBUG,  # Set the logging level to DEBUG for all messages
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    filename='endpoint_categories.log')  # Log messages to a file named example.log
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Categories', description='Categories Endpoint')
@@ -17,6 +21,7 @@ class Categories():
     def __init__(self, databaseName):
         global db
         db = database_extensions(databaseName)
+        logging.debug(f"Categories - Setting database to {databaseName}")
 
 def bread_crumbs(id):
     """ Generate the categories bread crumbs eg "cat1 >> cat2 >> Cat3 >> Cat4" """
@@ -41,7 +46,8 @@ def build_category_tree(categories, parent_id='0'):
     
 @api.route('/categories', doc={"description": "Get all categories"})
 class GetCategories(Resource):
-    def get(self):        
+    def get(self):
+        logging.debug("GetCategories - Get all categories")        
         return db.fetchJson([databaseFieldCategoryId, databaseFieldCategoryName, databaseFieldParentCategoryId], databaseTableName, '', f'ORDER BY {databaseFieldCategoryName} ASC')
 
 @api.route('/category/<string:id>/children', doc={"description": "Get children categories"})

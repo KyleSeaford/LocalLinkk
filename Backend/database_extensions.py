@@ -1,5 +1,10 @@
+import logging
 import uuid
 import sqlite3
+
+logging.basicConfig(level=logging.DEBUG,  # Set the logging level to DEBUG for all messages
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    filename='database_extensions.log')  # Log messages to a file named 
 
 class database_extensions():
     def __init__(self, db):
@@ -7,7 +12,7 @@ class database_extensions():
 
     def fetchAll(self, sql):
         """Fetch all of the records from the database"""
-        print(f"fetchAll from {self.databaseFileName} sql {sql}")
+        logging.debug(f"fetchAll from {self.databaseFileName} sql {sql}")
         conn = sqlite3.connect(self.databaseFileName)
         cursor = conn.cursor()
         cursor.execute(sql)
@@ -17,7 +22,7 @@ class database_extensions():
 
     def fetchSingleRecord(self, sql):
         """Fetch one record from the database"""
-        print(f"fetchSingleRecord from {self.databaseFileName} sql {sql}")
+        logging.debug(f"fetchSingleRecord from {self.databaseFileName} sql {sql}")
         conn = sqlite3.connect(self.databaseFileName)
         cursor = conn.cursor()
         cursor.execute(sql)
@@ -50,6 +55,7 @@ class database_extensions():
 
     def execute(self, sql):
         """Execute an sql command that will not return any records"""
+        logging.debug(f"execute from {self.databaseFileName} sql {sql}")
         conn = sqlite3.connect(self.databaseFileName)
         cursor = conn.cursor()
         cursor.execute(sql)
@@ -58,4 +64,6 @@ class database_extensions():
     
     def generateId(self):
         """Generate a unique id number"""
-        return str(uuid.uuid4())
+        id = str(uuid.uuid4())
+        logging.debug(f"generate id {id}")
+        return id
