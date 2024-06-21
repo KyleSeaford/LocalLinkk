@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Navbar from '../components/navbar';
 
 
-const HomeScreen = () => {
+const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View>
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default HomeScreen;
+export default ProfileScreen;
