@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Animated, Dimensions, Modal } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -9,12 +10,14 @@ import { Entypo } from '@expo/vector-icons';
 import menu from '../assets/menu.png';
 import user from '../assets/user-icon.png';
 
-
 const { width } = Dimensions.get('window');
 
 const Navbar = () => {
+
+    const navigation = useNavigation();
+
     const [menuVisible, setMenuVisible] = useState(false);
-    const slideAnim = useState(new Animated.Value(-width))[0]; // Initial value for sliding menu
+    const slideAnim = useState(new Animated.Value(-width))[0];
 
     const handleMenuClick = () => {
         setMenuVisible(!menuVisible);
@@ -26,11 +29,13 @@ const Navbar = () => {
     };
 
     const handleProfileClick = () => {
-        console.log("Profile clicked!");
+        navigation.navigate('LocalLinkk - Profile');
+        console.log("Navigated to Profile");
     };
 
     const handleNameClick = () => {
-        console.log("Name clicked!");
+        navigation.navigate('LocalLinkk - Home');
+        console.log("Navigated to LocalLinkk");
     };
 
     const handleAllClick = () => {
@@ -61,6 +66,10 @@ const Navbar = () => {
         console.log("Help clicked!");
     }
 
+    const handlePostClick = () => {
+        console.log("Post clicked!");
+    }
+    
     return (
         <View style={styles.container}>
             <View style={styles.navBar}>
@@ -75,6 +84,7 @@ const Navbar = () => {
                     <Image
                         source={user}
                         style={styles.logo}
+                        // Will be the users profile picture
                     />
                 </TouchableOpacity>
 
@@ -129,6 +139,12 @@ const Navbar = () => {
                         </View>
                     </TouchableOpacity>
 
+                    <View style={styles.postContainer}>
+                        <TouchableOpacity onPress={handlePostClick}>
+                            <Text style={styles.postContainerTEXT}>Create a New Post</Text>
+                        </TouchableOpacity>
+                    </View>
+
                     <View style={styles.menu2Container}>
                         <TouchableOpacity onPress={handleSettingsClick} style={styles.menuItemContainer}>
                             <Text style={styles.menuContainerTEXT}>Settings</Text>
@@ -177,7 +193,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 20,
-        marginTop: 550,
+        marginTop: 0,
+    },
+    postContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginTop: 505,
+    },
+    postContainerTEXT: {
+        fontSize: 20,
+        color: 'black',
+        borderColor: '#4CBB17',
+        borderWidth: 2,
+        borderRadius: 5,
+        padding: 5,
+        backgroundColor: '#4CBB17',
     },
     menuItemContainer: {
         flexDirection: 'row',

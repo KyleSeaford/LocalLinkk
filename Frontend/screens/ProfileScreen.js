@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbar';
+import Profile from '../components/profile';
 
 
 const ProfileScreen = () => {
@@ -9,6 +10,7 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View>
         <Navbar />
+        <Profile />
       </View>
     </View>
   );

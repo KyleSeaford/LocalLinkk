@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     container: {
         // 0 on web, 110 on mobile, not sure why this has to be different
         marginTop: 0,
-        backgroundColor: '#fff',
+        backgroundColor: '#E4E4E4',
         padding: 10,
         borderRadius: 5,
         marginVertical: 2,
