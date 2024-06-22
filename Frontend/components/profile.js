@@ -1,22 +1,27 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-
-import user from '../assets/user-icon.png';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 
+import user from '../assets/user-icon.png';
+
 const Profile = () => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleProfileClick = () => {
-        console.log("Clicked Profile");
-    }
+        setIsModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalVisible(false);
+    };
 
     const handleEditClick = () => {
         console.log("Edit clicked!");
-    }
+    };
 
     const handlePostClick = () => {
         console.log("Post clicked!");
-    }
+    };
 
     return (
         <View style={styles.container}>
@@ -25,7 +30,6 @@ const Profile = () => {
                     source={user}
                     style={styles.logo}
                     // Will be the users profile picture
-                    // when clicked, will expand to show the image 
                 />
             </TouchableOpacity>
 
@@ -47,9 +51,25 @@ const Profile = () => {
                 <Entypo name="triangle-down" size={24} color="black" />
                 <Text style={styles.PostcontainerTEXT}>Your Past LocalLinkk's are Below</Text>
                 <Entypo name="triangle-down" size={24} color="black" />
-                {/* Will show past posts */}
             </View>
 
+            <Modal
+                visible={isModalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={handleCloseModal}
+            >
+                <View style={styles.modalContainer}>
+                    <TouchableOpacity style={styles.modalCloseButton} onPress={handleCloseModal}>
+                        <Entypo name="cross" size={30} color="#fff" />
+                    </TouchableOpacity>
+                    <Image
+                        source={user}
+                        style={styles.expandedImage}
+                        // Expanded version of the profile picture
+                    />
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -120,7 +140,23 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'black',
     },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    expandedImage: {
+        width: '80%',
+        height: '80%',
+        resizeMode: 'contain',
+    },
+    modalCloseButton: {
+        position: 'absolute',
+        top: 280,
+        right: 30,
+        zIndex: 999,
+    },
 });
-
 
 export default Profile;

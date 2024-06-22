@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbar';
 import Profile from '../components/profile';
+import PastPosts from '../components/pastposts';
 
 
 const ProfileScreen = () => {
@@ -11,6 +12,7 @@ const ProfileScreen = () => {
       <View>
         <Navbar />
         <Profile />
+        <PastPosts />
       </View>
     </View>
   );
