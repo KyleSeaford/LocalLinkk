@@ -70,10 +70,8 @@ class SystemSettingsTestCase(unittest.TestCase):
 
         # Arrange 
         categoryId = '04030201-0605-0807-0910-111213141517'
-        expected_result = [
-            {'category_id': '04030201-0605-0807-0910-111213141517', 'category_name': 'Cat2', 'parent_category_id': '04030201-0605-0807-0910-111213141516'}
-        ]
-
+        expected_result = {'category_id': '04030201-0605-0807-0910-111213141517', 'category_name': 'Cat2', 'parent_category_id': '04030201-0605-0807-0910-111213141516'}
+        
         # Act
         response = self.client.get(f'/category/{categoryId}') # Make a GET request to the Categories/Category/{id} endpoint
 
@@ -227,8 +225,8 @@ class SystemSettingsTestCase(unittest.TestCase):
         response = self.client.get(f'/category/{category_id}') # Make a GET request to the updated category endpoint
         self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
         actual_result = json.loads(response.data) # Parse the JSON response
-        self.assertEqual(actual_result[0]['parent_category_id'], updated_parent_category_id) # Check the updated parent category id
-        self.assertEqual(actual_result[0]['category_name'], updated_category_name) # Check the updated category name
+        self.assertEqual(actual_result['parent_category_id'], updated_parent_category_id) # Check the updated parent category id
+        self.assertEqual(actual_result['category_name'], updated_category_name) # Check the updated category name
 
     def test_delete_category(self):
         """Test confirms that DELETE /Category/<id> will delete an existing category"""

@@ -100,7 +100,7 @@ class UpdateCategory(Resource):
         result = db.fetchJson([databaseFieldCategoryId, databaseFieldCategoryName, databaseFieldParentCategoryId], databaseTableName, f"WHERE {databaseFieldCategoryId}='{category_id}'", '')
         if len(result) == 0:
             return {'message': f'Category {category_id} does not exists'}, 400
-        return result
+        return result[0]
 
     @api.doc(parser=parserUpdate)
     @api.doc(description="Update an existing category")

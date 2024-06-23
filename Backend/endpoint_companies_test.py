@@ -71,9 +71,7 @@ class endpoint_companies_tests(unittest.TestCase):
         """Test confirms that GET /company/<company_id>/details will return a company details"""
 
         # Arrange 
-        expected_result = [
-            {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520','email':None,'latitude':53.293571,'longitude':-2.11014,'phone':None,'website':None}
-        ]
+        expected_result = {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520','email':None,'latitude':53.293571,'longitude':-2.11014,'phone':None,'website':None}        
 
         # Act
         response = self.client.get('/company/04030201-0605-0807-0910-111213141511/details') # Make a GET request to the company endpoint
@@ -131,6 +129,50 @@ class endpoint_companies_tests(unittest.TestCase):
         for i in range(len(expected_results)):
             self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
             self.assertEqual(actual_results[i]['category_id'], expected_results[i]['category_id']) # Check the category id
+
+    
+    def test_put_company(self):
+        """Test confirms that PUT /company/<company_id> will update an existing company"""
+        
+        # Arrange 
+        company_id = '04030201-0605-0807-0910-111213141511'
+        updatedCompanyName = 'Updated Company Name'
+        updatedLatitude = 10
+        updatedLongitude = 20
+        expected_message = 'Company updated successfully'
+        
+        # Act
+        response = self.client.put(f'/company/{company_id}', json={'Company Name': updatedCompanyName, 'Latitude': updatedLatitude, 'Longitude': updatedLongitude})
+        
+        # Assert
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        response_json = response.get_json() # Extract the JSON data from the response
+        self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+        self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+        
+        response = self.client.get(f'/company/{company_id}/details') # Make a GET request to get the updated company details
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        company_data = json.loads(response.data)
+        self.assertEqual(company_data['company_name'], updatedCompanyName) # Check the updated company name
+        self.assertEqual(company_data['latitude'], updatedLatitude) # Check the updated latitude
+        self.assertEqual(company_data['longitude'], updatedLongitude) # Check the updated longitude
+
+    def test_delete_company(self):
+        """Test confirms that DELETE /company/<company_id> will delete an existing company"""
+
+        # Arrange 
+        company_id = '04030201-0605-0807-0910-111213141511'
+        expected_message = 'Company deleted successfully'
+
+        # Act
+        response = self.client.delete(f'/company/{company_id}')
+
+        # Assert
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        response_json = response.get_json() # Extract the JSON data from the response
+        self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+        self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+  
 
 if __name__ == '__main__':
     unittest.main()
