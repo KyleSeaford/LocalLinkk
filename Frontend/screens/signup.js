@@ -2,17 +2,14 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbar';
-import Profile from '../components/profile';
-import PastPosts from '../components/pastposts';
+import SignupPage from '../components/signupbuttons';
 
 
-const ProfileScreen = () => {
+const SignupScreen = () => {
   return (
     <View style={styles.container}>
       <View>
-        <Navbar />
-        <Profile />
-        <PastPosts />
+        <SignupPage />
       </View>
     </View>
   );
@@ -21,9 +18,9 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
       flex: 1,
-      backgroundColor: '#045757',
+      backgroundColor: '#1A1A1A',
   },
 });
 
 
-export default ProfileScreen;
+export default SignupScreen;
