@@ -25,6 +25,6 @@ LocalLinkk is designed to bridge the gap between local businesses and residents,
 - **Local Services:** Find local businesses offering services such as car valeting, plumbing, dog walking, and more
 - **Special Deals:** Exclusive promotions and discounts from local businesses
 - **Community News:** Updates and announcements about what's happening in your area
-Hobby Groups and Classes: Discover local hobby groups, fitness classes, and workshop
+- **Hobby Groups and Classes:** Discover local hobby groups, fitness classes, and workshop
 
 Join the LocalLinkk community today and start connecting with your neighbors!

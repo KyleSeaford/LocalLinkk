@@ -12,6 +12,7 @@ const PastPosts = () => {
     return (
         <View style={styles.container}>
             <Text>Past LocalLinkk's will be shown below</Text>
+            {/* will get the users past posts from the database */}
         </View>
     );
 };
