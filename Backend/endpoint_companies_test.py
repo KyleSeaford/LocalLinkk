@@ -68,7 +68,7 @@ class endpoint_companies_tests(unittest.TestCase):
         self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
 
     def test_get_company(self):
-        """Test confirms that GET /company will return a company details"""
+        """Test confirms that GET /company/<company_id>/details will return a company details"""
 
         # Arrange 
         expected_result = [
@@ -82,6 +82,55 @@ class endpoint_companies_tests(unittest.TestCase):
         self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
         actual_result = json.loads(response.data) # Parse the JSON response        
         self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data        
+
+    def test_get_company_bad_company_id(self):
+        """Test confirms that GET /company/<company_id>/details will return an error when the company id does not exist"""
+
+        # Arrange 
+        companyId = 'bad'
+        expected_message = 'Company bad does not exists'
+        
+        # Act
+        response = self.client.get(f'/company/{companyId}/details') # Make a GET request to the endpoint
+
+        # Assert
+        self.assertEqual(response.status_code, 400) # Check that the response status code is 400 BAD
+        self.assertEqual(response.status, '400 BAD REQUEST') # Check the response status message        
+        response_json = response.get_json() # Extract the JSON data from the response    
+        self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+        self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+    
+    def test_post_company(self):
+        """Test confirms that POST /company will add a new company"""
+
+        # Arrange 
+        expectedCompanyName = 'zcomp1'
+        expectedCategoryId = '04030201-0605-0807-0910-111213141530'
+        expectedLatitude = '1'
+        expectedLongitude = '2'
+        expected_results = [
+            {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520'},
+            {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530'},
+            {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': expectedCompanyName, 'category_id': expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude}
+        ]        
+        expected_message = 'Company added successfully'
+
+        # Act
+        response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude})
+
+        # Assert
+        self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
+        response_json = response.get_json() # Extract the JSON data from the response    
+        self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+        self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+        self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
+        self.assertEqual(len(response_json['company_id']), 36) # Check that the response message contains a 36 character company id
+        response = self.client.get('/companies') # Make a GET request to the Categories/Categories endpoint
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        actual_results = json.loads(response.data) # Parse the JSON response  
+        for i in range(len(expected_results)):
+            self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
+            self.assertEqual(actual_results[i]['category_id'], expected_results[i]['category_id']) # Check the category id
 
 if __name__ == '__main__':
     unittest.main()
