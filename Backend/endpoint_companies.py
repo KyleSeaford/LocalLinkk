@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
 
-
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Companies', description='Companies Endpoint')
@@ -21,7 +20,7 @@ databaseFieldEmail = 'email'
 databaseFieldPhone = 'phone'
 databaseFieldWebsite = 'website'
 databaseFieldLatitude = 'latitude'
-databaseField = 'longitude'
+databaseFieldLongitude = 'longitude'
 argumentCompanyName = 'Company Name'
 argumentCategoryId = 'Category Id'
 argumentCompanyEmail = 'Company Email'
@@ -40,6 +39,12 @@ class GetCompanies(Resource):
     def get(self):        
         return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC')
     
+@api.route('/company/<string:company_id>/details')
+@api.param('company_id', 'Company id')
+class GetCompany(Resource):
+    def get(self,company_id):
+        logging.debug(f"Getting company details for {company_id}")        
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldEmail, databaseFieldPhone, databaseFieldWebsite, databaseFieldLongitude, databaseFieldLatitude], databaseTableName, f"where {databaseFieldCompanyId}='{company_id}'", '')
 
 #TODO: GET company/{company_id}/details
 #TODO: POST /company

@@ -50,8 +50,8 @@ class endpoint_companies_tests(unittest.TestCase):
         conn.commit()
         conn.close()
 
-    def test_get_categories(self):
-        """Test confirms that GET /Categories will return a list of all the categories"""
+    def test_get_companies(self):
+        """Test confirms that GET /companies will return a list of all the companies"""
 
         # Arrange 
         expected_result = [
@@ -66,6 +66,22 @@ class endpoint_companies_tests(unittest.TestCase):
         self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
         actual_result = json.loads(response.data) # Parse the JSON response        
         self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
+
+    def test_get_company(self):
+        """Test confirms that GET /company will return a company details"""
+
+        # Arrange 
+        expected_result = [
+            {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520','email':None,'latitude':53.293571,'longitude':-2.11014,'phone':None,'website':None}
+        ]
+
+        # Act
+        response = self.client.get('/company/04030201-0605-0807-0910-111213141511/details') # Make a GET request to the company endpoint
+
+        # Assert
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        actual_result = json.loads(response.data) # Parse the JSON response        
+        self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data        
 
 if __name__ == '__main__':
     unittest.main()
