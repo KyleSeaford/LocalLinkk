@@ -1,10 +1,11 @@
 import logging
 import uuid
 import sqlite3
+import os
+from dotenv import load_dotenv
 
-logging.basicConfig(level=logging.DEBUG,  # Set the logging level to DEBUG for all messages
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    filename='database_extensions.log')  # Log messages to a file named 
+load_dotenv()
+logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
 
 class database_extensions():
     def __init__(self, db):

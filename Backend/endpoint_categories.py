@@ -2,14 +2,16 @@ import logging
 from flask_restx import Api, Namespace, Resource, reqparse
 from flask import Flask
 from database_extensions import database_extensions
+import os
+from dotenv import load_dotenv
 
-logging.basicConfig(level=logging.DEBUG,  # Set the logging level to DEBUG for all messages
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    filename='endpoint_categories.log')  # Log messages to a file named example.log
+load_dotenv()
+logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
+
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Categories', description='Categories Endpoint')
-db = database_extensions("")
+db = database_extensions(os.getenv("databaseFilename"))
 databaseTableName = 'categories'
 databaseFieldCategoryId = 'category_id'
 databaseFieldCategoryName = 'category_name'
