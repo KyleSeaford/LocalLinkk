@@ -38,7 +38,14 @@ class Companies():
 class GetCompanies(Resource):
     def get(self):        
         return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC')
-    
+
+@api.route('/companies/<string:category_id>')
+@api.param('category_id', 'Category id')
+class GetCompaniesByCategory(Resource):
+    def get(self,category_id):
+        logging.debug(f"Getting companies by category id")        
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId], databaseTableName, f"where {databaseFieldCategoryId}='{category_id}'", '')
+
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
 class GetCompany(Resource):
@@ -128,7 +135,5 @@ class PostCompany(Resource):
             return {'message': 'Company deleted successfully'}, 200
     
 
-#TODO: PUT /company/{company_id}
-#TODO: DELETE /company/{company_id}
 #TODO: /companies/{category_id}
 #TODO: /companies/{category_id}/{lat}/{long}/{radius}
