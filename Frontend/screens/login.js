@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-import Navbar from '../components/navbar';
 import LoginButtons from '../components/loginbuttons';
 
 
