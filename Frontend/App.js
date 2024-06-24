@@ -13,10 +13,9 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator> 
-        <Stack.Screen name="LocalLinkk - Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LocalLinkk - Sign Up" component={SignupPage} options={{ headerShown: false }} />
         <Stack.Screen name="LocalLinkk - Log In" component={LoginScreen} options={{ headerShown: false }} />
-
+        <Stack.Screen name="LocalLinkk - Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="LocalLinkk - Profile" component={ProfileScreen} options={{ headerShown: false }} /> 
       </Stack.Navigator>
     </NavigationContainer>
