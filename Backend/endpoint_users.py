@@ -95,7 +95,9 @@ class Users(Resource):
         newUserID = db.generateId()
         sql = f"INSERT INTO users ({userID}, {userFname}, {userLname}, {userLocation}, {userEmail}, {userPassword}) VALUES ('{newUserID}', '{data[userFname]}', '{data[userLname]}', '{data[userLocation]}', '{data[userEmail]}', '{hashlib.md5(data[userPassword].encode()).hexdigest()}')"
         db.execute(sql)
-        return {'message': 'User added'}, 201
+        access_token = create_access_token(identity=sql[0])
+        logging.debug(f"User added - access_token: {access_token}")
+        return {'access_token': access_token}, 201
     
 
 @api.route("/users/login", doc={"description": "Logs in a user"})
@@ -119,6 +121,7 @@ class Users(Resource):
             return {'access_token': access_token}, 200
 
         else:
-            logging.debug(f"Wrong password")
-            return {'message': 'Wrong password'}, 401
+            logging.debug(f"Incorrect password")
+            return {'message': 'Incorrect password'}, 401
+
 

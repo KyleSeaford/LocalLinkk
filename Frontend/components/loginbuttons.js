@@ -1,22 +1,69 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
 import logo from '../assets/icon.png';
+
 
 const LoginPage = () => {
     const navigator = useNavigation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         console.log('Login clicked!');
-        console.log('Email:', email);
-        console.log('Password:', password);
+
+        // Input validation
+        if (!email || !password) {
+            setErrorMessage('All fields are required');
+            return;
+        }
+
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            setErrorMessage('Please enter a valid email address');
+            return;
+        }
+
+        const url = `http://192.168.127.93:5500/Users/users/login`;
+
+        const requestBody = {
+            userEmail: email,
+            userPassword: password
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json();
+            await AsyncStorage.setItem('token', data.access_token);
+            await AsyncStorage.setItem("isAuthenticated", "true");
+            //window.localStorage.setItem('token', data.access_token);
+            //window.localStorage.setItem("isAuthenticated", true);
+
+            if (response.status === 200) {
+                console.log('User logged in successfully:', data);
+                navigator.navigate('LocalLinkk - Home');
+            } else {
+                console.error('Login failed:', data.message);
+                setErrorMessage(data.message);
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
+            setErrorMessage('An error occurred. Please try again');
+        }
     };
 
-    const handleSignup = () => {
+    const handleSignup = async () => {
         console.log('Signup clicked!');
         navigator.navigate('LocalLinkk - Sign Up');
     };
@@ -27,7 +74,9 @@ const LoginPage = () => {
             <Image source={logo} style={styles.logo}/>
 
             <Text style={styles.title}>LocalLinkk Login</Text>
-            
+
+            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+
             <TextInput
                 style={styles.input}
                 placeholder="Email Address"
@@ -105,6 +154,11 @@ const styles = StyleSheet.create({
         height: 150,
         marginBottom: 24,
         borderRadius: 80,
+    },
+    error: {
+        color: 'red',
+        marginBottom: 16,
+        marginTop: -10,
     },
 });
 
