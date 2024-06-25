@@ -52,10 +52,12 @@ const LoginPage = () => {
 
             if (response.status === 200) {
                 console.log('User logged in successfully:', data);
-                navigator.navigate('LocalLinkk - Home');
+                navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
             } else {
                 console.error('Login failed:', data.message);
                 setErrorMessage(data.message);
+                AsyncStorage.removeItem('token');
+                AsyncStorage.removeItem('isAuthenticated');
             }
         } catch (error) {
             console.error('An error occurred:', error);
@@ -65,7 +67,8 @@ const LoginPage = () => {
 
     const handleSignup = async () => {
         console.log('Signup clicked!');
-        navigator.navigate('LocalLinkk - Sign Up');
+        //navigator.navigate('LocalLinkk - Sign Up');
+        navigation.navigate('LocalLinkk - Sign Up', { screen: 'SignupPage' });
     };
 
     return (

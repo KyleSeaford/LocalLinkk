@@ -68,3 +68,9 @@ class database_extensions():
         id = str(uuid.uuid4())
         logging.debug(f"generate id {id}")
         return id
+    
+    def close(self):
+        """Close the database connection"""
+        logging.debug(f"close {self.databaseFileName}")
+        conn = sqlite3.connect(self.databaseFileName)
+        conn.close()

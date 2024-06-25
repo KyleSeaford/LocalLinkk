@@ -38,6 +38,12 @@ const SignupPage = () => {
       return;
     }
 
+    if (password.length < 5) {
+      setErrorMessage('Password must be at least 5 characters long');
+      return;
+    }
+
+    
     const url = `http://192.168.127.93:5500/Users/users/signup`;
 
     const requestBody = {
@@ -63,7 +69,7 @@ const SignupPage = () => {
         await AsyncStorage.setItem('token', data.access_token);
         await AsyncStorage.setItem('isAuthenticated', 'true');
         console.log('User added successfully:', data);
-        navigator.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
       } else {
         console.error('Signup failed:', data.message);
         setErrorMessage(data.message);

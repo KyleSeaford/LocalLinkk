@@ -5,7 +5,8 @@ import logging
 import os
 import hashlib
 from dotenv import load_dotenv
-import jwt
+import sqlite3
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager, get_jwt, jwt_required, create_access_token
 from flask import request, make_response
 
@@ -23,6 +24,8 @@ authorizations = {
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY') # make sure to change this in .env file
 jwt = JWTManager(app) 
+
+CORS(app)  # Allow CORS for all routes
 
 api = Api(app, authorizations=authorizations, security='Token')
 
@@ -94,11 +97,17 @@ class Users(Resource):
         data = self.parserAdd.parse_args()
         newUserID = db.generateId()
         sql = f"INSERT INTO users ({userID}, {userFname}, {userLname}, {userLocation}, {userEmail}, {userPassword}) VALUES ('{newUserID}', '{data[userFname]}', '{data[userLname]}', '{data[userLocation]}', '{data[userEmail]}', '{hashlib.md5(data[userPassword].encode()).hexdigest()}')"
-        db.execute(sql)
-        access_token = create_access_token(identity=sql[0])
-        logging.debug(f"User added - access_token: {access_token}")
-        return {'access_token': access_token}, 201
-    
+        
+        try:
+            db.execute(sql)
+            access_token = create_access_token(identity=newUserID)
+            logging.debug(f"User added - access_token: {access_token}")
+            return {'access_token': access_token}, 201
+        
+        except sqlite3.IntegrityError:
+            logging.error(f"Email {data[userEmail]} already exists")
+            db.close()
+            return {'message': 'Email already exists'}, 400
 
 @api.route("/users/login", doc={"description": "Logs in a user"})
 class Users(Resource):
