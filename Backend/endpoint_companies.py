@@ -46,6 +46,24 @@ class GetCompaniesByCategory(Resource):
         logging.debug(f"Getting companies by category id")        
         return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId], databaseTableName, f"where {databaseFieldCategoryId}='{category_id}'", '')
 
+@api.route('/companies/<string:category_id>/<string:latitude>/<string:longitude>/<string:radius>')
+@api.param('category_id', 'Category id')
+@api.param('longitude', 'Longitude')
+@api.param('latitude', 'Latitude')
+@api.param('radius', 'Maximum Distance')
+class GetCompaniesByCategoryAndLocation(Resource):
+    def get(self,category_id, latitude, longitude, radius):
+        logging.debug(f"Getting companies by category id and location")  
+
+        #query = f"SELECT {databaseFieldCompanyId}, {databaseFieldCompanyName}, latitude, longitude, (6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude)))) AS distance FROM {databaseTableName} where distance < {radius} ORDER BY distance"
+        #return db.fetchAll(query)
+        #TODO create unit tests
+        #TODO return result as json
+        #TODO add {databaseFieldCategoryId}='{category_id}'        
+        distance = f"(6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude)))) AS distance"
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distance], databaseTableName, f"where distance < {radius}", "ORDER BY distance")
+        
+
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
 class GetCompany(Resource):
@@ -133,7 +151,3 @@ class PostCompany(Resource):
             # Delete the company
             db.execute(f"DELETE FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
             return {'message': 'Company deleted successfully'}, 200
-    
-
-#TODO: /companies/{category_id}
-#TODO: /companies/{category_id}/{lat}/{long}/{radius}

@@ -83,6 +83,48 @@ class endpoint_companies_tests(unittest.TestCase):
         actual_result = json.loads(response.data) # Parse the JSON response        
         self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
 
+    def test_get_companies_by_distance16(self):
+        """Test confirms that GET /companies will return a list of all the companies by distance """
+        # - Log and Lat
+        # Macclesfield = 53.260841, -2.128190
+        # Bollington = 53.293571, -2.110140
+        # Mansfield = 53.143871, -1.199110
+
+        # Arrange 
+        expectedName = "bollington"
+        expectedCompanyId = '04030201-0605-0807-0910-111213141511'
+
+        # Act
+        response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/16') # Make a GET request to the companies endpoint
+
+        # Assert
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        actual_result = json.loads(response.data) # Parse the JSON response        
+        self.assertEqual(1, len(actual_result)) # Confirm the number of results
+        self.assertEqual(expectedName, actual_result[0]['company_name']) 
+        self.assertEqual(expectedCompanyId, actual_result[0]['company_id']) 
+    
+    def test_get_companies_by_distance100(self):
+        """Test confirms that GET /companies will return a list of all the companies by distance """
+        # - Log and Lat
+        # Macclesfield = 53.260841, -2.128190
+        # Bollington = 53.293571, -2.110140
+        # Mansfield = 53.143871, -1.199110
+
+        # Arrange 
+        expectedName = "bollington"
+        expectedCompanyId = '04030201-0605-0807-0910-111213141511'
+
+        # Act
+        response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/100') # Make a GET request to the companies endpoint
+
+        # Assert
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        actual_result = json.loads(response.data) # Parse the JSON response        
+        self.assertEqual(2, len(actual_result)) # Confirm the number of results
+        self.assertEqual(expectedName, actual_result[0]['company_name']) 
+        self.assertEqual(expectedCompanyId, actual_result[0]['company_id']) 
+
     def test_get_company(self):
         """Test confirms that GET /company/<company_id>/details will return a company details"""
 
@@ -93,6 +135,7 @@ class endpoint_companies_tests(unittest.TestCase):
         response = self.client.get('/company/04030201-0605-0807-0910-111213141511/details') # Make a GET request to the company endpoint
 
         # Assert
+        print(response)
         self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
         actual_result = json.loads(response.data) # Parse the JSON response        
         self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data        
