@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import logo from '../assets/icon.png';
+import { Feather } from '@expo/vector-icons';
+
 
 const SignupPage = () => {
-  const navigator = useNavigation();
+    const navigator = useNavigation();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [location, setLocation] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [location, setLocation] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
   const handleSignup = async () => {
     console.log('Signup clicked!');
@@ -44,7 +46,6 @@ const SignupPage = () => {
       return;
     }
 
-    
     const url = `http://192.168.127.93:5500/Users/users/signup`;
 
     const requestBody = {
@@ -70,7 +71,7 @@ const SignupPage = () => {
         await AsyncStorage.setItem('token', data.access_token);
         await AsyncStorage.setItem('isAuthenticated', 'true');
         await AsyncStorage.setItem("userId", data.userID);
-        
+
         console.log('User added successfully:', data);
         navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
       } else {
@@ -85,17 +86,14 @@ const SignupPage = () => {
 
   const handleLogin = () => {
     console.log('Login clicked!');
-    navigator.navigate('LocalLinkk - Log In');
+    navigator.navigate('LocalLinkk - Log In', { screen: 'LoginScreen' });
   };
 
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
-
       <Text style={styles.title}>LocalLinkk Signup</Text>
-
       {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-
       <TextInput
         style={styles.input}
         placeholder="First Name"
@@ -103,7 +101,6 @@ const SignupPage = () => {
         onChangeText={setFirstName}
         autoCapitalize="words"
       />
-
       <TextInput
         style={styles.input}
         placeholder="Last Name"
@@ -111,7 +108,6 @@ const SignupPage = () => {
         onChangeText={setLastName}
         autoCapitalize="none"
       />
-
       <TextInput
         style={styles.input}
         placeholder="Town/City"
@@ -120,7 +116,6 @@ const SignupPage = () => {
         onChangeText={(text) => setLocation(text.charAt(0).toUpperCase() + text.slice(1))}
         autoCapitalize="words"
       />
-
       <TextInput
         style={styles.input}
         placeholder="Email Address"
@@ -129,20 +124,22 @@ const SignupPage = () => {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-      />
-
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          autoCapitalize="none"
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.toggleButton}>
+          <Text style={styles.toggleButtonText}>{showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />}</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={styles.buttonText}>Signup</Text>
       </TouchableOpacity>
-
       <TouchableOpacity style={styles.button2} onPress={handleLogin}>
         <Text style={styles.buttonText}>Have An Account - Log in</Text>
       </TouchableOpacity>
@@ -172,6 +169,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#fff',
   },
+  passwordContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+},
+toggleButton: {
+    position: 'absolute',
+    right: 16,
+},
+toggleButtonText: {
+    fontWeight: 'bold',
+    marginBottom: 15,
+},
   button: {
     width: '100%',
     padding: 16,

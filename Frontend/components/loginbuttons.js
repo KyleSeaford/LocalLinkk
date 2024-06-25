@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
 import logo from '../assets/icon.png';
-
 
 const LoginPage = () => {
     const navigator = useNavigation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleLogin = async () => {
@@ -65,20 +66,16 @@ const LoginPage = () => {
         }
     };
 
-    const handleSignup = async () => {
+    const handleSignup = () => {
         console.log('Signup clicked!');
         navigation.navigate('LocalLinkk - Sign Up', { screen: 'SignupPage' });
     };
 
     return (
         <View style={styles.container}>
-
-            <Image source={logo} style={styles.logo}/>
-
+            <Image source={logo} style={styles.logo} />
             <Text style={styles.title}>LocalLinkk Login</Text>
-
             {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-
             <TextInput
                 style={styles.input}
                 placeholder="Email Address"
@@ -87,20 +84,22 @@ const LoginPage = () => {
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
-            
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-            />
-
+            <View style={styles.passwordContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.toggleButton}>
+                    <Text style={styles.toggleButtonText}>{showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />}</Text>
+                </TouchableOpacity>
+            </View>
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.button2} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Create An Account</Text>
             </TouchableOpacity>
@@ -130,6 +129,19 @@ const styles = StyleSheet.create({
         borderColor: '#007BFF',
         borderRadius: 8,
         backgroundColor: '#fff',
+    },
+    passwordContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    toggleButton: {
+        position: 'absolute',
+        right: 16,
+    },
+    toggleButtonText: {
+        fontWeight: 'bold',
+        marginBottom: 15,
     },
     button: {
         width: '100%',

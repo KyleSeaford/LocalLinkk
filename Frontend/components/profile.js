@@ -57,11 +57,11 @@ const Profile = () => {
       </TouchableOpacity>
 
       <Text style={styles.Namecontainer}>{userData[1]} {userData[2]}</Text>
-      <Text style={styles.CNamecontainer}>{userData[5]}</Text>
+      <Text style={styles.CNamecontainer}>Account Type: {userData[5]}</Text>
       {/* Will be the users name and company name */}
 
       <TouchableOpacity onPress={handleEditClick}>
-        <Text style={styles.Editcontainer}>Edit Profile</Text>
+        <Text style={styles.Editcontainer}>Edit</Text>
         {/* When clicked, will allow user to edit name and companies name */}
       </TouchableOpacity>
 
@@ -72,7 +72,7 @@ const Profile = () => {
 
       <View style={styles.Pastcontainer}>
         <Entypo name="triangle-down" size={24} color="black" />
-        <Text style={styles.PostcontainerTEXT}>Your Past LocalLinkk's are Below</Text>
+        <Text style={styles.PostcontainerTEXT}>Your Past LocalLinkk's</Text>
         <Entypo name="triangle-down" size={24} color="black" />
       </View>
 
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         marginLeft: 20,
-        marginTop: 10,
+        marginTop: 20,
         borderRadius: 60,
     },
     Namecontainer: {
@@ -123,14 +123,14 @@ const styles = StyleSheet.create({
     },
     Editcontainer: {
         fontSize: 20,
-        marginLeft: 310,
-        marginTop: -30,
+        marginLeft: 350,
+        marginTop: -29,
         color: 'black',
         borderColor: '#E4E4E4',
         borderWidth: 2,
         borderRadius: 5,
         padding: 2,
-        width: 105,
+        width: 75,
         backgroundColor: '#E4E4E4',
         textAlign: 'center',
     },
@@ -153,7 +153,6 @@ const styles = StyleSheet.create({
         color: 'black',
         borderColor: '#E4E4E4',
         borderWidth: 5,
-        borderRadius: 5,
         padding: 5,
         backgroundColor: '#E4E4E4',
         alignItems: 'center',
