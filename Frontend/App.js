@@ -17,7 +17,6 @@ const App = () => {
     const checkAuthStatus = async () => {
       const authStatus = await AsyncStorage.getItem('isAuthenticated');
       setIsAuthenticated(authStatus === 'true');
-      console.log('Is authenticated:', authStatus);
     };
 
     checkAuthStatus();

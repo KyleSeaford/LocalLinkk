@@ -1,77 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 import user from '../assets/user-icon.png';
 
 const Profile = () => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [userData, setUserData] = useState({});
 
-    const handleProfileClick = () => {
-        setIsModalVisible(true);
+  const url = 'http://192.168.127.93:5500/';
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        const token = await AsyncStorage.getItem('token');
+        const response = await axios.get(`${url}Users/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
+    fetchUserData();
+  }, []);
 
-    const handleCloseModal = () => {
-        setIsModalVisible(false);
-    };
+  const handleProfileClick = () => {
+    setIsModalVisible(true);
+  };
 
-    const handleEditClick = () => {
-        console.log("Edit clicked!");
-    };
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
 
-    const handlePostClick = () => {
-        console.log("Post clicked!");
-    };
+  const handleEditClick = () => {
+    console.log("Edit clicked!");
+  };
 
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={handleProfileClick}>
-                <Image
-                    source={user}
-                    style={styles.logo}
-                    // Will be the users profile picture
-                />
-            </TouchableOpacity>
+  const handlePostClick = () => {
+    console.log("Post clicked!");
+  };
 
-            <Text style={styles.Namecontainer}>First Name -- Surname</Text>
-            <Text style={styles.CNamecontainer}>Company Name</Text>
-            {/* Will be the users name and company name */}
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleProfileClick}>
+        <Image
+          source={user}
+          style={styles.logo}
+          // Will be the users profile picture
+        />
+      </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleEditClick}>
-                <Text style={styles.Editcontainer}>Edit Profile</Text>
-                {/* When clicked, will allow user to edit name and companies name */}
-            </TouchableOpacity>
+      <Text style={styles.Namecontainer}>{userData[1]} {userData[2]}</Text>
+      <Text style={styles.CNamecontainer}>{userData[5]}</Text>
+      {/* Will be the users name and company name */}
 
-            <TouchableOpacity onPress={handlePostClick}>
-                <Text style={styles.Postcontainer}>Create a New Post</Text> 
-                {/* When clicked, will allow user to create a new post */}
-            </TouchableOpacity>
+      <TouchableOpacity onPress={handleEditClick}>
+        <Text style={styles.Editcontainer}>Edit Profile</Text>
+        {/* When clicked, will allow user to edit name and companies name */}
+      </TouchableOpacity>
 
-            <View style={styles.Pastcontainer}>
-                <Entypo name="triangle-down" size={24} color="black" />
-                <Text style={styles.PostcontainerTEXT}>Your Past LocalLinkk's are Below</Text>
-                <Entypo name="triangle-down" size={24} color="black" />
-            </View>
+      <TouchableOpacity onPress={handlePostClick}>
+        <Text style={styles.Postcontainer}>Create a New Post</Text> 
+        {/* When clicked, will allow user to create a new post */}
+      </TouchableOpacity>
 
-            <Modal
-                visible={isModalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={handleCloseModal}
-            >
-                <View style={styles.modalContainer}>
-                    <TouchableOpacity style={styles.modalCloseButton} onPress={handleCloseModal}>
-                        <Entypo name="cross" size={30} color="#fff" />
-                    </TouchableOpacity>
-                    <Image
-                        source={user}
-                        style={styles.expandedImage}
-                        // Expanded version of the profile picture
-                    />
-                </View>
-            </Modal>
+      <View style={styles.Pastcontainer}>
+        <Entypo name="triangle-down" size={24} color="black" />
+        <Text style={styles.PostcontainerTEXT}>Your Past LocalLinkk's are Below</Text>
+        <Entypo name="triangle-down" size={24} color="black" />
+      </View>
+
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCloseModal}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.modalCloseButton} onPress={handleCloseModal}>
+            <Entypo name="cross" size={30} color="#fff" />
+          </TouchableOpacity>
+          <Image
+            source={user}
+            style={styles.expandedImage}
+            // Expanded version of the profile picture
+          />
         </View>
-    );
+      </Modal>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

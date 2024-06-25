@@ -61,7 +61,7 @@ class Users(Resource):
     
     def get(self, id):
         logging.debug(f"Getting user by ID")
-        user = db.fetchSingleRecord(f"SELECT {userID}, {userFname}, {userLname}, {userLocation}, {userEmail}, {userPassword}, {userType}, {userAdmin} FROM users WHERE {userID2} = '{id}'")
+        user = db.fetchSingleRecord(f"SELECT {userID}, {userFname}, {userLname}, {userLocation}, {userEmail}, {userType} FROM users WHERE {userID2} = '{id}'")
         logging.debug(f"user: {user}")
         
         if user is None:
@@ -96,13 +96,14 @@ class Users(Resource):
         logging.debug(f"Adding a new user")
         data = self.parserAdd.parse_args()
         newUserID = db.generateId()
-        sql = f"INSERT INTO users ({userID}, {userFname}, {userLname}, {userLocation}, {userEmail}, {userPassword}) VALUES ('{newUserID}', '{data[userFname]}', '{data[userLname]}', '{data[userLocation]}', '{data[userEmail]}', '{hashlib.md5(data[userPassword].encode()).hexdigest()}')"
+        userid = newUserID
+        sql = f"INSERT INTO users ({userID}, {userFname}, {userLname}, {userLocation}, {userEmail}, {userPassword}) VALUES ('{userid}', '{data[userFname]}', '{data[userLname]}', '{data[userLocation]}', '{data[userEmail]}', '{hashlib.md5(data[userPassword].encode()).hexdigest()}')"
         
         try:
             db.execute(sql)
-            access_token = create_access_token(identity=newUserID)
+            access_token = create_access_token(identity=userid)
             logging.debug(f"User added - access_token: {access_token}")
-            return {'access_token': access_token}, 201
+            return {'access_token': access_token, 'userID': userid}, 201
         
         except sqlite3.IntegrityError:
             logging.error(f"Email {data[userEmail]} already exists")
@@ -127,10 +128,15 @@ class Users(Resource):
         if user[1] == hashlib.md5(data[userPassword].encode()).hexdigest():
             access_token = create_access_token(identity=user[0])
             logging.debug(f"User logged in - access_token: {access_token}")
-            return {'access_token': access_token}, 200
+            return {'access_token': access_token, 'userID': user[0]}, 200
 
         else:
             logging.debug(f"Incorrect password")
             return {'message': 'Incorrect password'}, 401
 
 
+@api.route("/users/locations", doc={"description": "gets all the locations of the users"})
+class Users(Resource):
+    def get(self):
+        logging.debug(f"Getting all locations")
+        return db.fetchJson([userLocation], 'users', '', f'ORDER BY {userLocation} ASC')

@@ -47,8 +47,7 @@ const LoginPage = () => {
             const data = await response.json();
             await AsyncStorage.setItem('token', data.access_token);
             await AsyncStorage.setItem("isAuthenticated", "true");
-            //window.localStorage.setItem('token', data.access_token);
-            //window.localStorage.setItem("isAuthenticated", true);
+            await AsyncStorage.setItem("userId", data.userID);
 
             if (response.status === 200) {
                 console.log('User logged in successfully:', data);
@@ -58,6 +57,7 @@ const LoginPage = () => {
                 setErrorMessage(data.message);
                 AsyncStorage.removeItem('token');
                 AsyncStorage.removeItem('isAuthenticated');
+                AsyncStorage.removeItem('userId');
             }
         } catch (error) {
             console.error('An error occurred:', error);
@@ -67,7 +67,6 @@ const LoginPage = () => {
 
     const handleSignup = async () => {
         console.log('Signup clicked!');
-        //navigator.navigate('LocalLinkk - Sign Up');
         navigation.navigate('LocalLinkk - Sign Up', { screen: 'SignupPage' });
     };
 

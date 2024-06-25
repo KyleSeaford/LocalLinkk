@@ -38,6 +38,7 @@ const SignupPage = () => {
       return;
     }
 
+    // Password validation
     if (password.length < 5) {
       setErrorMessage('Password must be at least 5 characters long');
       return;
@@ -68,6 +69,8 @@ const SignupPage = () => {
       if (response.status === 201) {
         await AsyncStorage.setItem('token', data.access_token);
         await AsyncStorage.setItem('isAuthenticated', 'true');
+        await AsyncStorage.setItem("userId", data.userID);
+        
         console.log('User added successfully:', data);
         navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
       } else {

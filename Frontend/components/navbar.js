@@ -47,10 +47,10 @@ const Navbar = () => {
 
     const fetchLocations = async () => {
         try {
-            const response = await fetch(`${url2}Users/users`);
-            const data = await response.json();
+            const response = await fetch(`${url2}Users/users/locations`);
+            const Locations = await response.json();
             // Extract unique locations using Set
-            const uniqueLocations = Array.from(new Set(data.map(user => user.userLocation)));
+            const uniqueLocations = Array.from(new Set(Locations.map(user => user.userLocation)));
             setLocations(uniqueLocations);
         } catch (error) {
             console.error('Error fetching locations:', error);
@@ -113,9 +113,7 @@ const Navbar = () => {
 
     const handleLogOutClick = () => {
         AsyncStorage.clear();
-        //window.localStorage.clear();
         setMenuVisible(!menuVisible);
-        //setTimeout(() => { 500 });
         navigation.navigate('LocalLinkk - Log In');
     }
 
