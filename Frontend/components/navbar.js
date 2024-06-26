@@ -18,6 +18,19 @@ const Navbar = () => {
     // local url for testing
     const url2 = 'http://192.168.127.93:5500/';
 
+
+    const fetchUsersLocation = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            const response = await fetch(`${url2}Users/users/locations/${userId}`);
+            const userLOC = await response.json();
+            return userLOC.message;
+        } catch (error) {
+            console.error('Error fetching users location:', error);
+            return 'Unknown'; // Return a default value in case of an error
+        }
+    }
+
     const [menuVisible, setMenuVisible] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [locationDropdownVisible, setLocationDropdownVisible] = useState(false);
@@ -33,7 +46,13 @@ const Navbar = () => {
     useEffect(() => {
         fetchCategories();
         fetchLocations();
+        fetchAndSetUserLocation();
     }, []);
+
+    const fetchAndSetUserLocation = async () => {
+        const userLocation = await fetchUsersLocation();
+        setLocation(userLocation);
+    };
 
     const fetchCategories = async () => {
         try {
@@ -46,6 +65,7 @@ const Navbar = () => {
     };
 
     const fetchLocations = async () => {
+        // get all locations
         try {
             const response = await fetch(`${url2}Users/users/locations`);
             const Locations = await response.json();
@@ -57,7 +77,6 @@ const Navbar = () => {
         }
     };
     
-
     const handleMenuClick = () => {
         setMenuVisible(!menuVisible);
         Animated.timing(slideAnim, {
@@ -83,10 +102,29 @@ const Navbar = () => {
         setLocationDropdownVisible(!locationDropdownVisible);
     };
 
+    const ChangeUsersLocation = async (newLocation) => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            const response = await fetch(`${url2}Users/users/locations/change/${userId}/${newLocation}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userLocation: newLocation }),
+            });
+            const data = await response.json();
+            console.log('Location updated:', data.message);
+            setLocation(newLocation);
+        } catch (error) {
+            console.error('Error updating location:', error);
+        }
+    }
+
     const handlePredefinedLocationClick = (selectedLocation) => {
         console.log(`Selected location: ${selectedLocation}`);
         setLocation(selectedLocation);
         setLocationDropdownVisible(false);
+        ChangeUsersLocation(selectedLocation);
     };
 
     const handleCategory = (category) => {

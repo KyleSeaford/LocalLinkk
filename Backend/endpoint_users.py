@@ -140,3 +140,56 @@ class Users(Resource):
     def get(self):
         logging.debug(f"Getting all locations")
         return db.fetchJson([userLocation], 'users', '', f'ORDER BY {userLocation} ASC')
+    
+@api.route("/users/locations/<string:id>", doc={"description": "gets a location of a user by ID"})
+class Users(Resource):
+    parserGet = reqparse.RequestParser()
+    parserGet.add_argument(userID2, type=str, help='User ID', required=True)
+    
+    def get(self, id):
+        logging.debug(f"Getting location by ID")
+        location = db.fetchSingleRecord(f"SELECT {userLocation} FROM users WHERE {userID2} = '{id}'")
+
+        location = location[0]
+        logging.debug(f"location: {location}")
+
+
+        if location is None:
+            logging.debug(f"Location not found")
+            return {'message': 'Location not found'}, 404
+        
+        return {'message': location}, 200
+    
+@api.route("/users/locations/change/<string:id>/<string:location>", doc={"description": "Changes the location of a user by ID"})
+class Users(Resource):
+    parserChange = reqparse.RequestParser()
+    parserChange.add_argument(userID2, type=str, help='User ID', required=True)
+    parserChange.add_argument(userLocation, type=str, help='Location', required=True)
+
+    def put(self, id, location):
+        logging.debug(f"Changing location by ID")
+        db.execute(f"UPDATE users SET {userLocation} = '{location}' WHERE {userID} = '{id}'")
+        logging.debug(f"Location changed")
+        return {'message': 'Location changed'}, 200
+
+@api.route("/users/nameChange", doc={"description": "Changes the name of a user by ID"})
+class Users(Resource):
+    parserChange = reqparse.RequestParser()
+    parserChange.add_argument(userID2, type=str, help='User ID', required=True)
+    parserChange.add_argument(userFname, type=str, help='First Name', required=True)
+    parserChange.add_argument(userLname, type=str, help='Last Name', required=True)
+
+    @api.doc(parser=parserChange)
+    def put(self):
+        logging.debug(f"Changing name by ID")
+        data = self.parserChange.parse_args()
+        db.execute(f"UPDATE users SET {userFname} = '{data[userFname]}', {userLname} = '{data[userLname]}' WHERE {userID} = '{data[userID2]}'")
+        logging.debug(f"Name changed")
+        return {'message': 'Name changed'}, 200
+
+@api.route("/users/admins", doc={"description": "gets all the admins"})
+class Users(Resource):
+    def get(self):
+        logging.debug(f"Getting all admins")
+        return db.fetchJson([userID, userFname, userLname, userType, userAdmin], 'users', 'WHERE userAdmin = 1', f'ORDER BY {userID} ASC')
+    
