@@ -1,5 +1,5 @@
 from flask_restx import Api, Namespace, Resource, reqparse
-from flask import Flask
+from flask import Flask, send_file
 from database_extensions import database_extensions
 import logging
 import os
@@ -11,7 +11,6 @@ from flask_jwt_extended import JWTManager, get_jwt, jwt_required, create_access_
 from flask import request, make_response
 import os
 import shutil
-import pathlib
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -81,7 +80,7 @@ class Users(Resource):
     def delete(self, id):
         logging.debug(f"Removing a user by ID")
         db.execute(f"DELETE FROM users WHERE {userID} = '{id}'")
-        
+
         shutil.rmtree(f"profilePictures/{id}", ignore_errors=True)
         logging.debug(f"User removed")
         return {'message': 'User removed'}, 200
@@ -193,6 +192,23 @@ class Users(Resource):
         db.execute(f"UPDATE users SET {userFname} = '{data[userFname]}', {userLname} = '{data[userLname]}' WHERE {userID} = '{data[userID2]}'")
         logging.debug(f"Name changed")
         return {'message': 'Name changed'}, 200
+    
+@api.route("/users/image/<string:id>", doc={"description": "Gets the image of a user by ID"})
+class Users(Resource):
+    def get(self, id):
+        logging.debug(f"Getting image by ID")
+        try:
+            
+            image_dir = f"profilePictures/{id}/profilePicture.jpg"
+            logging.debug(f"image_dir: {image_dir}")
+
+            return send_file(image_dir, mimetype='image/jpg')
+            #return make_response(image_path)
+
+        except FileNotFoundError:
+            logging.debug(f"Image not found")
+            return {'message': 'Image not found'}, 404
+
 
 @api.route("/users/admins", doc={"description": "gets all the admins"})
 class Users(Resource):
