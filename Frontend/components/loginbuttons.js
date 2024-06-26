@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import { Feather } from '@expo/vector-icons';
 import logo from '../assets/icon.png';
 
 const LoginPage = () => {
@@ -9,25 +10,72 @@ const LoginPage = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         console.log('Login clicked!');
-        console.log('Email:', email);
-        console.log('Password:', password);
+
+        // Input validation
+        if (!email || !password) {
+            setErrorMessage('All fields are required');
+            return;
+        }
+
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            setErrorMessage('Please enter a valid email address');
+            return;
+        }
+
+        const url = `http://192.168.127.93:5500/Users/users/login`;
+
+        const requestBody = {
+            userEmail: email,
+            userPassword: password
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json();
+            await AsyncStorage.setItem('token', data.access_token);
+            await AsyncStorage.setItem("isAuthenticated", "true");
+            await AsyncStorage.setItem("userId", data.userID);
+
+            if (response.status === 200) {
+                console.log('User logged in successfully:', data);
+                navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
+            } else {
+                console.error('Login failed:', data.message);
+                setErrorMessage(data.message);
+                AsyncStorage.removeItem('token');
+                AsyncStorage.removeItem('isAuthenticated');
+                AsyncStorage.removeItem('userId');
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
+            setErrorMessage('An error occurred. Please try again');
+        }
     };
 
     const handleSignup = () => {
         console.log('Signup clicked!');
-        navigator.navigate('LocalLinkk - Sign Up');
+        navigation.navigate('LocalLinkk - Sign Up', { screen: 'SignupPage' });
     };
 
     return (
         <View style={styles.container}>
-
-            <Image source={logo} style={styles.logo}/>
-
+            <Image source={logo} style={styles.logo} />
             <Text style={styles.title}>LocalLinkk Login</Text>
-            
+            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
             <TextInput
                 style={styles.input}
                 placeholder="Email Address"
@@ -36,20 +84,22 @@ const LoginPage = () => {
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
-            
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-            />
-
+            <View style={styles.passwordContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.toggleButton}>
+                    <Text style={styles.toggleButtonText}>{showPassword ? <Feather name="eye-off" size={24} color="black" /> : <Feather name="eye" size={24} color="black" />}</Text>
+                </TouchableOpacity>
+            </View>
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.button2} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Create An Account</Text>
             </TouchableOpacity>
@@ -80,6 +130,19 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#fff',
     },
+    passwordContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    toggleButton: {
+        position: 'absolute',
+        right: 16,
+    },
+    toggleButtonText: {
+        fontWeight: 'bold',
+        marginBottom: 15,
+    },
     button: {
         width: '100%',
         padding: 16,
@@ -105,6 +168,11 @@ const styles = StyleSheet.create({
         height: 150,
         marginBottom: 24,
         borderRadius: 80,
+    },
+    error: {
+        color: 'red',
+        marginBottom: 16,
+        marginTop: -10,
     },
 });
 

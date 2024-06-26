@@ -1,47 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Animated, Dimensions, Modal } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Animated, Dimensions, Modal, TextInput, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, MaterialIcons, Entypo } from '@expo/vector-icons';
 
 import menu from '../assets/menu.png';
 import user from '../assets/user-icon.png';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const Navbar = () => {
     const navigation = useNavigation();
+
+    // server url
+    const url = 'http://192.168.127.223/';
+
+    // local url for testing
+    const url2 = 'http://192.168.127.93:5500/';
 
     const [menuVisible, setMenuVisible] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [locationDropdownVisible, setLocationDropdownVisible] = useState(false);
     const [categories, setCategories] = useState([]);
     const [location, setLocation] = useState('');
-    const [predefinedLocations, setPredefinedLocations] = useState([
-        'Macclesfield',
-        'Manchester',
-        'London',
-        'Birmingham',
-        'Liverpool',
-        'Leeds',
-        'Sheffield',
-    ]);
+    const [locations, setLocations] = useState([]);
     const [activeButton, setActiveButton] = useState('All');
+    const [searchLocation, setSearchLocation] = useState('');
+    const [searchCategory, setSearchCategory] = useState('');
 
     const slideAnim = useState(new Animated.Value(-width))[0];
 
     useEffect(() => {
         fetchCategories();
+        fetchLocations();
     }, []);
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://192.168.127.223/Categories/categories');
+            const response = await fetch(`${url}Categories/categories`);
             const data = await response.json();
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
     };
+
+    const fetchLocations = async () => {
+        try {
+            const response = await fetch(`${url2}Users/users/locations`);
+            const Locations = await response.json();
+            // Extract unique locations using Set
+            const uniqueLocations = Array.from(new Set(Locations.map(user => user.userLocation)));
+            setLocations(uniqueLocations);
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        }
+    };
+    
 
     const handleMenuClick = () => {
         setMenuVisible(!menuVisible);
@@ -54,12 +69,10 @@ const Navbar = () => {
 
     const handleProfileClick = () => {
         navigation.navigate('LocalLinkk - Profile');
-        console.log("Navigated to Profile");
     };
 
     const handleNameClick = () => {
         navigation.navigate('LocalLinkk - Home');
-        console.log("Navigated to LocalLinkk");
     };
 
     const handleCategoryClick = () => {
@@ -96,6 +109,62 @@ const Navbar = () => {
 
     const handlePostClick = () => {
         console.log("Post clicked!");
+    };
+
+    const handleLogOutClick = () => {
+        AsyncStorage.clear();
+        setMenuVisible(!menuVisible);
+        navigation.navigate('LocalLinkk - Log In');
+    }
+
+    const renderLocationDropdown = () => {
+        const filteredLocations = locations.filter(location =>
+            location.toLowerCase().includes(searchLocation.toLowerCase())
+        );
+
+        return (
+            <ScrollView style={styles.dropdownScroll}>
+                <View style={styles.searchContainer}>
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search Location"
+                        value={searchLocation}
+                        onChangeText={setSearchLocation}
+                    />
+                    <Ionicons name="search" size={24} color="#1a1a1a" style={styles.searchIcon} />
+                </View>
+                {filteredLocations.map((location, index) => (
+                    <TouchableOpacity key={index} onPress={() => handlePredefinedLocationClick(location)}>
+                        <Text style={styles.dropdownItem}>{location}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        );
+    };
+
+    const renderCategoryDropdown = () => {
+        const filteredCategories = categories.filter(category =>
+            category.category_name.toLowerCase().includes(searchCategory.toLowerCase())
+        );
+
+        return (
+            <ScrollView style={styles.dropdownScroll}>
+                <View style={styles.searchContainer}>
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search Category"
+                        value={searchCategory}
+                        onChangeText={setSearchCategory}
+                    />
+                    <Ionicons name="search" size={24} color="#1a1a1a" style={styles.searchIcon} />
+                </View>
+                {filteredCategories.map((category) => (
+                    <TouchableOpacity key={category.category_id} onPress={() => handleCategory(category)}>
+                        <Text style={styles.dropdownItem}>{category.category_name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        );
     };
 
     return (
@@ -170,11 +239,7 @@ const Navbar = () => {
 
                     {locationDropdownVisible && (
                         <View style={styles.dropdown}>
-                            {predefinedLocations.map((location, index) => (
-                                <TouchableOpacity key={index} onPress={() => handlePredefinedLocationClick(location)}>
-                                    <Text style={styles.dropdownItem}>{location}</Text>
-                                </TouchableOpacity>
-                            ))}
+                            {renderLocationDropdown()}
                         </View>
                     )}
 
@@ -187,17 +252,20 @@ const Navbar = () => {
 
                     {dropdownVisible && (
                         <View style={styles.dropdown}>
-                            {categories.map((category) => (
-                                <TouchableOpacity key={category.category_id} onPress={() => handleCategory(category)}>
-                                    <Text style={styles.dropdownItem}>{category.category_name}</Text>
-                                </TouchableOpacity>
-                            ))}
+                            {renderCategoryDropdown()}
                         </View>
                     )}
 
                     <View style={styles.postContainer}>
                         <TouchableOpacity onPress={handlePostClick}>
                             <Text style={styles.postContainerTEXT}>Create a New Post</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.menuContainer}>
+                        <TouchableOpacity onPress={handleLogOutClick} style={styles.menuItemContainer}>
+                            <Text style={styles.menuContainerTEXT}>Log Out</Text>
+                            <Ionicons name="log-out" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
 
@@ -254,7 +322,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
-        marginTop: 490,
+        marginTop: 420,
     },
     postContainerTEXT: {
         fontSize: 20,
@@ -325,8 +393,13 @@ const styles = StyleSheet.create({
     dropdown: {
         backgroundColor: '#f9f9f9',
         padding: 10,
+        marginTop: 0,
         margin: 10,
         borderRadius: 5,
+        maxHeight: height * 0.4, // Adjust max height as needed
+    },
+    dropdownScroll: {
+        maxHeight: height * 0.5, // Adjust max height for scrollable content
     },
     dropdownItem: {
         padding: 10,
@@ -335,7 +408,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
     },
     activeButton: {
-        backgroundColor: '#d3d3d3', // Highlight color for active button
+        backgroundColor: '#d3d3d3',
         borderRadius: 5,
         padding: 5,
     },
@@ -347,6 +420,24 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 5,
     },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    searchInput: {
+        flex: 1,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        backgroundColor: '#fff',
+        color: '#000',
+    },
+    searchIcon: {
+        padding: 10,
+    },
 });
 
 export default Navbar;
+
