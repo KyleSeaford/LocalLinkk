@@ -95,7 +95,7 @@ class endpoint_companies_tests(unittest.TestCase):
         expectedCompanyId = '04030201-0605-0807-0910-111213141511'
 
         # Act
-        response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/16') # Make a GET request to the companies endpoint
+        response = self.client.get('/companies/04030201-0605-0807-0910-111213141520/53.260841/-2.128190/16') # Make a GET request to the companies endpoint
 
         # Assert
         self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
@@ -104,8 +104,8 @@ class endpoint_companies_tests(unittest.TestCase):
         self.assertEqual(expectedName, actual_result[0]['company_name']) 
         self.assertEqual(expectedCompanyId, actual_result[0]['company_id']) 
     
-    def test_get_companies_by_distance100(self):
-        """Test confirms that GET /companies will return a list of all the companies by distance """
+    def test_get_companies_by_distance16DifferentCategory(self):
+        """Test confirms that GET /companies will return a list of all the companies by distance by distance 16"""
         # - Log and Lat
         # Macclesfield = 53.260841, -2.128190
         # Bollington = 53.293571, -2.110140
@@ -116,12 +116,31 @@ class endpoint_companies_tests(unittest.TestCase):
         expectedCompanyId = '04030201-0605-0807-0910-111213141511'
 
         # Act
+        response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/16') # Make a GET request to the companies endpoint
+
+        # Assert
+        self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+        actual_result = json.loads(response.data) # Parse the JSON response        
+        self.assertEqual(0, len(actual_result)) # Confirm the number of results, there should be zero companies that match the category and distance
+    
+    def test_get_companies_by_distance100(self):
+        """Test confirms that GET /companies will return a list of all the companies by distance 100"""
+        # - Log and Lat
+        # Macclesfield = 53.260841, -2.128190
+        # Bollington = 53.293571, -2.110140
+        # Mansfield = 53.143871, -1.199110
+
+        # Arrange 
+        expectedName = "mansfield"
+        expectedCompanyId = '04030201-0605-0807-0910-111213141512'
+
+        # Act
         response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/100') # Make a GET request to the companies endpoint
 
         # Assert
         self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
         actual_result = json.loads(response.data) # Parse the JSON response        
-        self.assertEqual(2, len(actual_result)) # Confirm the number of results
+        self.assertEqual(1, len(actual_result)) # Confirm the number of results
         self.assertEqual(expectedName, actual_result[0]['company_name']) 
         self.assertEqual(expectedCompanyId, actual_result[0]['company_id']) 
 

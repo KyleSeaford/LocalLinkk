@@ -53,17 +53,10 @@ class GetCompaniesByCategory(Resource):
 @api.param('radius', 'Maximum Distance')
 class GetCompaniesByCategoryAndLocation(Resource):
     def get(self,category_id, latitude, longitude, radius):
-        logging.debug(f"Getting companies by category id and location")  
-
-        #query = f"SELECT {databaseFieldCompanyId}, {databaseFieldCompanyName}, latitude, longitude, (6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude)))) AS distance FROM {databaseTableName} where distance < {radius} ORDER BY distance"
-        #return db.fetchAll(query)
-        #TODO create unit tests
-        #TODO return result as json
-        #TODO add {databaseFieldCategoryId}='{category_id}'        
+        logging.debug(f"Getting companies by category id and location")        
         distance = f"(6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude)))) AS distance"
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distance], databaseTableName, f"where distance < {radius}", "ORDER BY distance")
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distance], databaseTableName, f"where distance < {radius} and {databaseFieldCategoryId}='{category_id}'", "ORDER BY distance")
         
-
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
 class GetCompany(Resource):
