@@ -9,6 +9,9 @@ import sqlite3
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, get_jwt, jwt_required, create_access_token
 from flask import request, make_response
+import os
+import shutil
+import pathlib
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -78,6 +81,8 @@ class Users(Resource):
     def delete(self, id):
         logging.debug(f"Removing a user by ID")
         db.execute(f"DELETE FROM users WHERE {userID} = '{id}'")
+        
+        shutil.rmtree(f"profilePictures/{id}", ignore_errors=True)
         logging.debug(f"User removed")
         return {'message': 'User removed'}, 200
 
@@ -101,6 +106,8 @@ class Users(Resource):
         
         try:
             db.execute(sql)
+            os.mkdir(f"profilePictures/{userid}")
+            shutil.copyfile("zprofilePicture.jpg", f"profilePictures/{userid}/profilePicture.jpg")
             access_token = create_access_token(identity=userid)
             logging.debug(f"User added - access_token: {access_token}")
             return {'access_token': access_token, 'userID': userid}, 201
