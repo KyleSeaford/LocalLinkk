@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View,Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Barsearch = () => {
@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
         marginTop: 0,
         backgroundColor: '#E4E4E4',
         padding: 10,
-        borderRadius: 5,
-        marginVertical: 2,
-        marginHorizontal: 5,
+        //borderRadius: 5,
+        //marginVertical: 2,
+        marginHorizontal: 1,
         flexDirection: 'row',
     },
     
@@ -40,6 +40,12 @@ const styles = StyleSheet.create({
     
     iconContainer: {
         marginLeft: 10,
+    },
+    text: {
+        fontSize: 16,
+        color: 'black',
+        textAlign: 'center',
+        marginTop: 20,
     },
 });
 

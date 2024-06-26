@@ -27,5 +27,6 @@ The following steps describe how to update the code on an existing deployment
 - Get the latest code from the git hub repository `sudo git pull`
 - Change the directory to the Backend `cd Backend`
 - Updated the requirements `sudo pip install -r requirements.txt`
+- Edit the `.env` to Add any new setting from `.env.example`
 - Restart the server `sudo systemctl reload apache2`
 `

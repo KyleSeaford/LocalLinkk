@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Animated, Dimensions, Modal, TextInput, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Animated, Dimensions, Modal, TextInput, ScrollView, BackHandler } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 import menu from '../assets/menu.png';
 import user from '../assets/user-icon.png';
@@ -56,13 +57,25 @@ const Navbar = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${url}Categories/categories`);
+            const response = await fetch(`${url2}Categories/category/0/children`);
             const data = await response.json();
+            AsyncStorage.setItem('categories', JSON.stringify(data));
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
     };
+
+    const fetchCategoriechildren = async (category_id) => {
+        try {
+            const response = await fetch(`${url2}Categories/category/${category_id}/children`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            return [];
+        }
+    }
 
     const fetchLocations = async () => {
         // get all locations
@@ -84,6 +97,8 @@ const Navbar = () => {
             duration: 600,
             useNativeDriver: true,
         }).start();
+        setLocationDropdownVisible(false) 
+        setDropdownVisible(false);
     };
 
     const handleProfileClick = () => {
@@ -129,7 +144,21 @@ const Navbar = () => {
 
     const handleCategory = (category) => {
         console.log(`Category clicked: ${category.category_name}`);
-        setDropdownVisible(false); // Close the category dropdown after clicking
+        console.log('Category ID:', category.category_id);
+        AsyncStorage.setItem('category', category.category_id.toString());
+        // Fetch and set children categories
+        fetchCategoriechildren(category.category_id).then(children => {
+            if (children.length > 0) {
+                setCategories(children);
+                console.log('Parent category:', category);
+                console.log('Children categories:', children);
+            } else {
+                console.log('No children categories found');
+                setDropdownVisible(false);
+                setMenuVisible(false);
+                
+            }
+        }); 
     };
 
     const handleButtonClick = (buttonName) => {
@@ -180,6 +209,13 @@ const Navbar = () => {
         );
     };
 
+    const handleBackClick = () => {
+        console.log('Back clicked!');
+        AsyncStorage.getItem('categories').then(data => {
+            setCategories(JSON.parse(data));
+        });
+    };
+
     const renderCategoryDropdown = () => {
         const filteredCategories = categories.filter(category =>
             category.category_name.toLowerCase().includes(searchCategory.toLowerCase())
@@ -188,13 +224,15 @@ const Navbar = () => {
         return (
             <ScrollView style={styles.dropdownScroll}>
                 <View style={styles.searchContainer}>
+                    <TouchableOpacity style={styles.back} onPress={handleBackClick}>
+                        <AntDesign name="back" size={24} color="black" />                    
+                    </TouchableOpacity>
                     <TextInput
                         style={styles.searchInput}
                         placeholder="Search Category"
                         value={searchCategory}
                         onChangeText={setSearchCategory}
                     />
-                    <Ionicons name="search" size={24} color="#1a1a1a" style={styles.searchIcon} />
                 </View>
                 {filteredCategories.map((category) => (
                     <TouchableOpacity key={category.category_id} onPress={() => handleCategory(category)}>
@@ -329,6 +367,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#045757',
     },
+    back: {
+        marginRight: 10,
+    },
     iconContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -434,10 +475,10 @@ const styles = StyleSheet.create({
         marginTop: 0,
         margin: 10,
         borderRadius: 5,
-        maxHeight: height * 0.4, // Adjust max height as needed
+        maxHeight: height * 0.7, // Adjust max height as needed
     },
     dropdownScroll: {
-        maxHeight: height * 0.5, // Adjust max height for scrollable content
+        maxHeight: height * 0.6, // Adjust max height for scrollable content
     },
     dropdownItem: {
         padding: 10,

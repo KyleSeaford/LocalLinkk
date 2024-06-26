@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbar';
 import Barsearch from '../components/searchbar';
+import Crumbs from '../components/breadcrumbs';
 
 
 const HomeScreen = () => {
@@ -11,6 +12,7 @@ const HomeScreen = () => {
       <View>
         <Navbar />
         <Barsearch />
+        <Crumbs /> {/* cant figure out how to get the breadcrumbs to work too tired to think */}
       </View>
     </View>
   );
