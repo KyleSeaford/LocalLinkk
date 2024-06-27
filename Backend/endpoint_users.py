@@ -34,7 +34,7 @@ api = Api(app, authorizations=authorizations, security='Token')
 api = Namespace('Users', description='Users Endpoint')
 
 db = database_extensions(os.getenv("databaseFilename"))
-
+# NEED TO CHANGE THE COLUMN NAMES TO LOWER CASE in database and here 
 userID = 'userID'
 userID2 = 'userID'
 userFname = 'userFname'
