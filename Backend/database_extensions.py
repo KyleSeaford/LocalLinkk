@@ -3,6 +3,8 @@ import uuid
 import sqlite3
 import os
 from dotenv import load_dotenv
+import psycopg2
+
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -12,24 +14,57 @@ class database_extensions():
         self.databaseFileName = db
 
     def fetchAll(self, sql):
-        """Fetch all of the records from the database"""
-        logging.debug(f"fetchAll from {self.databaseFileName} sql {sql}")
-        conn = sqlite3.connect(self.databaseFileName)
-        cursor = conn.cursor()
-        cursor.execute(sql)
-        records = cursor.fetchall()  
-        conn.close() 
-        return records   
+        if os.getenv("dbType") == "postgres":
+            """Fetch all of the records from the database"""
+            logging.debug(f"fetchAll from postgres sql {sql}")
+
+            conn = psycopg2.connect(
+                host=os.getenv("dbHost"),
+                database=os.getenv("dbDatabase"),
+                user=os.getenv("dbUser"),
+                password=os.getenv("dbPassword")
+            )
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            records = cursor.fetchall()  
+            conn.close() 
+            return records  
+         
+        else:
+            """Fetch all of the records from the database"""
+            logging.debug(f"fetchAll from {self.databaseFileName} sql {sql}")
+            conn = sqlite3.connect(self.databaseFileName)
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            records = cursor.fetchall()  
+            conn.close() 
+            return records
 
     def fetchSingleRecord(self, sql):
-        """Fetch one record from the database"""
-        logging.debug(f"fetchSingleRecord from {self.databaseFileName} sql {sql}")
-        conn = sqlite3.connect(self.databaseFileName)
-        cursor = conn.cursor()
-        cursor.execute(sql)
-        record = cursor.fetchone()  
-        conn.close() 
-        return record
+        if os.getenv("dbType") == "postgres":
+            """Fetch one record from the database"""
+            logging.debug(f"fetchSingleRecord from postgres sql {sql}")
+
+            conn = psycopg2.connect(
+                host=os.getenv("dbHost"),
+                database=os.getenv("dbDatabase"),
+                user=os.getenv("dbUser"),
+                password=os.getenv("dbPassword")
+            )
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            record = cursor.fetchone()  
+            conn.close() 
+            return record
+        else:
+            """Fetch one record from the database"""
+            logging.debug(f"fetchSingleRecord from {self.databaseFileName} sql {sql}")
+            conn = sqlite3.connect(self.databaseFileName)
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            record = cursor.fetchone()  
+            conn.close() 
+            return record
 
     def fetchSingleValue(self, sql):
         """Fetch one single value from the database"""
@@ -45,7 +80,7 @@ class database_extensions():
 
     def fetchJson(self, fields, table, where, order):
         """Fetch all of the records from the database and return result in a JSON list"""
-        sql = "select " + ','.join(fields) + f" from `{table}` {where} {order}"
+        sql = "select " + ','.join(fields) + f" from {table} {where} {order}"
         result = []
         for record in self.fetchAll(sql):
             resultRow = {}
@@ -55,13 +90,28 @@ class database_extensions():
         return result
 
     def execute(self, sql):
-        """Execute an sql command that will not return any records"""
-        logging.debug(f"execute from {self.databaseFileName} sql {sql}")
-        conn = sqlite3.connect(self.databaseFileName)
-        cursor = conn.cursor()
-        cursor.execute(sql)
-        conn.commit()
-        conn.close()
+        if os.getenv("dbType") == "postgres":
+            """Execute an sql command that will not return any records"""
+            logging.debug(f"execute from postgres sql {sql}")
+
+            conn = psycopg2.connect(
+                host=os.getenv("dbHost"),
+                database=os.getenv("dbDatabase"),
+                user=os.getenv("dbUser"),
+                password=os.getenv("dbPassword")
+            )
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
+        else:
+            """Execute an sql command that will not return any records"""
+            logging.debug(f"execute from {self.databaseFileName} sql {sql}")
+            conn = sqlite3.connect(self.databaseFileName)
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
     
     def generateId(self):
         """Generate a unique id number"""
@@ -70,7 +120,18 @@ class database_extensions():
         return id
     
     def close(self):
-        """Close the database connection"""
-        logging.debug(f"close {self.databaseFileName}")
-        conn = sqlite3.connect(self.databaseFileName)
-        conn.close()
+        if os.getenv("dbType") == "postgres":
+            """Close the database connection"""
+            logging.debug(f"close postgres")
+            conn = psycopg2.connect(
+                host=os.getenv("dbHost"),
+                database=os.getenv("dbDatabase"),
+                user=os.getenv("dbUser"),
+                password=os.getenv("dbPassword")
+            )
+            conn.close()
+        else:
+            """Close the database connection"""
+            logging.debug(f"close {self.databaseFileName}")
+            conn = sqlite3.connect(self.databaseFileName)
+            conn.close()
