@@ -17,10 +17,10 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertFalse(is_valid_advert("Visit our website at http://example.com"))
 
     def test_contains_swear_word(self):
-        self.assertFalse(is_valid_advert("This advert contains swear1 word"))
+        self.assertFalse(is_valid_advert("This advert contains ass word"))
 
     def test_combined_invalid_cases(self):
-        invalid_text = "This advert contains swear1 word and an email example@example.com"
+        invalid_text = "This advert contains ass word and an email example@example.com"
         self.assertFalse(is_valid_advert(invalid_text))
 
     def test_edge_case_empty_string(self):
@@ -31,7 +31,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertTrue(is_valid_advert(text))
 
     def test_case_insensitive_swear_word(self):
-        self.assertFalse(is_valid_advert("This advert contains Swear1 word"))
+        self.assertFalse(is_valid_advert("This advert contains ass word"))
 
 if __name__ == '__main__':
     unittest.main()
