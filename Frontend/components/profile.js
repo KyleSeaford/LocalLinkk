@@ -238,9 +238,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   expandedImage: {
-    width: 350, // set the width to 200 pixels
-    height: 350, // set the height to 200 pixels
-    resizeMode: 'stretch', // or 'cover'
+    width: 350, // set the width to 350 pixels
+    height: 350, // set the height to 350 pixels
+    resizeMode: 'stretch',
   },
   modalCloseButton: {
     position: 'absolute',
