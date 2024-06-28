@@ -35,15 +35,15 @@ api = Namespace('Users', description='Users Endpoint')
 
 db = database_extensions(os.getenv("databaseFilename"))
 # NEED TO CHANGE THE COLUMN NAMES TO LOWER CASE in database and here 
-userID = 'userID'
-userID2 = 'userID'
-userFname = 'userFname'
-userLname = 'userLname'
-userLocation = 'userLocation'
-userEmail = 'userEmail'
-userPassword = 'userPassword'
-userType = 'userType'
-userAdmin = 'userAdmin' # 1 = admin, 0 = user
+userID = 'userid'
+userID2 = 'userid'
+userFname = 'userfname'
+userLname = 'userlname'
+userLocation = 'userlocation'
+userEmail = 'useremail'
+userPassword = 'userpassword'
+userType = 'usertype'
+userAdmin = 'useradmin' # true = admin, false = user
 
 class Users():    
     def __init__(self, databaseName):
