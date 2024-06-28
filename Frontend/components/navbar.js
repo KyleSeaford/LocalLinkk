@@ -27,7 +27,6 @@ const Navbar = () => {
             const imageResponse = await fetch(`${url}Users/users/image/${userId}`);
             const imageBlob = await imageResponse.blob();
             const imageUrl = URL.createObjectURL(imageBlob);
-            console.log('Image URL:', imageUrl);
             setUserImage(imageUrl);
 
             return userLOC.message;
@@ -180,10 +179,15 @@ const Navbar = () => {
 
     const handleSettingsClick = () => {
         console.log("Settings clicked!");
+        //navigation.navigate('LocalLinkk - Settings');
+        navigation.navigate('LocalLinkk - Settings', { screen: 'SettingScreen' });
+        setMenuVisible(!menuVisible);
     };
 
     const handleHelpClick = () => {
         console.log("Help clicked!");
+        navigation.navigate('LocalLinkk - Help', { screen: 'HelpScreen' });
+        setMenuVisible(!menuVisible);
     };
 
     const handlePostClick = () => {

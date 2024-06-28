@@ -7,7 +7,8 @@ import SignupPage from './screens/signup';
 import LoginScreen from './screens/login';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
-
+import SettingScreen from './screens/settingScreen';
+import HelpScreen from './screens/helpScreen';
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,16 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Profile"
           component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Settings"
+          component={SettingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Help"
+          component={HelpScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

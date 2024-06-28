@@ -32,7 +32,6 @@ const Profile = () => {
         const imageResponse = await fetch(`${url}Users/users/image/${userId}`);
         const imageBlob = await imageResponse.blob();
         const imageUrl = URL.createObjectURL(imageBlob);
-        console.log('Image URL:', imageUrl);
         setUserImage(imageUrl);
 
       } catch (error) {
@@ -91,6 +90,10 @@ const Profile = () => {
     console.log("Post clicked!");
   };
 
+  const changeimg = () => {
+    console.log("Change image clicked!");
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleProfileClick}>
@@ -101,7 +104,7 @@ const Profile = () => {
       </TouchableOpacity>
 
       <Text style={styles.Namecontainer}>{userData[1]} {userData[2]}</Text>
-      <Text style={styles.CNamecontainer}>Account Type: {userData[5]}</Text>
+      <Text style={styles.CNamecontainer}>Profile Rank: {userData[5]}</Text>
 
       <TouchableOpacity onPress={handleEditClick}>
         <Text style={styles.Editcontainer}>Edit</Text>
@@ -157,8 +160,13 @@ const Profile = () => {
             value={lastName}
             onChangeText={setLastName}
           />
+
           <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
             <Text style={styles.saveButtonText}>Save Changes</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.chooseImageButton} onPress={changeimg}>
+            <Text style={styles.chooseImageButtonText}>Choose a Profile Image</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -259,15 +267,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    marginTop: 350,
-    marginBottom: 350,
+    marginTop: 250,
+    marginBottom: 300,
     marginHorizontal: 20,
     borderRadius: 10,
     padding: 20,
   },
   input: {
     width: '80%',
-    height: 40,
+    height: 55,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
@@ -287,7 +295,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     padding: 10,
     borderRadius: 5,
-    marginTop: 20,
+    marginTop: 40,
   },
   chooseImageButtonText: {
     color: '#fff',

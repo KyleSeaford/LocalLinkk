@@ -21,7 +21,6 @@ const Crumbs = () => {
         try {
             const category_id = await AsyncStorage.getItem('category');
             const response = await axios.get(`${url}Categories/category/${category_id}/breadcrumbs`);
-            console.log(response.data); // Log the response data
             setBreadcrumbsState(response.data.breadcrumbs);
         } catch (error) {
             console.error(error);
