@@ -84,6 +84,7 @@ class Users(Resource):
         logging.debug(f"User removed")
         return {'message': 'User removed'}, 200
 
+
 @api.route("/users/signup", doc={"description": "Signs up a user"})
 class Users(Resource):
     parserAdd = reqparse.RequestParser()
