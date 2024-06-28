@@ -34,16 +34,15 @@ api = Api(app, authorizations=authorizations, security='Token')
 api = Namespace('Users', description='Users Endpoint')
 
 db = database_extensions(os.getenv("databaseFilename"))
-# NEED TO CHANGE THE COLUMN NAMES TO LOWER CASE in database and here 
-userID = 'userid'
-userID2 = 'userid'
-userFname = 'userfname'
-userLname = 'userlname'
-userLocation = 'userlocation'
-userEmail = 'useremail'
-userPassword = 'userpassword'
-userType = 'usertype'
-userAdmin = 'useradmin' # true = admin, false = user
+
+userID = 'userID'
+userID2 = 'userID'
+userFname = 'userFname'
+userLname = 'userLname'
+userLocation = 'userLocation'
+userEmail = 'userEmail'
+userPassword = 'userPassword'
+userType = 'userType'
 
 class Users():    
     def __init__(self, databaseName):
@@ -54,7 +53,7 @@ class Users():
 class Users(Resource):
     def get(self):
         logging.debug(f"Getting all users")
-        return db.fetchJson([userID, userFname, userLname, userLocation, userEmail, userPassword, userType, userAdmin], 'users', '', f'ORDER BY {userID} ASC')
+        return db.fetchJson([userID, userFname, userLname, userLocation, userEmail, userPassword, userType], 'users', '', f'ORDER BY {userID} ASC')
 
 @api.route("/users/<string:id>",  doc={"description": "Gets a user by ID"})
 class Users(Resource):
@@ -84,7 +83,6 @@ class Users(Resource):
         shutil.rmtree(f"profilePictures/{id}", ignore_errors=True)
         logging.debug(f"User removed")
         return {'message': 'User removed'}, 200
-
 
 @api.route("/users/signup", doc={"description": "Signs up a user"})
 class Users(Resource):
@@ -214,5 +212,5 @@ class Users(Resource):
 class Users(Resource):
     def get(self):
         logging.debug(f"Getting all admins")
-        return db.fetchJson([userID, userFname, userLname, userType, userAdmin], 'users', 'WHERE userAdmin = 1', f'ORDER BY {userID} ASC')
+        return db.fetchJson([userID, userFname, userLname, userType], 'users', 'WHERE usertype = "admin"', f'ORDER BY {userID} ASC')
     

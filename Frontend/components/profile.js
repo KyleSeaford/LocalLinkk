@@ -3,9 +3,10 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TextInput, Aler
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import * as ImagePicker from 'react-native-image-picker';
 
-import user from '../assets/user-icon.png';
+import user from '../assets/transparent_picture.png';
+
+const url = 'http://192.168.127.93:5500/';
 
 const Profile = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -13,9 +14,7 @@ const Profile = () => {
   const [userData, setUserData] = useState({});
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const url = 'http://192.168.127.93:5500/';
+  const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,6 +27,14 @@ const Profile = () => {
           },
         });
         setUserData(response.data);
+
+        // Fetch user image
+        const imageResponse = await fetch(`${url}Users/users/image/${userId}`);
+        const imageBlob = await imageResponse.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+        console.log('Image URL:', imageUrl);
+        setUserImage(imageUrl);
+
       } catch (error) {
         console.error(error);
       }
@@ -88,7 +95,7 @@ const Profile = () => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleProfileClick}>
         <Image
-          source={userData.userImg ? { uri: userData.userImg } : user}
+          source={userImage ? { uri: userImage } : user}
           style={styles.logo}
         />
       </TouchableOpacity>
@@ -121,7 +128,7 @@ const Profile = () => {
             <Entypo name="cross" size={30} color="#fff" />
           </TouchableOpacity>
           <Image
-            source={userData.userImg ? { uri: userData.userImg } : user}
+            source={userImage ? { uri: userImage } : user}
             style={styles.expandedImage}
           />
         </View>
@@ -231,9 +238,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   expandedImage: {
-    width: '80%',
-    height: '80%',
-    resizeMode: 'contain',
+    width: 350, // set the width to 200 pixels
+    height: 350, // set the height to 200 pixels
+    resizeMode: 'stretch', // or 'cover'
   },
   modalCloseButton: {
     position: 'absolute',

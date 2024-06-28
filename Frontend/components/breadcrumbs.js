@@ -1,30 +1,40 @@
-// cant figure out how to get the breadcrumbs to work too tired to think
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const Crumbs = () => {
+const url = 'http://192.168.127.93:5500/';
 
-    const url = `http://192.168.127.93:5500/Categories/category/`;
+export const setBreadcrumbs = (breadcrumbs) => {
+    //  function can be used to set the breadcrumbs state
+    breadcrumbsStateSetter(breadcrumbs);
+};
+
+let breadcrumbsStateSetter = null;
+
+const Crumbs = () => {
+    const [breadcrumbs, setBreadcrumbsState] = useState('');
+
+    breadcrumbsStateSetter = setBreadcrumbsState;
 
     const fetchCrumbs = async () => {
         try {
             const category_id = await AsyncStorage.getItem('category');
-            const response = await axios.get(`${url}${category_id}/breadcrumbs`);
+            const response = await axios.get(`${url}Categories/category/${category_id}/breadcrumbs`);
             console.log(response.data); // Log the response data
-            return response.data;
-    
+            setBreadcrumbsState(response.data.breadcrumbs);
         } catch (error) {
             console.error(error);
-        };
+        }
     };
-    
+
+    useEffect(() => {
+        fetchCrumbs();
+    }, []);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.TextCon}>Category >> Automotive >> Car Hire</Text>
+            <Text style={styles.TextCon}>{breadcrumbs}</Text>
         </View>
     );
 };

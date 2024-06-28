@@ -4,28 +4,34 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { setBreadcrumbs } from './breadcrumbs';
+
 
 import menu from '../assets/menu.png';
-import user from '../assets/user-icon.png';
+import user from '../assets/transparent_picture.png';
+
+const url = 'http://192.168.127.93:5500/'
 
 const { width, height } = Dimensions.get('window');
 
 const Navbar = () => {
     const navigation = useNavigation();
 
-    // server url
-    const url = 'http://192.168.127.223/';
-
-    // local url for testing
-    const url2 = 'http://192.168.127.93:5500/';
-
-
     const fetchUsersLocation = async () => {
         try {
             const userId = await AsyncStorage.getItem('userId');
-            const response = await fetch(`${url2}Users/users/locations/${userId}`);
+            const response = await fetch(`${url}Users/users/locations/${userId}`);
             const userLOC = await response.json();
+
+            // Fetch user image
+            const imageResponse = await fetch(`${url}Users/users/image/${userId}`);
+            const imageBlob = await imageResponse.blob();
+            const imageUrl = URL.createObjectURL(imageBlob);
+            console.log('Image URL:', imageUrl);
+            setUserImage(imageUrl);
+
             return userLOC.message;
+
         } catch (error) {
             console.error('Error fetching users location:', error);
             return 'Unknown'; // Return a default value in case of an error
@@ -41,6 +47,8 @@ const Navbar = () => {
     const [activeButton, setActiveButton] = useState('All');
     const [searchLocation, setSearchLocation] = useState('');
     const [searchCategory, setSearchCategory] = useState('');
+    const [breadcrumbPath, setBreadcrumbPath] = useState('Category');
+    const [userImage, setUserImage] = useState(null);
 
     const slideAnim = useState(new Animated.Value(-width))[0];
 
@@ -57,7 +65,7 @@ const Navbar = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${url2}Categories/category/0/children`);
+            const response = await fetch(`${url}Categories/category/0/children`);
             const data = await response.json();
             AsyncStorage.setItem('categories', JSON.stringify(data));
             setCategories(data);
@@ -68,7 +76,7 @@ const Navbar = () => {
 
     const fetchCategoriechildren = async (category_id) => {
         try {
-            const response = await fetch(`${url2}Categories/category/${category_id}/children`);
+            const response = await fetch(`${url}Categories/category/${category_id}/children`);
             const data = await response.json();
             return data;
         } catch (error) {
@@ -80,7 +88,7 @@ const Navbar = () => {
     const fetchLocations = async () => {
         // get all locations
         try {
-            const response = await fetch(`${url2}Users/users/locations`);
+            const response = await fetch(`${url}Users/users/locations`);
             const Locations = await response.json();
             // Extract unique locations using Set
             const uniqueLocations = Array.from(new Set(Locations.map(user => user.userLocation)));
@@ -110,6 +118,8 @@ const Navbar = () => {
     };
 
     const handleCategoryClick = () => {
+        AsyncStorage.removeItem('category');
+        setBreadcrumbs('');
         setDropdownVisible(!dropdownVisible);
     };
 
@@ -120,7 +130,7 @@ const Navbar = () => {
     const ChangeUsersLocation = async (newLocation) => {
         try {
             const userId = await AsyncStorage.getItem('userId');
-            const response = await fetch(`${url2}Users/users/locations/change/${userId}/${newLocation}`, {
+            const response = await fetch(`${url}Users/users/locations/change/${userId}/${newLocation}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -152,11 +162,13 @@ const Navbar = () => {
                 setCategories(children);
                 console.log('Parent category:', category);
                 console.log('Children categories:', children);
+                setBreadcrumbPath(prev => `${prev} >> ${category.category_name}`);
             } else {
                 console.log('No children categories found');
+                console.log(breadcrumbPath);
+                setBreadcrumbs(`${breadcrumbPath} >> ${category.category_name}`);
                 setDropdownVisible(false);
                 setMenuVisible(false);
-                
             }
         }); 
     };
@@ -214,6 +226,7 @@ const Navbar = () => {
         AsyncStorage.getItem('categories').then(data => {
             setCategories(JSON.parse(data));
         });
+        setBreadcrumbPath('Category');
     };
 
     const renderCategoryDropdown = () => {
@@ -255,7 +268,7 @@ const Navbar = () => {
 
                 <TouchableOpacity onPress={handleProfileClick}>
                     <Image
-                        source={user}
+                        source={userImage ? { uri: userImage } : user}
                         style={styles.logo}
                     />
                 </TouchableOpacity>
