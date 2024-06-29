@@ -18,7 +18,7 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY') # make sure to change
 jwt = JWTManager(app) 
 CORS(app)  # Allow CORS for all routes
 
-api = Api(app, version='1.0', title='Application', description='Application Swagger\n Database Type: ' + os.getenv("dbType"))
+api = Api(app, version='1.0', title='Application', description='Application Swagger\n Database Type: ' + str(os.getenv("dbType")))
 
 api.add_namespace(namespaceCategories)
 api.add_namespace(namespaceCompanies)
