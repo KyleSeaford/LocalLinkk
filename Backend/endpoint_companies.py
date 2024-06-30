@@ -90,7 +90,6 @@ class PostCompany(Resource):
     parserAdd.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
     parserAdd.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
     parserAdd.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
-    parserAdd.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
 
     @api.doc(parser=parserAdd)
     def post(self):
@@ -126,13 +125,9 @@ class PostCompany(Resource):
         advertType = args[argumentAdvertType]
         if advertType == "" or advertType == None:
             advertType = "Text"
-        
-        expiresDate = args[argumentAdvertExpires]
-        if expiresDate == None or expiresDate == "" or expiresDate == "None":
-            expiresDate = ""
 
         newCompanyId = db.generateId()
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldAdvertExpires}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{expiresDate}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
 
     @api.route('/company/<company_id>')
