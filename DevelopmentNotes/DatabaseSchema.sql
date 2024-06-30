@@ -7,7 +7,11 @@ CREATE TABLE "companies" (
     `phone` varchar(15),
     `website` varchar(255),
     latitude DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL
+    longitude DOUBLE PRECISION NOT NULL, 
+    advert_type TEXT, 
+    advert_text TEXT, 
+    advert_image TEXT, 
+    advert_expires Date
     )
 
 CREATE UNIQUE INDEX `sqlite_autoindex_companies_1` ON `companies` (company_id);

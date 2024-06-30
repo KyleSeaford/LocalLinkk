@@ -4,6 +4,8 @@ from database_extensions import database_extensions
 import logging
 import os
 from dotenv import load_dotenv
+from function_is_valid_advert import is_valid_advert
+from function_generate_default_text_advert import *
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -21,6 +23,10 @@ databaseFieldPhone = 'phone'
 databaseFieldWebsite = 'website'
 databaseFieldLatitude = 'latitude'
 databaseFieldLongitude = 'longitude'
+databaseFieldAdvertType = 'advert_type'
+databaseFieldAdvertText = 'advert_text'
+databaseFieldAdvertImage = 'advert_image'
+databaseFieldAdvertExpires = 'advert_expires'
 argumentCompanyName = 'Company Name'
 argumentCategoryId = 'Category Id'
 argumentCompanyEmail = 'Company Email'
@@ -28,6 +34,10 @@ argumentCompanyPhone = 'Company Phone'
 argumentCompanyWebsite = 'Company Website'
 argumentLatitude = 'Latitude'
 argumentLongitude = 'Longitude'
+argumentAdvertType = 'Advert Type'
+argumentAdvertText = 'Advert Text'
+argumentAdvertImage = 'Advert Image'
+argumentAdvertExpires = 'Advert Expiry Date'
 
 class Companies():    
     def __init__(self, databaseName):
@@ -37,14 +47,14 @@ class Companies():
 @api.route('/companies', doc={"description": "Get all companies"})
 class GetCompanies(Resource):
     def get(self):        
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC')
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC')
 
 @api.route('/companies/<string:category_id>')
 @api.param('category_id', 'Category id')
 class GetCompaniesByCategory(Resource):
     def get(self,category_id):
         logging.debug(f"Getting companies by category id")        
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId], databaseTableName, f"where {databaseFieldCategoryId}='{category_id}'", '')
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCategoryId}='{category_id}'", '')
 
 @api.route('/companies/<string:category_id>/<string:latitude>/<string:longitude>/<string:radius>')
 @api.param('category_id', 'Category id')
@@ -55,7 +65,7 @@ class GetCompaniesByCategoryAndLocation(Resource):
     def get(self,category_id, latitude, longitude, radius):
         logging.debug(f"Getting companies by category id and location")        
         distance = f"(6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude)))) AS distance"
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distance], databaseTableName, f"where distance < {radius} and {databaseFieldCategoryId}='{category_id}'", "ORDER BY distance")
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distance, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where distance < {radius} and {databaseFieldCategoryId}='{category_id}'", "ORDER BY distance")
         
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
@@ -77,6 +87,11 @@ class PostCompany(Resource):
     parserAdd.add_argument(argumentCompanyEmail, type=str, help='Email', required=False)
     parserAdd.add_argument(argumentCompanyPhone, type=str, help='Phone', required=False)
     parserAdd.add_argument(argumentCompanyWebsite, type=str, help='Website', required=False)
+    parserAdd.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
+    parserAdd.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
+    parserAdd.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
+    parserAdd.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
+
     @api.doc(parser=parserAdd)
     def post(self):
         args = self.parserAdd.parse_args()
@@ -89,12 +104,31 @@ class PostCompany(Resource):
             return {'message': f'company {companyName} already exists'}, 400
         
         # Check the category exists
+        #TODO add category check
         #recordExists = db.fetchSingleValue(f"SELECT COUNT(*) FROM categories WHERE category_id='{categoryId}'")
         #if recordExists != 1:
         #    return {'message': f'Category {categoryId} does not exists'}, 400
 
+        phone = args[argumentCompanyPhone]
+        if phone != "" and phone != None:
+            if is_valid_uk_phone_number(phone) == False:
+                return {'message': f'Invalid phone number'}, 400
+
+        advertText = args[argumentAdvertText]
+        if advertText == "" or advertText == None:
+            city = "" #TODO get city
+            advertText = generateDefaultTextAdvert(companyName, city, phone)
+
+        if is_valid_advert(advertText) == False:
+            #TODO send message explaining why the advert text is invalid
+            return {'message': f'Invalid advert text'}, 400
+        
+        advertType = args[argumentAdvertType]
+        if advertType == "" or advertType == None:
+            advertType = "Text"
+
         newCompanyId = db.generateId()
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{args[argumentCompanyPhone]}','{args[argumentCompanyWebsite]}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldAdvertExpires}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentAdvertExpires]}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
 
     @api.route('/company/<company_id>')
@@ -107,6 +141,10 @@ class PostCompany(Resource):
         parserUpdate.add_argument(argumentCompanyEmail, type=str, help='Email', required=False)
         parserUpdate.add_argument(argumentCompanyPhone, type=str, help='Phone', required=False)
         parserUpdate.add_argument(argumentCompanyWebsite, type=str, help='Website', required=False)
+        parserUpdate.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
+        parserUpdate.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
+        parserUpdate.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
+        parserUpdate.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
         
         @api.doc(parser=parserUpdate)
         @api.doc(description="Update an existing company")
@@ -120,7 +158,11 @@ class PostCompany(Resource):
                 argumentLongitude: databaseFieldLongitude,
                 argumentCompanyEmail: databaseFieldEmail,
                 argumentCompanyPhone: databaseFieldPhone,
-                argumentCompanyWebsite: databaseFieldWebsite
+                argumentCompanyWebsite: databaseFieldWebsite,
+                argumentAdvertType:databaseFieldAdvertType,
+                argumentAdvertText:databaseFieldAdvertText,
+                argumentAdvertImage: databaseFieldAdvertImage,
+                argumentAdvertExpires: databaseFieldAdvertExpires
             }
             
             update_fields = {field_mapping[arg]: value for arg, value in args.items() if value is not None}

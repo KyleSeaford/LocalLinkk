@@ -44,7 +44,7 @@ class endpoint_companies_tests(unittest.TestCase):
 
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('CREATE TABLE "companies" (`company_id` guid PRIMARY KEY, `company_name`, `category_id` guid,`email` varchar(255),`phone` varchar(15),`website` varchar(255),latitude DOUBLE PRECISION NOT NULL,longitude DOUBLE PRECISION NOT NULL)')
+        cursor.execute('CREATE TABLE "companies" (`company_id` guid PRIMARY KEY, `company_name`, `category_id` guid,`email` varchar(255),`phone` varchar(15),`website` varchar(255),latitude DOUBLE PRECISION NOT NULL,longitude DOUBLE PRECISION NOT NULL, advert_type TEXT, advert_text TEXT, advert_image TEXT, advert_expires Date)')
         cursor.execute('INSERT INTO companies (company_id, company_name, category_id,latitude,longitude) VALUES (?, ?, ?, ?, ?)', ('04030201-0605-0807-0910-111213141511', 'bollington', '04030201-0605-0807-0910-111213141520', 53.293571, -2.110140))
         cursor.execute('INSERT INTO companies (company_id, company_name, category_id,latitude,longitude) VALUES (?, ?, ?, ?, ?)', ('04030201-0605-0807-0910-111213141512', 'mansfield', '04030201-0605-0807-0910-111213141530',53.143871, -1.199110))
         conn.commit()
@@ -55,8 +55,8 @@ class endpoint_companies_tests(unittest.TestCase):
 
         # Arrange 
         expected_result = [
-            {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520'},
-            {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530'}
+            {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520','advert_image': None, 'advert_text': None,'advert_type': None},
+            {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530','advert_image': None, 'advert_text': None,'advert_type': None}
         ]
 
         # Act
@@ -72,7 +72,7 @@ class endpoint_companies_tests(unittest.TestCase):
 
         # Arrange 
         expected_result = [
-            {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530'}
+            {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530','advert_image': None, 'advert_text': None,'advert_type': None,}
         ]
 
         # Act
