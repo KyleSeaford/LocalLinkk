@@ -192,6 +192,34 @@ class Users(Resource):
         logging.debug(f"Name changed")
         return {'message': 'Name changed'}, 200
     
+@api.route("/users/passwordChange", doc={"description": "Changes the password of a user by ID"})
+class Users(Resource):
+    parserChange = reqparse.RequestParser()
+    parserChange.add_argument(userID2, type=str, help='User ID', required=True)
+    parserChange.add_argument(userPassword, type=str, help='Password', required=True)
+
+    @api.doc(parser=parserChange)
+    def put(self):
+        logging.debug(f"Changing password by ID")
+        data = self.parserChange.parse_args()
+        db.execute(f"UPDATE users SET {userPassword} = '{hashlib.md5(data[userPassword].encode()).hexdigest()}' WHERE {userID} = '{data[userID2]}'")
+        logging.debug(f"Password changed")
+        return {'message': 'Password changed'}, 200
+    
+@api.route("/users/EmailChange", doc={"description": "Changes the email of a user by ID"})
+class Users(Resource):
+    parserChange = reqparse.RequestParser()
+    parserChange.add_argument(userID2, type=str, help='User ID', required=True)
+    parserChange.add_argument(userEmail, type=str, help='Email', required=True)
+
+    @api.doc(parser=parserChange)
+    def put(self):
+        logging.debug(f"Changing email by ID")
+        data = self.parserChange.parse_args()
+        db.execute(f"UPDATE users SET {userEmail} = '{data[userEmail]}' WHERE {userID} = '{data[userID2]}'")
+        logging.debug(f"Email changed")
+        return {'message': 'Email changed'}, 200
+    
 @api.route("/users/image/<string:id>", doc={"description": "Gets the image of a user by ID"})
 class Users(Resource):
     def get(self, id):

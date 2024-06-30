@@ -1,42 +1,37 @@
-// page wont scroll and im not sure why
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Octicons } from '@expo/vector-icons';
 
 const Help = () => {
-    const [contactMessage, setContactMessage] = useState('');
-
-    const handleSendContactMessage = () => {
-        console.log("Contact message sent:", contactMessage);
+    const handleBackToHomeClick = () => {
+        console.log("Back to Home Page clicked!");
+        navigation.navigate('LocalLinkk - Home');
     };
 
     return (
         <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
             <View style={styles.container}>
-                <Text style={styles.title}>Help & Support</Text>
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>FAQs</Text>
-                    <Text style={styles.question}>Q1: How do I reset my password?</Text>
-                    <Text style={styles.answer}>A: Go to the settings page and click on 'Change Password'.</Text>
-                    <Text style={styles.question}>Q2: How do I update my profile picture?</Text>
-                    <Text style={styles.answer}>A: Go to the settings page and choose a new profile picture.</Text>
-                    <Text style={styles.question}>Q3: How do I delete my account?</Text>
-                    <Text style={styles.answer}>A: Go to the settings page and type 'DELETE' in the confirmation box to delete your account.</Text>
+                <View style={styles.headerContainer}>
+                    <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
+                        <Octicons name="home" size={24} color="white" />
+                    </TouchableOpacity>
+                    <Text style={styles.text}>LocalLinkk Help</Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Contact Us</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Type your message here..."
-                        placeholderTextColor="#aaa"
-                        value={contactMessage}
-                        onChangeText={setContactMessage}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={handleSendContactMessage}>
-                        <Text style={styles.buttonText}>Send</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.contactInfo}>You can also reach us at: support@example.com</Text>
+                    <Text style={styles.sectionTitle}>FAQs</Text>
+                    <Text style={styles.question}>Q1: How do I Choose my location</Text>
+                    <Text style={styles.answer}>A: Go to the settings menu and click on 'Location'</Text>
+                    <Text style={styles.question}>Q2: How do I update my Profile picture?</Text>
+                    <Text style={styles.answer}>A: Go to the profile page, click `edit` and then choose a new profile picture.</Text>
+                    <Text style={styles.question}>Q3: How do I change my profile Name?</Text>
+                    <Text style={styles.answer}>A: Go to the settings page and click on 'Change Profile Name' or go to the profile page and click `edit`.</Text>
+                    <Text style={styles.question}>Q4: How do I change my profiles email address?</Text>
+                    <Text style={styles.answer}>A: Go to the settings page and click on 'Change Email'</Text>
+                    <Text style={styles.question}>Q5: How do I change my profiles password</Text>
+                    <Text style={styles.answer}>A: Go to the settings page and click on 'Change Password'</Text>
+                    <Text style={styles.question}>Q6: How do I delete my account?</Text>
+                    <Text style={styles.answer}>A: Go to the settings page and type 'DELETE' in the confirmation box to delete your account.</Text>
                 </View>
 
                 <View style={styles.section}>
@@ -45,9 +40,6 @@ const Help = () => {
                     <Text style={styles.guideText}>Ensure you have a stable internet connection and try restarting the app.</Text>
                     <Text style={styles.guideTitle}>Profile picture not updating?</Text>
                     <Text style={styles.guideText}>Ensure the image is less than 5MB and in a supported format (jpg, png).</Text>
-                    <Text style={styles.guideTitle}>Notifications not working?</Text>
-                    <Text style={styles.guideText}>Check your device settings to allow notifications for our app.</Text>
-
                 </View>
 
                 <View style={styles.section}>
@@ -81,7 +73,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     container: {
-        flexGrow: 1,
+        flex: 1,
     },
     title: {
         fontSize: 28,
@@ -155,6 +147,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#ccc',
         marginBottom: 15,
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    text: {
+        fontSize: 25,
+        color: '#fff',
     },
 });
 

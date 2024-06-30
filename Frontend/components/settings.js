@@ -1,46 +1,154 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert, Image } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-const Settings = () => {
+
+const Settings= () => {
+    const navigation = useNavigation();
+    const url = 'http://192.168.127.93:5500/'
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [deleteConfirm, setDeleteConfirm] = useState('');
     const [profilefName, setProfilefName] = useState('');
     const [profilelname, setProfilelName] = useState('');
+    const [userData, setUserData] = useState({});
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleLogoutClick = () => {
-        console.log("Logout clicked!");
-    };
+    const handleLogOutClick = () => {
+        AsyncStorage.clear();
+        navigation.navigate('LocalLinkk - Log In');
+    }
 
-    const handleDeleteAccountClick = () => {
+    const handleDeleteAccountClick = async () => {
         if (deleteConfirm === 'DELETE') {
-            console.log("Delete Account confirmed!");
-        } else {
-            console.log("Delete Account clicked but not confirmed.");
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                const token = await AsyncStorage.getItem('token');
+                await axios.delete(`${url}Users/users/remove/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                console.log("Account deleted successfully");
+                navigation.navigate('LocalLinkk - Log In', { screen: 'LoginScreen' });
+                AsyncStorage.clear();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        else {
+            setErrorMessage('Please type DELETE to confirm account deletion');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 2000);
         }
     };
 
-    const handleChangeEmailClick = () => {
-        console.log("Change Email clicked!");
-        console.log("New Email:", email);
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+
+    const validatePassword = (password) => {
+        return password.length >= 5;
+    }
+
+    const handleChangeEmailClick = async () => {
+        if (!validateEmail(email)) {
+            setErrorMessage('Please enter a valid email address');
+            return;
+        }
+
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            const token = await AsyncStorage.getItem('token');
+            await axios.put(`${url}Users/users/EmailChange`, null, {
+                params: {
+                    userID: userId,
+                    userEmail: email,
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            
+            setUserData(prevState => ({
+                ...prevState,
+                0: email,
+            }));
+            console.log("Email updated successfully");
+            setErrorMessage('Email updated successfully');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const handleChangePasswordClick = () => {
-        console.log("Change Password clicked!");
-        console.log("New Password:", password);
+    const handleChangePasswordClick = async () => {
+        if (!validatePassword(password)) {
+            setErrorMessage('Password must be at least 5 characters long');
+            return;
+        }
+
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            const token = await AsyncStorage.getItem('token');
+            await axios.put(`${url}Users/users/passwordChange`, null, {
+                params: {
+                    userID: userId,
+                    userPassword: password,
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Password updated successfully");
+            setErrorMessage('Password updated successfully');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
+        }
+        catch (error) {
+            console.error(error);
+        }
     };
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
+        navigation.navigate('LocalLinkk - Home');
     };
 
-
-    const handleSaveProfile = () => {
-        console.log("Save Profile clicked!");
-        console.log("First Name:", profilefName);
-        console.log("Last Name:", profilelname);
-    };
+    const handleChangeName = async () => {
+        try {
+          const userId = await AsyncStorage.getItem('userId');
+          const token = await AsyncStorage.getItem('token');
+          await axios.put(`${url}Users/users/nameChange`, null, {
+            params: {
+              userID: userId,
+              userFname: profilefName,
+              userLname: profilelname,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUserData(prevState => ({
+            ...prevState,
+            1: profilefName,
+            2: profilelname,
+          }));
+          console.log("Profile Name updated successfully");
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
 
     return (
         <View style={styles.container}>
@@ -50,6 +158,8 @@ const Settings = () => {
                 </TouchableOpacity>
                 <Text style={styles.text}>LocalLinkk Settings</Text>
             </View>
+
+            {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
 
             <View style={styles.sectionContainer}>
                 <Text style={styles.sectionTitle}>Change Profile Name</Text>
@@ -67,7 +177,7 @@ const Settings = () => {
                     value={profilelname}
                     onChangeText={setProfilelName}
                 />
-                <TouchableOpacity style={styles.button} onPress={handleSaveProfile}>
+                <TouchableOpacity style={styles.button} onPress={handleChangeName}>
                     <Text style={styles.buttonText}>Save Profile Changes</Text>
                 </TouchableOpacity>
             </View>
@@ -101,7 +211,7 @@ const Settings = () => {
                 </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleLogoutClick}>
+            <TouchableOpacity style={styles.button} onPress={handleLogOutClick}>
                 <Text style={styles.buttonText}>Logout</Text>
             </TouchableOpacity>
 
@@ -192,6 +302,11 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
         alignSelf: 'center',
+        marginVertical: 10,
+    },
+    errorMessage: {
+        color: 'red',
+        textAlign: 'center',
         marginVertical: 10,
     },
 });

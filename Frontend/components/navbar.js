@@ -194,11 +194,6 @@ const Navbar = () => {
         console.log("Post clicked!");
     };
 
-    const handleLogOutClick = () => {
-        AsyncStorage.clear();
-        setMenuVisible(!menuVisible);
-        navigation.navigate('LocalLinkk - Log In');
-    }
 
     const renderLocationDropdown = () => {
         const filteredLocations = locations.filter(location =>
@@ -355,13 +350,6 @@ const Navbar = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.menuContainer}>
-                        <TouchableOpacity onPress={handleLogOutClick} style={styles.menuItemContainer}>
-                            <Text style={styles.menuContainerTEXT}>Log Out</Text>
-                            <Ionicons name="log-out" size={24} color="black" />
-                        </TouchableOpacity>
-                    </View>
-
                     <View style={styles.menu2Container}>
                         <TouchableOpacity onPress={handleSettingsClick} style={styles.menuItemContainer}>
                             <Text style={styles.menuContainerTEXT}>Settings</Text>
@@ -418,7 +406,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
-        marginTop: 420,
+        marginTop: 480,
     },
     postContainerTEXT: {
         fontSize: 20,
