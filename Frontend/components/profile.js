@@ -3,6 +3,9 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TextInput, Aler
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+//import * as ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+
 
 import user from '../assets/transparent_picture.png';
 
@@ -90,10 +93,23 @@ const Profile = () => {
     console.log("Post clicked!");
   };
 
-  const changeimg = () => {
+  const changeimg = async () => {
     console.log("Change image clicked!");
-  };
 
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    const selectedImage = result.assets ? result.assets[0].uri : result.uri;
+
+    console.log('Selected image URI: ', selectedImage);
+
+  };
+  
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleProfileClick}>
@@ -246,8 +262,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   expandedImage: {
-    width: 350, // set the width to 350 pixels
-    height: 350, // set the height to 350 pixels
+    width: 350,
+    height: 350,
     resizeMode: 'stretch',
   },
   modalCloseButton: {

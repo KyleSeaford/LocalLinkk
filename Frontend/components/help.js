@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Help = () => {
+    const navigation = useNavigation();
+
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
         navigation.navigate('LocalLinkk - Home');
     };
 
     return (
-        <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-            <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
-                        <Octicons name="home" size={24} color="white" />
-                    </TouchableOpacity>
-                    <Text style={styles.text}>LocalLinkk Help</Text>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
+                    <Octicons name="home" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.text}>LocalLinkk Help</Text>
+            </View>
 
+            <ScrollView style={styles.scrollContainer}>
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>FAQs</Text>
                     <Text style={styles.question}>Q1: How do I Choose my location</Text>
@@ -32,48 +35,45 @@ const Help = () => {
                     <Text style={styles.answer}>A: Go to the settings page and click on 'Change Password'</Text>
                     <Text style={styles.question}>Q6: How do I delete my account?</Text>
                     <Text style={styles.answer}>A: Go to the settings page and type 'DELETE' in the confirmation box to delete your account.</Text>
-                </View>
 
-                <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Troubleshooting Guides</Text>
                     <Text style={styles.guideTitle}>App not loading?</Text>
                     <Text style={styles.guideText}>Ensure you have a stable internet connection and try restarting the app.</Text>
                     <Text style={styles.guideTitle}>Profile picture not updating?</Text>
                     <Text style={styles.guideText}>Ensure the image is less than 5MB and in a supported format (jpg, png).</Text>
-                </View>
 
-                <View style={styles.section}>
+                    {/* change the links to the real link */}
                     <Text style={styles.sectionTitle}>Privacy & Legal</Text>
                     <Text style={styles.subSectionTitle}>Privacy Policy</Text>
-                    <Text style={styles.policyText}>Our privacy policy outlines how we handle your data. [Link to privacy policy]</Text>
+                    <Text style={styles.policyText}>Our privacy policy outlines how we handle your data. <a href="https://github.com">Link to privacy policy</a></Text>
                     <Text style={styles.subSectionTitle}>Terms of Service</Text>
-                    <Text style={styles.policyText}>Our terms of service explain the rules of using our app. [Link to terms of service]</Text>
+                    <Text style={styles.policyText}>Our terms of service explain the rules of using our app. <a href="https://github.com">Link to terms of service</a></Text>
                     <Text style={styles.subSectionTitle}>Data Storage</Text>
-                    <Text style={styles.policyText}>Your data is securely stored and protected. [Link to data storage policy]</Text>
-                </View>
+                    <Text style={styles.policyText}>Your data is securely stored and protected. <a href="https://github.com">Link to data storage policy</a></Text>
 
-                <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Miscellaneous</Text>
                     <Text style={styles.subSectionTitle}>About Us</Text>
-                    <Text style={styles.miscText}>Learn more about our app, company, and team. [Link to about us]</Text>
+                    <Text style={styles.miscText}>Learn more about our app, company, and team. <a href="https://github.com">Link to about us</a></Text>
                     <Text style={styles.subSectionTitle}>Version History</Text>
-                    <Text style={styles.miscText}>View the version history of our app. [Link to version history]</Text>
+                    <Text style={styles.miscText}>View the version history of our app. <a href="https://github.com">Version history</a></Text>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    scrollContainer: {
+    container: {
         flex: 1,
-        backgroundColor: '#121212',
+        marginTop: 55,
+        marginHorizontal: 20,
+    },
+    scrollContainer: {
+        maxHeight: '10%', 
+        minHeight: '60%',
     },
     scrollContent: {
         padding: 20,
-    },
-    container: {
-        flex: 1,
     },
     title: {
         fontSize: 28,
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         color: '#fff',
         marginBottom: 10,
+        marginTop: 20,
     },
     question: {
         fontSize: 18,
@@ -152,7 +153,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 15,
+        padding: 15,
+        backgroundColor: '#1A1A1A',
     },
     text: {
         fontSize: 25,
