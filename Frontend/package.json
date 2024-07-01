@@ -29,7 +29,8 @@
     "react-native-secure-storage": "^0.1.2",
     "react-native-web": "~0.19.10",
     "react-navigation": "^5.0.0",
-    "expo-image-picker": "~15.0.6"
+    "expo-image-picker": "~15.0.6",
+    "expo-file-system": "~17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
