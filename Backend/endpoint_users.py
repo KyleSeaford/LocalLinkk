@@ -250,8 +250,8 @@ class Users(Resource):
     @api.expect(image_model)
     def put(self, id):
         logging.debug(f"Changing image by ID {id}")
-        bodyJson = request.json
-        image_data = bodyJson.image
+        image_data = request.json.get('image')
+
 
         try:
             # Ensure the image data is properly formatted

@@ -112,8 +112,8 @@ const Profile = () => {
   };
   
   async function updateImage(imageId, imageData) {
-    const url = `${apiUrl}/${imageId}`;
-    const response = await fetch(url, {
+    const url2 = `${url}Users/users/imageChange/${imageId}`;
+    const response = await fetch(url2, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -121,8 +121,9 @@ const Profile = () => {
         body: JSON.stringify({ image: imageData })
     });
 
-    if (response.status === 204) {
+    if (response.status === 200) {
         console.log(`Image ${imageId} updated successfully`);
+        setUserImage(imageData);
     } else {
         const errorData = await response.json();
         console.error('Error updating image:', errorData);
