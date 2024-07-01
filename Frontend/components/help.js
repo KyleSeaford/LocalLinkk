@@ -44,9 +44,9 @@ const Help = () => {
 
                     <Text style={styles.sectionTitle}>Privacy & Legal</Text>
                     <Text style={styles.subSectionTitle}>Privacy Policy</Text>
-                    <Text style={styles.policyText}>Our privacy policy outlines how we handle your personal data, including what information we collect, how we use it, and how you can control its use. Please click here for more information:></Text>
+                    <Text style={styles.policyText}>Our privacy policy outlines how we handle your personal data, including what information we collect, how we use it, and how you can control its use. Please click here for more information:</Text>
                     <Text style={styles.subSectionTitle}>Terms of Service</Text>
-                    <Text style={styles.policyText}>Our terms of service explain the rules of using our app and what is expected of users. Please click here for more information:></Text>
+                    <Text style={styles.policyText}>Our terms of service explain the rules of using our app and what is expected of users. Please click here for more information:</Text>
                     <Text style={styles.subSectionTitle}>Data Storage</Text>
                     <Text style={styles.policyText}>We take data security seriously and store all data securely. For more information on our data storage practices, please click here:</Text>
 

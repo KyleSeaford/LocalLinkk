@@ -12,6 +12,7 @@ from flask import request, make_response
 import os
 import shutil
 from werkzeug.datastructures import FileStorage
+import base64
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -236,29 +237,44 @@ class Users(Resource):
         except FileNotFoundError:
             logging.debug(f"Image not found")
             return {'message': 'Image not found'}, 404
+        
 
 @api.route("/users/imageChange/<string:id>", doc={"description": "Changes the image of a user by ID"})
 class Users(Resource):
     parserImage = reqparse.RequestParser()
-    parserImage.add_argument('image', type=FileStorage, location='files', required=True)
+    parserImage.add_argument('image', type=str, required=True, help='Base64 encoded image string')
 
     @api.doc(parser=parserImage)
     def put(self, id):
-        logging.debug(f"Changing image by ID")
+        logging.debug(f"Changing image by ID {id}")
         data = self.parserImage.parse_args()
-        image = data['image']
-        image_dir = f"profilePictures/{id}"
+        image_data = data['image']
         
-        if not os.path.exists(image_dir):
-            os.makedirs(image_dir)
+        try:
+            # Ensure the image data is properly formatted
+            if ',' in image_data:
+                header, image_data = image_data.split(',', 1)
+            
+            # Decode the base64 string
+            image_data = base64.b64decode(image_data)
+            
+            # Create directory if it doesn't exist
+            image_dir = f"profilePictures/{id}"
+            if not os.path.exists(image_dir):
+                os.makedirs(image_dir)
+                
+            # Save the image
+            image_path = os.path.join(image_dir, 'profilePicture.jpg')
+            with open(image_path, 'wb') as image_file:
+                image_file.write(image_data)
+                
+            logging.debug(f"Image changed and saved to {image_path}")
+            return {'message': 'Image changed'}, 200
+            
+        except Exception as e:
+            logging.error(f"Error changing image: {e}")
+            return {'message': 'Failed to change image', 'error': str(e)}, 500
         
-        image_path = os.path.join(image_dir, 'profilePicture.jpg')
-        image.save(image_path)
-        
-        logging.debug(f"Image changed and saved to {image_path}")
-        return {'message': 'Image changed'}, 200
-
-
 @api.route("/users/admins", doc={"description": "gets all the admins"})
 class Users(Resource):
     def get(self):
