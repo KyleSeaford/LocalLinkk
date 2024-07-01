@@ -108,8 +108,7 @@ const Profile = () => {
     console.log('Selected image URI: ', selectedImage);
 
     const userId = await AsyncStorage.getItem('userId');
-    const token = await AsyncStorage.getItem('token');
-    
+
   };
   
   

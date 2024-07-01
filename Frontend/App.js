@@ -9,6 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
+import ScreenPostSize from './screens/PostSizeScreen';
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Help"
           component={HelpScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Post"
+          component={ScreenPostSize}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -192,6 +192,8 @@ const Navbar = () => {
 
     const handlePostClick = () => {
         console.log("Post clicked!");
+        navigation.navigate('LocalLinkk - Post');
+        setMenuVisible(!menuVisible);
     };
 
 
