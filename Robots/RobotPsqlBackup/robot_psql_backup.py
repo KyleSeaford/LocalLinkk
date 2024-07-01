@@ -11,7 +11,7 @@ load_dotenv()
 DB_HOST = str(os.getenv('dbHost'))
 DB_DATABASE = str(os.getenv('dbDatabase'))
 DB_USER = str(os.getenv('dbUser'))
-DB_PASSWORD = str(str(os.getenv('dbPassword')))
+DB_PASSWORD = str(os.getenv('dbPassword'))
 EMAIL_SENDER = str(os.getenv('emailSender'))
 EMAIL_RECEIVER = str(os.getenv('emailReceiver'))
 EMAIL_SMTP_SERVER = str(os.getenv('emailSMTPServer'))
@@ -48,15 +48,18 @@ except subprocess.CalledProcessError as e:
     print(f"Backup failed: {e.stderr}")
     # Send email notification
     try:
+        # Split the EMAIL_RECEIVER string into a list of email addresses
+        email_recipients = [email.strip() for email in EMAIL_RECEIVER.split(';')]
+
         msg = MIMEText(f"Backup of database {DB_DATABASE} failed.\nError: {e.stderr}")
         msg['Subject'] = f"Database Backup Failed for {DB_DATABASE}"
         msg['From'] = EMAIL_SENDER
-        msg['To'] = EMAIL_RECEIVER
+        msg['To'] = ', '.join(email_recipients)
 
         with smtplib.SMTP(EMAIL_SMTP_SERVER, EMAIL_SMTP_PORT) as server:
             server.starttls()
             server.login(EMAIL_SMTP_USER, EMAIL_SMTP_PASSWORD)
-            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+            server.sendmail(EMAIL_SENDER, email_recipients, msg.as_string())
         print("Failure notification email sent successfully.")
     except Exception as email_error:
         print(f"Failed to send notification email: {email_error}")
