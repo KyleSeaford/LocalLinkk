@@ -11,6 +11,7 @@ from flask_jwt_extended import JWTManager, get_jwt, jwt_required, create_access_
 from flask import request, make_response
 import os
 import shutil
+from werkzeug.datastructures import FileStorage
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -235,6 +236,27 @@ class Users(Resource):
         except FileNotFoundError:
             logging.debug(f"Image not found")
             return {'message': 'Image not found'}, 404
+
+@api.route("/users/imageChange/<string:id>", doc={"description": "Changes the image of a user by ID"})
+class Users(Resource):
+    parserImage = reqparse.RequestParser()
+    parserImage.add_argument('image', type=FileStorage, location='files', required=True)
+
+    @api.doc(parser=parserImage)
+    def put(self, id):
+        logging.debug(f"Changing image by ID")
+        data = self.parserImage.parse_args()
+        image = data['image']
+        image_dir = f"profilePictures/{id}"
+        
+        if not os.path.exists(image_dir):
+            os.makedirs(image_dir)
+        
+        image_path = os.path.join(image_dir, 'profilePicture.jpg')
+        image.save(image_path)
+        
+        logging.debug(f"Image changed and saved to {image_path}")
+        return {'message': 'Image changed'}, 200
 
 
 @api.route("/users/admins", doc={"description": "gets all the admins"})
