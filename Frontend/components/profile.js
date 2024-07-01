@@ -106,11 +106,28 @@ const Profile = () => {
     const selectedImage = result.assets ? result.assets[0].uri : result.uri;
 
     console.log('Selected image URI: ', selectedImage);
-
+    
     const userId = await AsyncStorage.getItem('userId');
-
+    updateImage(userId, selectedImage)
   };
   
+  async function updateImage(imageId, imageData) {
+    const url = `${apiUrl}/${imageId}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ image: imageData })
+    });
+
+    if (response.status === 204) {
+        console.log(`Image ${imageId} updated successfully`);
+    } else {
+        const errorData = await response.json();
+        console.error('Error updating image:', errorData);
+    }
+}
   
   return (
     <View style={styles.container}>

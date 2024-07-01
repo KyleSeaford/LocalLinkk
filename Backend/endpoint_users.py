@@ -1,4 +1,4 @@
-from flask_restx import Api, Namespace, Resource, reqparse
+from flask_restx import Api, Namespace, Resource, reqparse, fields
 from flask import Flask, send_file
 from database_extensions import database_extensions
 import logging
@@ -238,18 +238,21 @@ class Users(Resource):
             logging.debug(f"Image not found")
             return {'message': 'Image not found'}, 404
         
+image_model = api.model('Image', {
+    'image': fields.String(required=True, description='The image in base64 format')
+})
 
 @api.route("/users/imageChange/<string:id>", doc={"description": "Changes the image of a user by ID"})
 class Users(Resource):
     parserImage = reqparse.RequestParser()
     parserImage.add_argument('image', type=str, required=True, help='Base64 encoded image string')
 
-    @api.doc(parser=parserImage)
+    @api.expect(image_model)
     def put(self, id):
         logging.debug(f"Changing image by ID {id}")
-        data = self.parserImage.parse_args()
-        image_data = data['image']
-        
+        bodyJson = request.json
+        image_data = bodyJson.image
+
         try:
             # Ensure the image data is properly formatted
             if ',' in image_data:
