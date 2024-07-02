@@ -9,11 +9,17 @@ The robot will back up the Postgres database every day.
 - The database is backed up to Garry `\\192.168.127.56\GarrysPool\samba\LocalLinkk\Backups\Database`
 - The settings are in the `/var/www/fask/LocalLinkk/Robots/RobotPsqlBackup/.env`
 
+## Logs
+
+- The cron job will log to `/var/www/fask/LocalLinkk/Robots/RobotPsqlBackup/robot_psql_backup_cron.log`
+- The Python script will send an email if the backup fails
+
 ## Development Notes
 
 Development notes for the robot are in:
 
 - [DevelopmentNotes\20240701.md](DevelopmentNotes\20240701.md)
+- [DevelopmentNotes\20240702.md](DevelopmentNotes\20240702.md)
 
 ## Deployment
 
