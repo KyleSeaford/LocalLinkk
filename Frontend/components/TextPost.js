@@ -29,8 +29,11 @@ const TEXTPost = () => {
             console.log('Please fill in all fields');
             return;
         }
-        
+
         console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
+        const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity });
+        AsyncStorage.setItem('details', details);
+        
         // Handle navigation to the next page or other actions
     };
 
@@ -68,7 +71,7 @@ const TEXTPost = () => {
     };
 
     const handleCategory = (category) => {
-        AsyncStorage.setItem('category', category.category_id.toString());
+        //AsyncStorage.setItem('category', category.category_id.toString());
         fetchCategoryChildren(category.category_id).then(children => {
             if (children.length > 0) {
                 setCategories(children);
@@ -259,10 +262,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#333',
         padding: 10,
         borderRadius: 5,
-        maxHeight: 300,
     },
     dropdownScroll: {
-        maxHeight: 250,
+        maxHeight: 500,
     },
     dropdownItem: {
         padding: 10,

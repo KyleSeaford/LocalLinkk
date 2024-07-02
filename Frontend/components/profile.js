@@ -4,6 +4,7 @@ import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 //import * as ImagePicker from 'react-native-image-picker';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -12,6 +13,8 @@ import user from '../assets/transparent_picture.png';
 const url = 'http://192.168.127.93:5500/';
 
 const Profile = () => {
+  const navigation = useNavigation();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [userData, setUserData] = useState({});
@@ -91,6 +94,7 @@ const Profile = () => {
 
   const handlePostClick = () => {
     console.log("Post clicked!");
+    navigation.navigate('LocalLinkk - Post');
   };
 
   const changeimg = async () => {
