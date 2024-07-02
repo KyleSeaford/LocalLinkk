@@ -31,9 +31,15 @@ const PostSize = () => {
         }
     };
 
+    const handleBackClick = () => {
+        console.log('Back clicked!');
+        navigation.goBack();
+    };
+
     const handleNextClick = () => {
         if (selectedPostType) {
             console.log(`Proceeding with ${selectedPostType.type}`);
+            navigation.navigate(`LocalLinkk - ${selectedPostType.type}`);
             // Handle navigation to the next page or other actions
         } else {
             console.log('Please select a post type first');
@@ -46,7 +52,7 @@ const PostSize = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.text}>Create a Post</Text>
+                <Text style={styles.text}>Chose a Post Size</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.postTypesContainer}>
@@ -71,9 +77,14 @@ const PostSize = () => {
                 ))}
             </ScrollView>
 
-            <TouchableOpacity style={styles.nextButton} onPress={handleNextClick}>
-                <Text style={styles.nextButtonText}>Next</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
+                    <Text style={styles.backNextButtonText}>Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.backNextButton} onPress={handleNextClick}>
+                    <Text style={styles.backNextButtonText}>Next</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -99,9 +110,11 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 25,
         color: '#fff',
+        fontWeight: 'bold',
     },
     postTypesContainer: {
         flexGrow: 1,
+        marginTop: 5,
     },
     postTypeButton: {
         backgroundColor: '#2196F3',
@@ -138,18 +151,31 @@ const styles = StyleSheet.create({
     postTypePreviewContainer: {
         marginTop: 10,
     },
-    nextButton: {
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 20,
+    },
+    backNextButton: {
         backgroundColor: '#4CAF50',
-        marginTop: 20,
         padding: 15,
         borderRadius: 5,
-        width: '40%',
         alignItems: 'center',
-        marginLeft: '60%',
+        flex: 1,
+        marginHorizontal: 5,
     },
-    nextButtonText: {
+    backNextButtonText: {
         color: '#fff',
         fontSize: 18,
+        fontWeight: 'bold',
+    },
+    backNextButton2: {
+        backgroundColor: '#848884',
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+        flex: 1,
+        marginHorizontal: 5,
     },
 });
 
