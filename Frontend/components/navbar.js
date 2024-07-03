@@ -113,7 +113,10 @@ const Navbar = () => {
     };
 
     const handleNameClick = () => {
+        //location.reload()
+        window.location.reload();
         navigation.navigate('LocalLinkk - Home');
+        //location.reload()
     };
 
     const handleCategoryClick = () => {

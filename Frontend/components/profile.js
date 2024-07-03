@@ -112,7 +112,7 @@ const Profile = () => {
     console.log('Selected image URI: ', selectedImage);
     
     const userId = await AsyncStorage.getItem('userId');
-    updateImage(userId, selectedImage)
+    updateImage(userId, selectedImage);
   };
   
   async function updateImage(imageId, imageData) {
