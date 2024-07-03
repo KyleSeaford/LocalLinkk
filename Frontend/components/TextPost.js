@@ -83,7 +83,9 @@ const TEXTPost = () => {
             const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, lat, lng });
             await AsyncStorage.setItem('details', details);
             
-            // Handle navigation to the next page or other actions
+            // TODO: create a preview page to display the entered details in the default format for chose post type, for text will go straight to the preview, for imgs it will go to the duration page
+            // TODO: on the preview page top bar as usual, title "LocalLinkk - Post Preview", preview of the post, cost of the post and two buttons "Back" and "Post"
+
             setErrorMessage(''); // Clear error message on success
         } catch (error) {
             setErrorMessage(error.message);
