@@ -127,6 +127,7 @@ class PostCompany(Resource):
             advertType = "Text"
 
         newCompanyId = db.generateId()
+
         db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
 

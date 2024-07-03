@@ -16,6 +16,8 @@ const TEXTPost = () => {
     const [townCity, setTownCity] = useState("");
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState('');
+
     useEffect(() => {
         fetchCategories();
     }, []);
@@ -24,21 +26,73 @@ const TEXTPost = () => {
         navigation.navigate('LocalLinkk - Home');
     };
 
-    const handleNextClick = () => {
-        if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
-            console.log('Please fill in all fields');
-            return;
-        }
-
-        console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
-        const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity });
-        AsyncStorage.setItem('details', details);
-        
-        // Handle navigation to the next page or other actions
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    
+    const validatePhoneNumber = (phoneNumber) => {
+        const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
+        return phoneRegex.test(phoneNumber);
+    };
+    
+    const validateWebsite = (website) => {
+        const websiteRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+        return websiteRegex.test(website);
     };
 
+    const getCoordinates = async (location) => {
+        const apiKey = '08bb878c2d3d4eb6af9ef8f0c7fa16fb'; // Replace with your OpenCage API key
+        const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
+        const data = await response.json();
+        
+        if (data.results && data.results.length > 0) {
+            const { lat, lng } = data.results[0].geometry;
+            return { lat, lng };
+        } else {
+            throw new Error('Location not found');
+        }
+    };
+    
+    const handleNextClick = async () => {
+        if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
+            setErrorMessage('Please fill in all fields');
+            return;
+        }
+    
+        if (!validateEmail(email)) {
+            setErrorMessage('Invalid email address');
+            return;
+        }
+    
+        if (!validatePhoneNumber(phoneNumber)) {
+            setErrorMessage('Invalid phone number');
+            return;
+        }
+    
+        if (!validateWebsite(website)) {
+            setErrorMessage('Invalid website URL');
+            return;
+        }
+    
+        try {
+            const { lat, lng } = await getCoordinates(townCity);
+            console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
+            console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
+    
+            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, lat, lng });
+            await AsyncStorage.setItem('details', details);
+            
+            // Handle navigation to the next page or other actions
+            setErrorMessage(''); // Clear error message on success
+        } catch (error) {
+            setErrorMessage(error.message);
+        }
+    };
+    
     const handleBackClick = () => {
         console.log('Back clicked!');
+        AsyncStorage.removeItem('details');
         navigation.goBack();
     };
 
@@ -48,7 +102,7 @@ const TEXTPost = () => {
         try {
             const response = await fetch(`${url}Categories/category/0/children`);
             const data = await response.json();
-            AsyncStorage.setItem('categories', JSON.stringify(data));
+            await AsyncStorage.setItem('categories', JSON.stringify(data));
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -71,7 +125,6 @@ const TEXTPost = () => {
     };
 
     const handleCategory = (category) => {
-        //AsyncStorage.setItem('category', category.category_id.toString());
         fetchCategoryChildren(category.category_id).then(children => {
             if (children.length > 0) {
                 setCategories(children);
@@ -118,7 +171,11 @@ const TEXTPost = () => {
                 <Text style={styles.text}>Your Company Details</Text>
             </View>
 
+            <Text style={styles.instructionText2}>Create a LocalLinkk Text Post, Step 1:</Text>
+
             <Text style={styles.instructionText}>Enter your company details. They will be used to generate your text advert.</Text>
+
+            {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
             <TextInput
                 style={styles.input}
@@ -214,6 +271,14 @@ const styles = StyleSheet.create({
         marginTop: 10,
         textAlign: 'center',
     },
+    instructionText2: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#aaa',
+        marginBottom: 5,
+        marginTop: 10,
+        textAlign: 'center',
+    },
     input: {
         backgroundColor: '#333',
         color: '#fff',
@@ -264,7 +329,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     dropdownScroll: {
-        maxHeight: 500,
+        maxHeight: 470,
     },
     dropdownItem: {
         padding: 10,
@@ -273,6 +338,12 @@ const styles = StyleSheet.create({
     },
     back: {
         padding: 10,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 16,
+        marginBottom: 20,
+        textAlign: 'center',
     },
 });
 
