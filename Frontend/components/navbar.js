@@ -113,7 +113,10 @@ const Navbar = () => {
     };
 
     const handleNameClick = () => {
+        //location.reload()
+        window.location.reload();
         navigation.navigate('LocalLinkk - Home');
+        //location.reload()
     };
 
     const handleCategoryClick = () => {
@@ -413,11 +416,8 @@ const styles = StyleSheet.create({
     postContainerTEXT: {
         fontSize: 20,
         color: 'black',
-        borderColor: '#4CBB17',
-        borderWidth: 2,
-        borderRadius: 5,
+        borderColor: 'black',
         padding: 5,
-        backgroundColor: '#4CBB17',
     },
     menuItemContainer: {
         flexDirection: 'row',

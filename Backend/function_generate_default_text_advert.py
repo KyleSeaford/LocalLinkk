@@ -7,7 +7,7 @@ def generateDefaultTextAdvert(companyName, city, phoneNumber):
         advert += "\n of " + city
     
     if phoneNumber != None and phoneNumber != "" and is_valid_uk_phone_number(phoneNumber):
-        advert += "\n call " + phoneNumber
+        advert += "\ncall " + phoneNumber
     
     return advert
 
