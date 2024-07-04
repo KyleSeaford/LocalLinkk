@@ -5,7 +5,7 @@
 - [ ] Make the app
 - [ ] Finalize app design and functionality
 - [ ] Test Launch
-- [ ] Get the domain name - I want [LocalLinkk.com](https://www.namecheap.com/domains/registration/results/?domain=locallinkk)
+- [x] Get the domain name - I want [LocalLinkk.com](https://www.namecheap.com/domains/registration/results/?domain=locallinkk)
 - [ ] Finalize app design and functionality
 - [ ] Show a demo
 - [ ] Find some investors
