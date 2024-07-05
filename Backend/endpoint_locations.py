@@ -67,7 +67,7 @@ class GetFilteredLocations(Resource):
 @api.route('/location', doc={"description": "Add a new location"})
 class PostLocation(Resource):
     parserPost = reqparse.RequestParser()
-    parserPost.add_argument(databaseFieldLocationName, type=str, required=False, help='Country name')
+    parserPost.add_argument(databaseFieldLocationName, type=str, required=False, help='City name')
     parserPost.add_argument(databaseFieldCountry, type=str, required=False, help='Country name')
     parserPost.add_argument(databaseFieldRegion, type=str, required=False, help='Region name')
     parserPost.add_argument(databaseFieldIsMajor, type=bool, required=False, help='Is major city')
@@ -86,7 +86,21 @@ class PostLocation(Resource):
         if recordExists > 0:
             return {'message': f'Location {name} already exists'}, 400
         
+        long = args[databaseFieldLongitude]
+        if long == None or long == "":
+            long = 0
+        
+        lat = args[databaseFieldLatitude]
+        if lat == None or lat == "":
+            lat = 0
+        
+        pop = args[databaseFieldPopulation]
+        if pop == None or pop == "":
+            pop = 0
+        
+        #todo fix isMajor because every thing has been added as major
+
         id = db.generateId()
 
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldLocationId}, {databaseFieldLocationName}, {databaseFieldRegion}, {databaseFieldCountry}, {databaseFieldIsMajor}, {databaseFieldPopulation}, {databaseFieldLatitude}, {databaseFieldLongitude}) VALUES ('{id}', '{name}', '{args[databaseFieldRegion]}', '{args[databaseFieldCountry]}','{args[databaseFieldIsMajor]}','{args[databaseFieldPopulation]}','{args[databaseFieldLatitude]}','{args[databaseFieldLongitude]}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldLocationId}, {databaseFieldLocationName}, {databaseFieldRegion}, {databaseFieldCountry}, {databaseFieldIsMajor}, {databaseFieldPopulation}, {databaseFieldLatitude}, {databaseFieldLongitude}) VALUES ('{id}', '{name}', '{args[databaseFieldRegion]}', '{args[databaseFieldCountry]}',{args[databaseFieldIsMajor]},'{pop}','{lat}','{long}')") 
         return {'message': 'Location added successfully', 'id':id}, 201

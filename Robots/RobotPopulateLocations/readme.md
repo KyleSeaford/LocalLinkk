@@ -8,6 +8,7 @@ Cities with the flag isMajor = true came from "major towns and cities Info"
 All other cities came from "built-up areas including subdivisions"
 
 - East
+
 - East Midlands
 - London
 - North East
