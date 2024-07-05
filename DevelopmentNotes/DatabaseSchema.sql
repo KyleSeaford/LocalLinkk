@@ -42,3 +42,15 @@ CREATE TABLE "users" (
 
 CREATE UNIQUE INDEX `sqlite_autoindex_users_2` ON `users` (userEmail);
 CREATE UNIQUE INDEX `sqlite_autoindex_users_1` ON `users` (userID);
+
+
+CREATE TABLE locations(  
+    id text NOT NULL PRIMARY KEY,
+    name VARCHAR(255),
+    region VARCHAR(255),
+    country varchar(255),
+    ismajor BOOLEAN,
+    population INT,
+    latitude double precision,
+    longitude double precision
+);
