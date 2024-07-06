@@ -85,12 +85,17 @@ const Navbar = () => {
     }
 
     const fetchLocations = async () => {
-        // get all locations
         try {
-            const response = await fetch(`${url}Users/users/locations`);
+            // Fetch locations from location API
+            const response = await fetch(`${url}Locations/locations`);
             const Locations = await response.json();
+    
+            // Extract location names
+            const locationNames = Locations.map(location => location.name);
+            console.log('Location names:', locationNames);
+    
             // Extract unique locations using Set
-            const uniqueLocations = Array.from(new Set(Locations.map(user => user.userLocation)));
+            const uniqueLocations = Array.from(new Set(locationNames));
             setLocations(uniqueLocations);
         } catch (error) {
             console.error('Error fetching locations:', error);
@@ -113,10 +118,8 @@ const Navbar = () => {
     };
 
     const handleNameClick = () => {
-        //location.reload()
         window.location.reload();
         navigation.navigate('LocalLinkk - Home');
-        //location.reload()
     };
 
     const handleCategoryClick = () => {
@@ -124,10 +127,12 @@ const Navbar = () => {
         setBreadcrumbs('');
         setDropdownVisible(!dropdownVisible);
     };
-
+    
     const handleLocationClick = () => {
         setLocationDropdownVisible(!locationDropdownVisible);
+        setDropdownVisible(false); // Hide category dropdown if open
     };
+    
 
     const ChangeUsersLocation = async (newLocation) => {
         try {
