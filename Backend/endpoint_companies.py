@@ -88,6 +88,7 @@ class PostCompany(Resource):
     parserAdd.add_argument(argumentLongitude, type=str, help='Longitude', required=True)
     parserAdd.add_argument(argumentCompanyEmail, type=str, help='Email', required=False)
     parserAdd.add_argument(argumentCompanyPhone, type=str, help='Phone', required=False)
+    parserAdd.add_argument(argumentMapLink, type=str, help='Google maps link', required=False)
     parserAdd.add_argument(argumentCompanyWebsite, type=str, help='Website', required=False)
     parserAdd.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
     parserAdd.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
@@ -130,7 +131,7 @@ class PostCompany(Resource):
 
         newCompanyId = db.generateId()
 
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage], args[argumentMapLink]}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
 
     @api.route('/company/<company_id>')
