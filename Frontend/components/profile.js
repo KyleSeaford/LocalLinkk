@@ -3,10 +3,8 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TextInput, Aler
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-//import * as ImagePicker from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-
 
 import user from '../assets/transparent_picture.png';
 
@@ -146,18 +144,20 @@ const Profile = () => {
       <Text style={styles.Namecontainer}>{userData[1]} {userData[2]}</Text>
       <Text style={styles.CNamecontainer}>Profile Rank: {userData[5]}</Text>
 
-      <TouchableOpacity onPress={handleEditClick}>
-        <Text style={styles.Editcontainer}>Edit</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={handleEditClick} style={styles.editButton}>
+          <Text style={styles.editButtonText}>Edit Your Profile</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={handlePostClick}>
-        <Text style={styles.Postcontainer}>Create a New Post</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={handlePostClick} style={styles.postButton}>
+          <Text style={styles.postButtonText}>Create A Post</Text>
+        </TouchableOpacity>
+      </View>
 
-      <View style={styles.Pastcontainer}>
-        <Entypo name="triangle-down" size={24} color="black" />
-        <Text style={styles.PostcontainerTEXT}>Your Past LocalLinkk's</Text>
-        <Entypo name="triangle-down" size={24} color="black" />
+      <View style={styles.pastContainer}>
+        <Entypo name="triangle-down" size={24} color="white" />
+        <Text style={styles.pastText}>Your Previous Posts Are Shown Below</Text>
+        <Entypo name="triangle-down" size={24} color="white" />
       </View>
 
       <Modal
@@ -187,7 +187,8 @@ const Profile = () => {
           <TouchableOpacity style={styles.modalCloseButton2} onPress={handleCloseEditModal}>
             <Entypo name="cross" size={30} color="#000" />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, marginBottom: 20 }}>Edit Your Name</Text>
+          <Text style={styles.editModalTitle}>LocalLinkk Profile Editor</Text>
+          <Text style={styles.editModalTitle}>Edit Your Name</Text>
           <TextInput
             style={styles.input}
             placeholder="First Name"
@@ -216,68 +217,71 @@ const Profile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    fontSize: 16,
-    justifyContent: 'center',
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
+    marginTop: -130,
+    backgroundColor: '#045757',
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginLeft: 20,
+    width: 150,
+    height: 150,
+    borderRadius: 80,
+    borderWidth: 2,
     marginTop: 20,
-    borderRadius: 60,
+    borderColor: '#007BFF',
   },
   Namecontainer: {
-    fontSize: 25,
-    marginLeft: 160,
-    marginTop: -120,
+    fontSize: 28,
+    marginTop: 15,
     color: '#fff',
+    fontWeight: 'bold',
   },
   CNamecontainer: {
-    fontSize: 20,
-    marginLeft: 160,
-    marginTop: 10,
-    color: 'white',
+    fontSize: 18,
+    marginTop: 5,
+    color: '#fff',
   },
-  Editcontainer: {
-    fontSize: 20,
-    marginLeft: 350,
-    marginTop: -29,
-    color: 'black',
-    borderColor: '#E4E4E4',
-    borderWidth: 2,
+  buttonsContainer: {
+    flexDirection: 'row',  // Aligns children in a row
+    justifyContent: 'space-between',  // Distributes space evenly
+    width: '100%',  // Makes sure buttons take up the full width of the container
+    maxWidth: 400,  // Optional: to constrain the width of the buttons container
+    marginTop: 20,  // Spacing above the buttons
+  },
+  editButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 30,
     borderRadius: 5,
-    padding: 2,
-    width: 75,
-    backgroundColor: '#E4E4E4',
-    textAlign: 'center',
+    backgroundColor: '#007BFF',
   },
-  Postcontainer: {
-    fontSize: 20,
-    marginTop: 10,
-    marginLeft: 160,
-    color: 'black',
-    borderColor: '#E4E4E4',
-    borderWidth: 2,
+  editButtonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  postButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 40,
     borderRadius: 5,
-    padding: 2,
-    width: 265,
-    backgroundColor: '#E4E4E4',
-    textAlign: 'center',
+    backgroundColor: '#007BFF',
   },
-  Pastcontainer: {
+  postButtonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  pastContainer: {
     flexDirection: 'row',
-    marginTop: 20,
-    color: 'black',
-    borderColor: '#E4E4E4',
-    borderWidth: 5,
-    padding: 5,
-    backgroundColor: '#E4E4E4',
+    marginTop: 5,
+    backgroundColor: '#045757',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    width: '110%',
   },
-  PostcontainerTEXT: {
-    fontSize: 20,
-    color: 'black',
+  pastText: {
+    fontSize: 18,
+    color: '#fff',
   },
   modalContainer: {
     flex: 1,
@@ -288,12 +292,12 @@ const styles = StyleSheet.create({
   expandedImage: {
     width: 350,
     height: 350,
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
   },
   modalCloseButton: {
     position: 'absolute',
     top: 280,
-    right: 30,
+    right: 25,
     zIndex: 999,
   },
   modalCloseButton2: {
@@ -307,25 +311,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    marginTop: 250,
-    marginBottom: 300,
-    marginHorizontal: 20,
+    marginHorizontal: 50,
+    marginVertical: 220,
     borderRadius: 10,
     padding: 20,
   },
+  editModalTitle: {
+    fontSize: 22,
+    marginBottom: 20,
+    color: '#333',
+  },
   input: {
-    width: '80%',
-    height: 55,
+    width: '100%',
+    height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 15,
     paddingLeft: 10,
   },
   saveButton: {
     backgroundColor: '#007BFF',
-    padding: 10,
+    padding: 12,
     borderRadius: 5,
+    marginTop: 10,
   },
   saveButtonText: {
     color: '#fff',
@@ -333,9 +342,9 @@ const styles = StyleSheet.create({
   },
   chooseImageButton: {
     backgroundColor: '#007BFF',
-    padding: 10,
+    padding: 12,
     borderRadius: 5,
-    marginTop: 40,
+    marginTop: 20,
   },
   chooseImageButtonText: {
     color: '#fff',

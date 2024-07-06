@@ -127,7 +127,7 @@ const Navbar = () => {
         setBreadcrumbs('');
         setDropdownVisible(!dropdownVisible);
     };
-    
+
     const handleLocationClick = () => {
         setLocationDropdownVisible(!locationDropdownVisible);
         setDropdownVisible(false); // Hide category dropdown if open
@@ -410,13 +410,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
         marginTop: 0,
+        padding: 10,
     },
     postContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
-        marginTop: 480,
+        marginTop: 460,
     },
     postContainerTEXT: {
         fontSize: 20,
@@ -432,6 +433,7 @@ const styles = StyleSheet.create({
     menuContainerTEXT: {
         fontSize: 20,
         color: '#222222',
+        padding: 3,
     },
     navBar: {
         height: 110,
@@ -480,6 +482,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#222222',
         marginBottom: 20,
+        padding: 10,
     },
     dropdown: {
         backgroundColor: '#f9f9f9',
