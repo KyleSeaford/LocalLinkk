@@ -27,6 +27,7 @@ databaseFieldAdvertType = 'advert_type'
 databaseFieldAdvertText = 'advert_text'
 databaseFieldAdvertImage = 'advert_image'
 databaseFieldAdvertExpires = 'advert_expires'
+databaseFieldMapLink = 'google_maps_link'
 argumentCompanyName = 'Company Name'
 argumentCategoryId = 'Category Id'
 argumentCompanyEmail = 'Company Email'
@@ -38,6 +39,7 @@ argumentAdvertType = 'Advert Type'
 argumentAdvertText = 'Advert Text'
 argumentAdvertImage = 'Advert Image'
 argumentAdvertExpires = 'Advert Expiry Date'
+argumentMapLink = 'Google Maps Link'
 
 class Companies():    
     def __init__(self, databaseName):
@@ -140,6 +142,7 @@ class PostCompany(Resource):
         parserUpdate.add_argument(argumentLongitude, type=str, help='Longitude', required=False)
         parserUpdate.add_argument(argumentCompanyEmail, type=str, help='Email', required=False)
         parserUpdate.add_argument(argumentCompanyPhone, type=str, help='Phone', required=False)
+        parserUpdate.add_argument(argumentMapLink, type=str, help='Google maps link', required=False)
         parserUpdate.add_argument(argumentCompanyWebsite, type=str, help='Website', required=False)
         parserUpdate.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
         parserUpdate.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
@@ -162,7 +165,8 @@ class PostCompany(Resource):
                 argumentAdvertType:databaseFieldAdvertType,
                 argumentAdvertText:databaseFieldAdvertText,
                 argumentAdvertImage: databaseFieldAdvertImage,
-                argumentAdvertExpires: databaseFieldAdvertExpires
+                argumentAdvertExpires: databaseFieldAdvertExpires,
+                argumentMapLink: databaseFieldMapLink
             }
             
             update_fields = {field_mapping[arg]: value for arg, value in args.items() if value is not None}
