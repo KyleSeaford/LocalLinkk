@@ -85,12 +85,17 @@ const Navbar = () => {
     }
 
     const fetchLocations = async () => {
-        // get all locations
         try {
-            const response = await fetch(`${url}Users/users/locations`);
+            // Fetch locations from location API
+            const response = await fetch(`${url}Locations/locations`);
             const Locations = await response.json();
+    
+            // Extract location names
+            const locationNames = Locations.map(location => location.name);
+            console.log('Location names:', locationNames);
+    
             // Extract unique locations using Set
-            const uniqueLocations = Array.from(new Set(Locations.map(user => user.userLocation)));
+            const uniqueLocations = Array.from(new Set(locationNames));
             setLocations(uniqueLocations);
         } catch (error) {
             console.error('Error fetching locations:', error);
@@ -113,10 +118,8 @@ const Navbar = () => {
     };
 
     const handleNameClick = () => {
-        //location.reload()
         window.location.reload();
         navigation.navigate('LocalLinkk - Home');
-        //location.reload()
     };
 
     const handleCategoryClick = () => {
@@ -127,7 +130,9 @@ const Navbar = () => {
 
     const handleLocationClick = () => {
         setLocationDropdownVisible(!locationDropdownVisible);
+        setDropdownVisible(false); // Hide category dropdown if open
     };
+    
 
     const ChangeUsersLocation = async (newLocation) => {
         try {
@@ -405,13 +410,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
         marginTop: 0,
+        padding: 10,
     },
     postContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
-        marginTop: 480,
+        marginTop: 460,
     },
     postContainerTEXT: {
         fontSize: 20,
@@ -427,6 +433,7 @@ const styles = StyleSheet.create({
     menuContainerTEXT: {
         fontSize: 20,
         color: '#222222',
+        padding: 3,
     },
     navBar: {
         height: 110,
@@ -475,6 +482,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#222222',
         marginBottom: 20,
+        padding: 10,
     },
     dropdown: {
         backgroundColor: '#f9f9f9',

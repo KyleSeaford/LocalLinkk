@@ -19,7 +19,10 @@ const PastPosts = () => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 0,
+        marginTop: 110,
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
 });

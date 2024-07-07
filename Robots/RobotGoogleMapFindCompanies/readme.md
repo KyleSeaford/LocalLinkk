@@ -4,7 +4,6 @@
 
 The RobotGoogleMapFindCompanies will find company's details using the Google Maps API.
 
-Requires a google map API Keys with Places API 
-https://developers.google.com/maps/documentation/places/web-service/get-api-key
+addMapLink.py adds the google maps link, because it wasn't included when it first ran
 
-https://elfsight.com/blog/how-to-get-google-maps-api-key-guide/
+removeDupedCompanies Removes duplicated companies
