@@ -63,44 +63,40 @@ class GetFilteredLocations(Resource):
             f'ORDER BY {databaseFieldLocationName} ASC'
         )
 
-
 @api.route('/location', doc={"description": "Add a new location"})
 class PostLocation(Resource):
     parserPost = reqparse.RequestParser()
-    parserPost.add_argument(databaseFieldLocationName, type=str, required=False, help='City name')
-    parserPost.add_argument(databaseFieldCountry, type=str, required=False, help='Country name')
+    parserPost.add_argument(databaseFieldLocationName, type=str, required=True, help='City name')
+    parserPost.add_argument(databaseFieldCountry, type=str, required=True, help='Country name')
     parserPost.add_argument(databaseFieldRegion, type=str, required=False, help='Region name')
-    parserPost.add_argument(databaseFieldIsMajor, type=bool, required=False, help='Is major city')
+    parserPost.add_argument(databaseFieldIsMajor, type=str, required=False, help='Is major city')  # Accept as str
     parserPost.add_argument(databaseFieldPopulation, type=int, required=False, help='Population')
-    parserPost.add_argument(databaseFieldLatitude, type=int, required=False, help='Latitude')
-    parserPost.add_argument(databaseFieldLongitude, type=int, required=False, help='Longitude')
+    parserPost.add_argument(databaseFieldLatitude, type=float, required=False, help='Latitude')
+    parserPost.add_argument(databaseFieldLongitude, type=float, required=False, help='Longitude')
 
     @api.doc(parser=parserPost)
     def post(self):
         args = self.parserPost.parse_args()
         name = args[databaseFieldLocationName]
         country = args[databaseFieldCountry]
+        
+        logging.debug(f"Parsed args: {args}")
 
         # Check if the location already exists
         recordExists = db.fetchSingleValue(f"SELECT COUNT(*) FROM {databaseTableName} WHERE {databaseFieldLocationName}='{name}' and {databaseFieldCountry}='{country}'")
         if recordExists > 0:
             return {'message': f'Location {name} already exists'}, 400
-        
-        long = args[databaseFieldLongitude]
-        if long == None or long == "":
-            long = 0
-        
-        lat = args[databaseFieldLatitude]
-        if lat == None or lat == "":
-            lat = 0
-        
-        pop = args[databaseFieldPopulation]
-        if pop == None or pop == "":
-            pop = 0
-        
-        #todo fix isMajor because every thing has been added as major
+
+        long = args[databaseFieldLongitude] or 0.0
+        lat = args[databaseFieldLatitude] or 0.0
+        pop = args[databaseFieldPopulation] or 0
+
+        # Handle isMajor correctly by explicitly converting to boolean
+        isMajorStr = args[databaseFieldIsMajor]
+        isMajor = isMajorStr.lower() in ['true', '1', 't', 'y', 'yes'] if isMajorStr is not None else False
+        logging.debug(f"is major 1 = {isMajor}")
 
         id = db.generateId()
 
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldLocationId}, {databaseFieldLocationName}, {databaseFieldRegion}, {databaseFieldCountry}, {databaseFieldIsMajor}, {databaseFieldPopulation}, {databaseFieldLatitude}, {databaseFieldLongitude}) VALUES ('{id}', '{name}', '{args[databaseFieldRegion]}', '{args[databaseFieldCountry]}',{args[databaseFieldIsMajor]},'{pop}','{lat}','{long}')") 
-        return {'message': 'Location added successfully', 'id':id}, 201
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldLocationId}, {databaseFieldLocationName}, {databaseFieldRegion}, {databaseFieldCountry}, {databaseFieldIsMajor}, {databaseFieldPopulation}, {databaseFieldLatitude}, {databaseFieldLongitude}) VALUES ('{id}', '{name}', '{args[databaseFieldRegion]}', '{args[databaseFieldCountry]}', {isMajor}, '{pop}', '{lat}', '{long}')")
+        return {'message': 'Location added successfully', 'id': id}, 201
