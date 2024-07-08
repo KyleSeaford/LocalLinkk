@@ -38,6 +38,8 @@ CREATE TABLE locations(
     longitude double precision,
     PRIMARY KEY(id)
 );
+CREATE INDEX idx_ismajor ON locations(ismajor);
+
 
 -- users
 CREATE TABLE users(
