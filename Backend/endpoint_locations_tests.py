@@ -134,6 +134,40 @@ class endpoint_companies_tests(unittest.TestCase):
             self.assertEqual(response.status_code, 200)  # Check that the response status code is 200 OK
             actual_result = json.loads(response.data)  # Parse the JSON response        
             self.assertEqual(actual_result, expected_results)  # Check that the response contains the expected data
+    
+    def test_post_location(self):
+        """Test that the post location endpoint create a new location"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange
+            excepted_city = 'city5'
+            expected_region = 'North'
+            expected_country = 'UK'
+            expected_ismajor = True
+            expected_population = 55555
+            expected_latitude = 0
+            expected_longitude = 0
+
+            # Act
+            response = self.client.post('/location', json={'name':excepted_city, 'region':expected_region, 'country':expected_country, 'ismajor': expected_ismajor, 'population': expected_population, 'latitude': expected_latitude, 'longitude':expected_longitude})
+
+            # Assert
+            #self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], "Location added successfully") # Check that the response message contains the expected message
+            self.assertIn('id', response_json) # Ensure the 'company_id' key is in the response
+            id = response_json['id']
+            expected_results = [
+                {'id': '22e94a57-e911-4d2e-94be-14d88cc20801', 'name': 'city1', 'region': 'North', 'country': 'UK', 'ismajor': True, 'population': 44444, 'latitude': 0, 'longitude': 0},
+                {'id': '22e94a57-e911-4d2e-94be-14d88cc20802', 'name': 'city2', 'region': 'East', 'country': 'UK', 'ismajor': False, 'population': 33333, 'latitude': 0, 'longitude': 0},
+                {'id': '22e94a57-e911-4d2e-94be-14d88cc20803', 'name': 'city3', 'region': 'West', 'country': 'UK', 'ismajor': False, 'population': 22222, 'latitude': 0, 'longitude': 0},
+                {'id': '22e94a57-e911-4d2e-94be-14d88cc20804', 'name': 'city4', 'region': 'South', 'country': 'USA', 'ismajor': False, 'population': 11111, 'latitude': 0, 'longitude': 0},
+                {'id': id, 'name': excepted_city, 'region': expected_region, 'country': expected_country, 'ismajor': expected_ismajor, 'population': expected_population, 'latitude': expected_latitude, 'longitude': expected_longitude},
+            ]             
+            response = self.client.get('/locations')            
+            self.assertEqual(response.status_code, 200)  # Check that the response status code is 200 OK
+            actual_result = json.loads(response.data)  # Parse the JSON response        
+            self.assertEqual(actual_result, expected_results)  # Check that the response contains the expected data
 
 if __name__ == '__main__':
     unittest.main()
