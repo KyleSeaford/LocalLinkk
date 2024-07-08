@@ -292,7 +292,8 @@ const styles = StyleSheet.create({
   expandedImage: {
     width: 350,
     height: 350,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
+    display: 'flex',
   },
   modalCloseButton: {
     position: 'absolute',

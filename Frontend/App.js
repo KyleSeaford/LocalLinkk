@@ -16,6 +16,7 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [userImage, setUserImage] = useState(null);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -25,6 +26,10 @@ const App = () => {
 
     checkAuthStatus();
   }, []);
+
+  const updateUserImage = (newImage) => {
+    setUserImage(newImage);
+  };
 
   if (isAuthenticated === null) {
     // Optionally, render a loading screen while checking auth status
@@ -37,9 +42,10 @@ const App = () => {
         {isAuthenticated ? (
           <Stack.Screen
             name="LocalLinkk - Home"
-            component={HomeScreen}
             options={{ headerShown: false }}
-          />
+          >
+            {(props) => <HomeScreen {...props} userImage={userImage} />}
+          </Stack.Screen>
         ) : (
           <Stack.Screen
             name="LocalLinkk - Sign Up"
@@ -54,9 +60,10 @@ const App = () => {
         />
         <Stack.Screen
           name="LocalLinkk - Profile"
-          component={ProfileScreen}
           options={{ headerShown: false }}
-        />
+        >
+          {(props) => <ProfileScreen {...props} userImage={userImage} updateUserImage={updateUserImage} />}
+        </Stack.Screen>
         <Stack.Screen
           name="LocalLinkk - Settings"
           component={SettingScreen}
