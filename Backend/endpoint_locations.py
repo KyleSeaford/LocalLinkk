@@ -30,17 +30,17 @@ class Locations():
 parser = reqparse.RequestParser()
 parser.add_argument(databaseFieldCountry, type=str, required=False, help='Country name')
 parser.add_argument(databaseFieldRegion, type=str, required=False, help='Region name')
-parser.add_argument(databaseFieldIsMajor, type=bool, required=False, help='Is major city')
+parser.add_argument(databaseFieldIsMajor, type=str, required=False, help='Is major city')
 parser.add_argument(databaseFieldPopulation, type=int, required=False, help='Minimum population')
 @api.route('/locations', doc={"description": "Get locations with optional filters"})
 class GetFilteredLocations(Resource):
     @api.expect(parser)
     def get(self):
         args = parser.parse_args()
-        country = args.get('country')
-        region = args.get('region')
-        is_major = args.get('isMajor')
-        population = args.get('population')
+        country = args.get(databaseFieldCountry)
+        region = args.get(databaseFieldRegion)
+        is_major = args.get(databaseFieldIsMajor)
+        population = args.get(databaseFieldPopulation)
 
         conditions = []
         if country:
@@ -48,7 +48,8 @@ class GetFilteredLocations(Resource):
         if region:
             conditions.append(f"{databaseFieldRegion}='{region}'")
         if is_major is not None:
-            conditions.append(f"{databaseFieldIsMajor}={is_major}")
+            isMajor = is_major.lower() in ['true', '1', 't', 'y', 'yes'] if is_major is not None else False
+            conditions.append(f"{databaseFieldIsMajor}={isMajor}")
         if population:
             conditions.append(f"{databaseFieldPopulation}>={population}")
 
