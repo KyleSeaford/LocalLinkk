@@ -87,7 +87,7 @@ const Navbar = () => {
     const fetchLocations = async () => {
         try {
             // Fetch locations from location API
-            const response = await fetch(`${url}Locations/locations`);
+            const response = await fetch(`${url}Locations/locations?ismajor=true`);
             const Locations = await response.json();
     
             // Extract location names

@@ -8,8 +8,8 @@ const postTypes = [
     { type: 'Large Text Post - Coming soon!', size: 'Large Text', sizeInPixels: '550x550', price: '£1.00'},
     { type: 'Small Image - Coming soon!', size: 'Small', sizeInPixels: '600x600', price: '£2.00'},
     { type: 'Medium Image - Coming soon!', size: 'Medium', sizeInPixels: '800x800', price: '£3.50'},
-    { type: 'Large Image - Coming soon!', size: 'Large', sizeInPixels: '1000x1000', price: '£4.00'},
-    { type: 'Extra-Large Image - Coming soon!', size: 'Extra-Large', sizeInPixels: '1200x1200', price: '£5.00' }
+    { type: 'Large Image - Coming soon!', size: 'Large', sizeInPixels: '1000x1000', price: '£5.00'},
+    { type: 'Custom Design - Coming soon!', size: 'Large', sizeInPixels: '1000x1000', price: '£45.00' }
 ];
 
 const PostSize = () => {
