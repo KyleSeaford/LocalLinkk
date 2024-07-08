@@ -11,19 +11,13 @@ logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Categories', description='Categories Endpoint')
-db = database_extensions(os.getenv("databaseFilename"))
+db = database_extensions()
 databaseTableName = 'categories'
 databaseFieldCategoryId = 'category_id'
 databaseFieldCategoryName = 'category_name'
 databaseFieldParentCategoryId = 'parent_category_id'
 argumentCategoryName = 'Category Name'
 argumentParentCategoryId = 'Parent Category Id'
-
-class Categories():    
-    def __init__(self, databaseName):
-        global db
-        db = database_extensions(databaseName)
-        logging.debug(f"Categories - Setting database to {databaseName}")
 
 def bread_crumbs(id):
     """ Generate the categories bread crumbs eg "cat1 >> cat2 >> Cat3 >> Cat4" """

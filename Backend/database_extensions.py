@@ -12,8 +12,8 @@ load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
 
 class database_extensions():
-    def __init__(self, db):
-        self.databaseFileName = db
+    def __init__(self):
+        self.databaseFileName = str(os.getenv("dbDatabase"))
 
     def fetchAll(self, sql):
         if os.getenv("dbType") == "postgres":

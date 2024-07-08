@@ -15,7 +15,7 @@ class endpoint_companies_tests(unittest.TestCase):
         """Set up for unit tests, executed once for the class"""
         
         # Create Postgres database for unit testing 
-        db = database_extensions("")
+        db = database_extensions()
         cls.unittest = db.create_database_and_tables("Backend\\database_schema.sql")
 
         # Populate database with test data

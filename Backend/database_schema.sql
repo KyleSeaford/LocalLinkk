@@ -53,3 +53,9 @@ CREATE TABLE users(
     PRIMARY KEY(userid)
 );
 CREATE UNIQUE INDEX users_useremail_key ON users USING btree ("useremail");
+
+-- settings
+CREATE TABLE settings (
+    Sname varchar(255),
+    Svalue varchar(255)
+);
