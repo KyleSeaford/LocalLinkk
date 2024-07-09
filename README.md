@@ -1,8 +1,7 @@
 # LocalLinkk - Connected Better
 
-[locallinkk.com](http://locallinkk.com/)
 
-LocalLinkk is an app designed to connect an unlimited number of people together, enabling local businesses and residents to discover and interact with each other.
+[locallinkk.com](http://locallinkk.com/) is an app designed to connect an unlimited number of people together, enabling local businesses and residents to discover and interact with each other.
 
 ## Features
 - Easily browse through local events, news, and businesses in your area
