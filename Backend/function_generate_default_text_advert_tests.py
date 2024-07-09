@@ -55,6 +55,20 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertIn(city, result)
         self.assertIn(phone, result)
 
+    def test_generateTextAdvert(self):
+        # Arrange 
+        companyName = "Bob and Co"
+        text = "We sell the best widgets"
+        link = "www.bobandco.com"
+
+        # Act
+        result = generateTextAdvert(companyName, text, link)
+
+        # Assert
+        self.assertIn(companyName, result)
+        self.assertIn(text, result)
+        self.assertIn(link, result)
+
     def test_valid_landline_numbers(self):
         self.assertTrue(is_valid_uk_phone_number("01234567890"))
         self.assertTrue(is_valid_uk_phone_number("020 7946 0123"))
