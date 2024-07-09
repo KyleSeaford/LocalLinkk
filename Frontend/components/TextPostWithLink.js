@@ -278,7 +278,8 @@ const TEXTLinkPost = () => {
                 placeholder="Town / City"
                 placeholderTextColor="#999"
                 value={townCity}
-                onChangeText={setTownCity}
+                onChangeText={(text) => setTownCity(text.charAt(0).toUpperCase() + text.slice(1))}
+                autoCapitalize="words"
             />
 
             <View style={styles.buttonRow}>
