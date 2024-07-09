@@ -100,21 +100,35 @@ class PostLocation(Resource):
         db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldLocationId}, {databaseFieldLocationName}, {databaseFieldRegion}, {databaseFieldCountry}, {databaseFieldIsMajor}, {databaseFieldPopulation}, {databaseFieldLatitude}, {databaseFieldLongitude}) VALUES ('{id}', '{name}', '{args[databaseFieldRegion]}', '{args[databaseFieldCountry]}', {isMajor}, '{pop}', '{lat}', '{long}')")
         return {'message': 'Location added successfully', 'id': id}, 201
 
-@api.route('/location/<string:name>', doc={"description": "Get a locations lat and long"})
+
+@api.route('/location/<string:name>', doc={"description": "Get a location's lat and long"})
 class GetLocation(Resource):
     parserGet = reqparse.RequestParser()
     parserGet.add_argument('name', type=str, required=True, help='Location name')
 
-    api_key = os.getenv("opencagedataAPIkey")
-
     def get(self, name):
-        url = f"https://api.opencagedata.com/geocode/v1/json?q={name}&key={self.api_key}"
+        # Check if location exists in the database
+        query = f"SELECT {databaseFieldLatitude}, {databaseFieldLongitude} FROM {databaseTableName} WHERE {databaseFieldLocationName}='{name}'"
+        record = db.fetchSingleRecord(query)
+        
+        if record[0] > 0:
+            lat, lng = record
+            return {"lat": lat, "lng": lng}
+        
+        
+        api_key = os.getenv("opencagedataAPIkey")
+
+        # If location doesn't exist, fetch from external API
+        url = f"https://api.opencagedata.com/geocode/v1/json?q={name}&key={api_key}"
         response = requests.get(url)
         data = response.json()
 
         if data["results"] and len(data["results"]) > 0:
             lat = data["results"][0]["geometry"]["lat"]
             lng = data["results"][0]["geometry"]["lng"]
+            
+            # Insert new location into the database
+            db.execute(f"UPDATE {databaseTableName} SET {databaseFieldLongitude} = '{lng}', {databaseFieldLatitude} = '{lat}' WHERE {databaseFieldLocationName} = '{name}'")            
             return {"lat": lat, "lng": lng}
-        else:    
+        else:
             raise Exception("Location not found")
