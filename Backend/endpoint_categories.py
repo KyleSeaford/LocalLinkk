@@ -10,7 +10,7 @@ logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat
 
 app = Flask(__name__)
 api = Api(app)
-api = Namespace('Categories', description='Categories Endpoint')
+api = Namespace('Categories', description='Categories for types of companies endpoint')
 db = database_extensions()
 databaseTableName = 'categories'
 databaseFieldCategoryId = 'category_id'

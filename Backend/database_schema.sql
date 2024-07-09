@@ -1,10 +1,18 @@
 
--- categories
+-- categories for types companies
 CREATE TABLE categories(
     category_id text NOT NULL,
     category_name text,
     parent_category_id text,
     PRIMARY KEY(category_id)
+);
+
+-- genres for types of events
+CREATE TABLE genres(
+    genre_id text NOT NULL,
+    genre_name text,
+    parent_genre_id text,
+    PRIMARY KEY(genre_id)
 );
 
 -- compaines
