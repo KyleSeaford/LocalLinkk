@@ -2,12 +2,13 @@ import re
 
 def generateDefaultTextAdvert(companyName, city, phoneNumber):    
     advert = companyName
+    newline = "\n"
 
     if city != None and city != "":
-        advert += f"{"\n"} of " + city
+        advert += f"{newline} of " + city
     
     if phoneNumber != None and phoneNumber != "" and is_valid_uk_phone_number(phoneNumber):
-        advert += f"{"\n"}call " + phoneNumber
+        advert += f"{newline}call " + phoneNumber
     
     return advert
 
