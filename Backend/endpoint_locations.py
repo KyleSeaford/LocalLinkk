@@ -11,7 +11,7 @@ logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Locations', description='Locations Endpoint')
-db = database_extensions(os.getenv("databaseFilename"))
+db = database_extensions()
 databaseTableName = 'locations'
 databaseFieldLocationId = 'id'
 databaseFieldLocationName = 'name'
@@ -21,11 +21,6 @@ databaseFieldIsMajor = 'ismajor'
 databaseFieldPopulation = 'population'
 databaseFieldLatitude = 'latitude'
 databaseFieldLongitude = 'longitude'
-
-class Locations():    
-    def __init__(self, databaseName):
-        global db
-        db = database_extensions(databaseName)
 
 parser = reqparse.RequestParser()
 parser.add_argument(databaseFieldCountry, type=str, required=False, help='Country name')

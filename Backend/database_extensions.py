@@ -1,12 +1,10 @@
 import logging
 import uuid
-import sqlite3
 import os
 from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import sql
 from datetime import datetime
-
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -16,57 +14,36 @@ class database_extensions():
         self.databaseFileName = str(os.getenv("dbDatabase"))
 
     def fetchAll(self, sql):
-        if os.getenv("dbType") == "postgres":
-            """Fetch all of the records from the database"""
-            logging.debug(f"fetchAll from postgres sql {sql}")
+        """Fetch all of the records from the database"""
+        logging.debug(f"fetchAll from postgres sql {sql}")
 
-            conn = psycopg2.connect(
-                host=os.getenv("dbHost"),
-                database=os.getenv("dbDatabase"),
-                user=os.getenv("dbUser"),
-                password=os.getenv("dbPassword")
-            )
-            cursor = conn.cursor()
-            cursor.execute(sql)
-            records = cursor.fetchall()  
-            conn.close() 
-            return records  
+        conn = psycopg2.connect(
+            host=os.getenv("dbHost"),
+            database=os.getenv("dbDatabase"),
+            user=os.getenv("dbUser"),
+            password=os.getenv("dbPassword")
+        )
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        records = cursor.fetchall()  
+        conn.close() 
+        return records  
          
-        else:
-            """Fetch all of the records from the database"""
-            logging.debug(f"fetchAll from {self.databaseFileName} sql {sql}")
-            conn = sqlite3.connect(self.databaseFileName)
-            cursor = conn.cursor()
-            cursor.execute(sql)
-            records = cursor.fetchall()  
-            conn.close() 
-            return records
-
     def fetchSingleRecord(self, sql):
-        if os.getenv("dbType") == "postgres":
-            """Fetch one record from the database"""
-            logging.debug(f"fetchSingleRecord from postgres sql {sql}")
+        """Fetch one record from the database"""
+        logging.debug(f"fetchSingleRecord from postgres sql {sql}")
 
-            conn = psycopg2.connect(
-                host=os.getenv("dbHost"),
-                database=os.getenv("dbDatabase"),
-                user=os.getenv("dbUser"),
-                password=os.getenv("dbPassword")
-            )
-            cursor = conn.cursor()
-            cursor.execute(sql)
-            record = cursor.fetchone()  
-            conn.close() 
-            return record
-        else:
-            """Fetch one record from the database"""
-            logging.debug(f"fetchSingleRecord from {self.databaseFileName} sql {sql}")
-            conn = sqlite3.connect(self.databaseFileName)
-            cursor = conn.cursor()
-            cursor.execute(sql)
-            record = cursor.fetchone()  
-            conn.close() 
-            return record
+        conn = psycopg2.connect(
+            host=os.getenv("dbHost"),
+            database=os.getenv("dbDatabase"),
+            user=os.getenv("dbUser"),
+            password=os.getenv("dbPassword")
+        )
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        record = cursor.fetchone()  
+        conn.close() 
+        return record
 
     def fetchSingleValue(self, sql):
         """Fetch one single value from the database"""
@@ -92,28 +69,19 @@ class database_extensions():
         return result
 
     def execute(self, sql):
-        if os.getenv("dbType") == "postgres":
-            """Execute an sql command that will not return any records"""
-            logging.debug(f"execute from postgres sql {sql}")
+        """Execute an sql command that will not return any records"""
+        logging.debug(f"execute from postgres sql {sql}")
 
-            conn = psycopg2.connect(
-                host=os.getenv("dbHost"),
-                database=os.getenv("dbDatabase"),
-                user=os.getenv("dbUser"),
-                password=os.getenv("dbPassword")
-            )
-            cursor = conn.cursor()
-            cursor.execute(sql)
-            conn.commit()
-            conn.close()
-        else:
-            """Execute an sql command that will not return any records"""
-            logging.debug(f"execute from {self.databaseFileName} sql {sql}")
-            conn = sqlite3.connect(self.databaseFileName)
-            cursor = conn.cursor()
-            cursor.execute(sql)
-            conn.commit()
-            conn.close()
+        conn = psycopg2.connect(
+            host=os.getenv("dbHost"),
+            database=os.getenv("dbDatabase"),
+            user=os.getenv("dbUser"),
+            password=os.getenv("dbPassword")
+        )
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
     
     def generateId(self):
         """Generate a unique id number"""
@@ -122,21 +90,16 @@ class database_extensions():
         return id
     
     def close(self):
-        if os.getenv("dbType") == "postgres":
-            """Close the database connection"""
-            logging.debug(f"close postgres")
-            conn = psycopg2.connect(
-                host=os.getenv("dbHost"),
-                database=os.getenv("dbDatabase"),
-                user=os.getenv("dbUser"),
-                password=os.getenv("dbPassword")
-            )
-            conn.close()
-        else:
-            """Close the database connection"""
-            logging.debug(f"close {self.databaseFileName}")
-            conn = sqlite3.connect(self.databaseFileName)
-            conn.close()
+        """Close the database connection"""
+        logging.debug(f"close postgres")
+        conn = psycopg2.connect(
+            host=os.getenv("dbHost"),
+            database=os.getenv("dbDatabase"),
+            user=os.getenv("dbUser"),
+            password=os.getenv("dbPassword")
+        )
+        conn.close()
+
 
     def create_database_and_tables(self, sql_file_path):
         # Create a connection to the server

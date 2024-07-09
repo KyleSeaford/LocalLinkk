@@ -35,7 +35,7 @@ api = Api(app, authorizations=authorizations, security='Token')
 
 api = Namespace('Users', description='Users Endpoint')
 
-db = database_extensions(os.getenv("databaseFilename"))
+db = database_extensions()
 
 userID = 'userID'
 userID2 = 'userID'
@@ -45,11 +45,6 @@ userLocation = 'userLocation'
 userEmail = 'userEmail'
 userPassword = 'userPassword'
 userType = 'userType'
-
-class Users():    
-    def __init__(self, databaseName):
-        global db
-        db = database_extensions(databaseName)
 
 @api.route("/users",  doc={"description": "Gets all users"})
 class Users(Resource):

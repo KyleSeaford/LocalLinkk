@@ -4,7 +4,6 @@ from flask_restx import Api
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from endpoint_categories import api as namespaceCategories
-from endpoint_categories import Categories
 from endpoint_companies import api as namespaceCompanies
 from endpoint_users import api as namespaceUsers
 from endpoint_locations import api as namespaceLocations
@@ -29,7 +28,6 @@ api.add_namespace(namespaceLocations)
 if __name__ == '__main__':
     logging.info("=== Application Start ===")
     try:
-        Categories(os.getenv("databaseFilename"))
         app.run(host='0.0.0.0', port=5500, debug=True)
     except Exception as ex:
         logging.error(f"ERROR in application: {ex}")
