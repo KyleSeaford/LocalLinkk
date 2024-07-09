@@ -126,65 +126,79 @@ class PostCompany(Resource):
         if advertType == "" or advertType == None:
             advertType = "Text"
 
+        mapLink = args[argumentMapLink]
+        if mapLink == "" or mapLink == None:
+            mapLink = " "
+
         newCompanyId = db.generateId()
 
         db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
 
-    @api.route('/company/<company_id>')
-    class PutCompany(Resource):
-        parserUpdate = reqparse.RequestParser()
-        parserUpdate.add_argument(argumentCompanyName, type=str, help='Company Name', required=False)
-        parserUpdate.add_argument(argumentCategoryId, type=str, help='Category Id', required=False)
-        parserUpdate.add_argument(argumentLatitude, type=str, help='Latitude', required=False)
-        parserUpdate.add_argument(argumentLongitude, type=str, help='Longitude', required=False)
-        parserUpdate.add_argument(argumentCompanyEmail, type=str, help='Email', required=False)
-        parserUpdate.add_argument(argumentCompanyPhone, type=str, help='Phone', required=False)
-        parserUpdate.add_argument(argumentMapLink, type=str, help='Google maps link', required=False)
-        parserUpdate.add_argument(argumentCompanyWebsite, type=str, help='Website', required=False)
-        parserUpdate.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
-        parserUpdate.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
-        parserUpdate.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
-        parserUpdate.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
+@api.route('/company/<company_id>')
+class PutCompany(Resource):
+    parserUpdate = reqparse.RequestParser()
+    parserUpdate.add_argument(argumentCompanyName, type=str, help='Company Name', required=False)
+    parserUpdate.add_argument(argumentCategoryId, type=str, help='Category Id', required=False)
+    parserUpdate.add_argument(argumentLatitude, type=str, help='Latitude', required=False)
+    parserUpdate.add_argument(argumentLongitude, type=str, help='Longitude', required=False)
+    parserUpdate.add_argument(argumentCompanyEmail, type=str, help='Email', required=False)
+    parserUpdate.add_argument(argumentCompanyPhone, type=str, help='Phone', required=False)
+    parserUpdate.add_argument(argumentMapLink, type=str, help='Google maps link', required=False)
+    parserUpdate.add_argument(argumentCompanyWebsite, type=str, help='Website', required=False)
+    parserUpdate.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
+    parserUpdate.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
+    parserUpdate.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
+    parserUpdate.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
+    
+    @api.doc(parser=parserUpdate)
+    @api.doc(description="Update an existing company")
+    def put(self, company_id):
+        args = self.parserUpdate.parse_args()
+        # Mapping argument names to database field names
+        field_mapping = {
+            argumentCompanyName: databaseFieldCompanyName,
+            argumentCategoryId: databaseFieldCategoryId,
+            argumentLatitude: databaseFieldLatitude,
+            argumentLongitude: databaseFieldLongitude,
+            argumentCompanyEmail: databaseFieldEmail,
+            argumentCompanyPhone: databaseFieldPhone,
+            argumentCompanyWebsite: databaseFieldWebsite,
+            argumentAdvertType:databaseFieldAdvertType,
+            argumentAdvertText:databaseFieldAdvertText,
+            argumentAdvertImage: databaseFieldAdvertImage,
+            argumentAdvertExpires: databaseFieldAdvertExpires,
+            argumentMapLink: databaseFieldMapLink
+        }
         
-        @api.doc(parser=parserUpdate)
-        @api.doc(description="Update an existing company")
-        def put(self, company_id):
-            args = self.parserUpdate.parse_args()
-            # Mapping argument names to database field names
-            field_mapping = {
-                argumentCompanyName: databaseFieldCompanyName,
-                argumentCategoryId: databaseFieldCategoryId,
-                argumentLatitude: databaseFieldLatitude,
-                argumentLongitude: databaseFieldLongitude,
-                argumentCompanyEmail: databaseFieldEmail,
-                argumentCompanyPhone: databaseFieldPhone,
-                argumentCompanyWebsite: databaseFieldWebsite,
-                argumentAdvertType:databaseFieldAdvertType,
-                argumentAdvertText:databaseFieldAdvertText,
-                argumentAdvertImage: databaseFieldAdvertImage,
-                argumentAdvertExpires: databaseFieldAdvertExpires,
-                argumentMapLink: databaseFieldMapLink
-            }
-            
-            update_fields = {field_mapping[arg]: value for arg, value in args.items() if value is not None}
-            
-            if not update_fields:
-                return {'message': 'No data provided to update'}, 400
-            
-            # Update the company details
-            update_set = ", ".join([f"{key}='{value}'" for key, value in update_fields.items()])
-            db.execute(f"UPDATE {databaseTableName} SET {update_set} WHERE {databaseFieldCompanyId}='{company_id}'")
-            
-            return {'message': 'Company updated successfully'}, 200
+        update_fields = {field_mapping[arg]: value for arg, value in args.items() if value is not None}
+        
+        if not update_fields:
+            return {'message': 'No data provided to update'}, 400
+        
+        # Update the company details
+        update_set = ", ".join([f"{key}='{value}'" for key, value in update_fields.items()])
+        db.execute(f"UPDATE {databaseTableName} SET {update_set} WHERE {databaseFieldCompanyId}='{company_id}'")
+        
+        return {'message': 'Company updated successfully'}, 200
 
-        @api.doc(description="Delete an existing company")
-        def delete(self, company_id):
-            # Check if the company exists
-            recordExists = db.fetchSingleValue(f"SELECT COUNT(*) FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
-            if recordExists == 0:
-                return {'message': f'Company {company_id} does not exist'}, 404
-            
-            # Delete the company
-            db.execute(f"DELETE FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
-            return {'message': 'Company deleted successfully'}, 200
+    @api.doc(description="Delete an existing company")
+    def delete(self, company_id):
+        # Check if the company exists
+        recordExists = db.fetchSingleValue(f"SELECT COUNT(*) FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
+        if recordExists == 0:
+            return {'message': f'Company {company_id} does not exist'}, 404
+        
+        # Delete the company
+        db.execute(f"DELETE FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
+        return {'message': 'Company deleted successfully'}, 200
+    
+@api.route('/company/<company_id>/advertPreview')
+@api.param('company_id', 'Company id')
+class GetAdvertPreview(Resource):
+    def get(self,company_id):
+        logging.debug(f"Getting advert preview for {company_id}")        
+        result = db.fetchJson([databaseFieldAdvertText], databaseTableName, f"where {databaseFieldCompanyId}='{company_id}'", '')
+        if len(result) == 0:
+            return {'message': f'Company {company_id} does not exists'}, 400
+        return result[0]

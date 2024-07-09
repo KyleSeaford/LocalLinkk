@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,7 +15,8 @@ const TEXTPost = () => {
     const [website, setWebsite] = useState("");
     const [townCity, setTownCity] = useState("");
     const [dropdownVisible, setDropdownVisible] = useState(false);
-
+    const [advertPreview, setAdvertPreview] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
@@ -58,37 +59,84 @@ const TEXTPost = () => {
         if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
             setErrorMessage('Please fill in all fields');
             return;
-        }
+        };
     
         if (!validateEmail(email)) {
             setErrorMessage('Invalid email address');
             return;
-        }
+        };
     
         if (!validatePhoneNumber(phoneNumber)) {
             setErrorMessage('Invalid phone number');
             return;
-        }
+        };
     
         if (!validateWebsite(website)) {
             setErrorMessage('Invalid website URL');
             return;
-        }
+        };
     
+        setIsLoading(true); // Start loading indicator
+        setErrorMessage(''); // Clear any previous error messages
+        setAdvertPreview(null); // Clear previous preview
+
         try {
             const { lat, lng } = await getCoordinates(townCity);
             console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
     
-            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, lat, lng });
+            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, lat, lng, advert_type: 'Text'});
             await AsyncStorage.setItem('details', details);
-            
-            // TODO: create a preview page to display the entered details in the default format for chose post type, for text will go straight to the preview, for imgs it will go to the duration page
-            // TODO: on the preview page top bar as usual, title "LocalLinkk - Post Preview", preview of the post, cost of the post and two buttons "Back" and "Post"
 
-            setErrorMessage(''); // Clear error message on success
+            const postAdvert = async (details) => {
+                try {
+                    const response = await fetch(`http://192.168.127.93:5500/Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(details),
+                    });
+                    const data = await response.json();
+                    console.log('company added:', data);
+                    await AsyncStorage.setItem('companyID', data.company_id);
+                    await AsyncStorage.removeItem('details');
+                    return data;
+                }
+                catch (error) {
+                    console.error('Error posting advert:', error);
+                    await AsyncStorage.removeItem('details');
+                }
+            };
+
+            const companyData = await postAdvert();
+
+            if (companyData) {
+                const showPreview = async () => {
+                    try {
+                        await AsyncStorage.getItem('companyID').then(async companyIdData => {
+                            const companyID = companyIdData;
+                            console.log('Company ID:', companyID);
+                            
+                            const response = await fetch(`http://192.168.127.93:5500/Companies/company/${companyID}/advertPreview`);
+                            const advertData = await response.json();
+                            console.log('Advert preview:', advertData);
+                            await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
+                            await AsyncStorage.removeItem('companyID');
+                            setAdvertPreview(advertData); // Set the advert preview data
+                        });
+                    } catch (error) {
+                        console.error('Error fetching advert preview:', error);
+                    }
+                };
+    
+                await showPreview();
+            }
+
         } catch (error) {
             setErrorMessage(error.message);
+        } finally {
+            setIsLoading(false); // Stop loading indicator
         }
     };
     
@@ -173,8 +221,6 @@ const TEXTPost = () => {
                 <Text style={styles.text}>Your Company Details</Text>
             </View>
 
-            <Text style={styles.instructionText2}>Create a LocalLinkk Text Post, Step 1:</Text>
-
             <Text style={styles.instructionText}>Enter your company details. They will be used to generate your text advert.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
@@ -236,9 +282,23 @@ const TEXTPost = () => {
                     <Text style={styles.backNextButtonText}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.backNextButton} onPress={handleNextClick}>
-                    <Text style={styles.backNextButtonText}>Next</Text>
+                    <Text style={styles.backNextButtonText}>Show Preview</Text>
                 </TouchableOpacity>
             </View>
+
+            {isLoading && (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#4CAF50" />
+                    <Text style={styles.loadingText}>Generating preview...</Text>
+                </View>
+            )}
+
+            {advertPreview && (
+                <View style={styles.previewContainer}>
+                    <Text style={styles.previewText}>Advert Preview:{"\n"}{"\n"}</Text>
+                    <Text style={styles.previewText}>{JSON.stringify(advertPreview.advert_text, null, 2)}</Text>
+                </View>
+            )}
         </ScrollView>
     );
 };
@@ -269,15 +329,7 @@ const styles = StyleSheet.create({
     instructionText: {
         fontSize: 16,
         color: '#aaa',
-        marginBottom: 35,
-        marginTop: 10,
-        textAlign: 'center',
-    },
-    instructionText2: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#aaa',
-        marginBottom: 5,
+        marginBottom: 25,
         marginTop: 10,
         textAlign: 'center',
     },
@@ -287,14 +339,14 @@ const styles = StyleSheet.create({
         padding: 15,
         marginVertical: 10,
         borderRadius: 5,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     categoryButton: {
         backgroundColor: '#333',
         padding: 15,
         borderRadius: 5,
         marginVertical: 10,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     categoryButtonText: {
         color: '#fff',
@@ -345,6 +397,26 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 16,
         marginBottom: 20,
+        textAlign: 'center',
+    },
+    loadingContainer: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    loadingText: {
+        color: '#4CAF50',
+        fontSize: 16,
+        marginTop: 10,
+    },
+    previewContainer: {
+        marginTop: 15,
+        padding: 10,
+        backgroundColor: '#333',
+        borderRadius: 5,
+    },
+    previewText: {
+        color: '#fff',
+        fontSize: 16,
         textAlign: 'center',
     },
 });
