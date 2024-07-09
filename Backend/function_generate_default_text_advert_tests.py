@@ -28,6 +28,19 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertIn(companyName, result)
         self.assertIn(city, result)
     
+    def test_company_name_and_phone_advert(self):
+        # Arrange 
+        companyName = "Bob and Co"
+        city = ""
+        phone = "01625 611979"
+
+        # Act
+        result = generateDefaultTextAdvert(companyName, city, phone)
+
+        # Assert
+        self.assertIn(companyName, result)
+        self.assertIn(phone, result)
+
     def test_company_name_and_city_and_phone_advert(self):
         # Arrange 
         companyName = "Bob and Co"
