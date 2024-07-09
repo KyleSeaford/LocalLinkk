@@ -4,8 +4,8 @@ import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const postTypes = [
-    { type: 'Text Post', size: 'Text', sizeInPixels: '500x500', price: 'Free'},
-    { type: 'Large Text Post - Coming soon!', size: 'Large Text', sizeInPixels: '550x550', price: '£1.00'},
+    { type: 'Text Post', size: 'Text', sizeInPixels: 'One Sentence', price: 'Free'},
+    { type: 'Text Post With Web Link', size: 'Text-Link', sizeInPixels: 'One Sentence With a Link', price: '£2.00'},
     { type: 'Small Image - Coming soon!', size: 'Small', sizeInPixels: '600x600', price: '£2.00'},
     { type: 'Medium Image - Coming soon!', size: 'Medium', sizeInPixels: '800x800', price: '£3.50'},
     { type: 'Large Image - Coming soon!', size: 'Large', sizeInPixels: '1000x1000', price: '£5.00'},
@@ -68,8 +68,8 @@ const PostSize = () => {
                         <View style={styles.postTypeDetailsContainer}>
                             <View style={styles.postTypeInfoLeft}>
                                 <Text style={styles.postTypeText}>{postType.type}</Text>
-                                <Text style={styles.postTypeDetails}>Size: {postType.size}</Text>
-                                <Text style={styles.postTypeDetails}>Size in pixels: {postType.sizeInPixels}</Text>
+                                <Text style={styles.postTypeDetails}>Type: {postType.size}</Text>
+                                <Text style={styles.postTypeDetails}>Size: {postType.sizeInPixels}</Text>
                             </View>
                             <Text style={styles.postTypePrice}>{postType.price}</Text>
                         </View>

@@ -457,8 +457,6 @@ const styles = StyleSheet.create({
         height: 40,
         marginRight: 10,
         borderRadius: 50,
-        borderWidth: 1,
-        borderColor: 'black',
     },
     titleContainer: {
         flex: 1,

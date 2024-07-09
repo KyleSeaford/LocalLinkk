@@ -1,5 +1,6 @@
 from flask_restx import Api, Namespace, Resource, reqparse
 from flask import Flask
+import requests
 from database_extensions import database_extensions
 import logging
 import os
@@ -96,3 +97,22 @@ class PostLocation(Resource):
 
         db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldLocationId}, {databaseFieldLocationName}, {databaseFieldRegion}, {databaseFieldCountry}, {databaseFieldIsMajor}, {databaseFieldPopulation}, {databaseFieldLatitude}, {databaseFieldLongitude}) VALUES ('{id}', '{name}', '{args[databaseFieldRegion]}', '{args[databaseFieldCountry]}', {isMajor}, '{pop}', '{lat}', '{long}')")
         return {'message': 'Location added successfully', 'id': id}, 201
+
+@api.route('/location/<string:name>', doc={"description": "Get a locations lat and long"})
+class GetLocation(Resource):
+    parserGet = reqparse.RequestParser()
+    parserGet.add_argument('name', type=str, required=True, help='Location name')
+
+    api_key = os.getenv("opencagedataAPIkey")
+
+    def get(self, name):
+        url = f"https://api.opencagedata.com/geocode/v1/json?q={name}&key={self.api_key}"
+        response = requests.get(url)
+        data = response.json()
+
+        if data["results"] and len(data["results"]) > 0:
+            lat = data["results"][0]["geometry"]["lat"]
+            lng = data["results"][0]["geometry"]["lng"]
+            return {"lat": lat, "lng": lng}
+        else:
+            raise Exception("Location not found")
