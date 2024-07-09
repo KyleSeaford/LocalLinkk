@@ -227,9 +227,9 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 80,
-    borderWidth: 2,
+    //borderWidth: 1,
     marginTop: 20,
-    borderColor: '#007BFF',
+    //borderColor: 'black',
   },
   Namecontainer: {
     fontSize: 28,

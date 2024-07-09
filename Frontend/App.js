@@ -11,6 +11,7 @@ import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
 import ScreenPostSize from './screens/PostSizeScreen';
 import ScreenPostTEXT from './screens/PostTEXTScreen';
+import ScreenPostTEXTLink from './screens/PostTEXTLinkScreen';
 
 const Stack = createStackNavigator();
 
@@ -82,6 +83,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Text Post"
           component={ScreenPostTEXT}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Text Post With Web Link"
+          component={ScreenPostTEXTLink}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

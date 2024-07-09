@@ -4,7 +4,7 @@ import { Octicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TEXTPost = () => {
+const TEXTLinkPost = () => {
     const navigation = useNavigation();
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
@@ -61,7 +61,6 @@ const TEXTPost = () => {
             throw new Error('Location not found');
         }
     };
-    
     
     const handleNextClick = async () => {
         if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
@@ -154,6 +153,7 @@ const TEXTPost = () => {
         navigation.goBack();
     };
 
+
     const fetchCategories = async () => {
         try {
             const response = await fetch(`${url}Categories/category/0/children`);
@@ -227,7 +227,7 @@ const TEXTPost = () => {
                 <Text style={styles.text}>Your Company Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your company details. They will be used to generate your text advert.</Text>
+            <Text style={styles.instructionText}>Enter your company details. They will be used to generate your text advert with your HyperLink.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
@@ -435,4 +435,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TEXTPost;
+export default TEXTLinkPost;
