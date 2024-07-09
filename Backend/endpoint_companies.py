@@ -13,7 +13,7 @@ logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Companies', description='Companies Endpoint')
-db = database_extensions(os.getenv("databaseFilename"))
+db = database_extensions()
 databaseTableName = 'companies'
 databaseFieldCompanyId = 'company_id'
 databaseFieldCompanyName = 'company_name'
@@ -41,11 +41,6 @@ argumentAdvertImage = 'Advert Image'
 argumentAdvertExpires = 'Advert Expiry Date'
 argumentMapLink = 'Google Maps Link'
 
-class Companies():    
-    def __init__(self, databaseName):
-        global db
-        db = database_extensions(databaseName)
-
 @api.route('/companies', doc={"description": "Get all companies"})
 class GetCompanies(Resource):
     def get(self):        
@@ -65,9 +60,11 @@ class GetCompaniesByCategory(Resource):
 @api.param('radius', 'Maximum Distance')
 class GetCompaniesByCategoryAndLocation(Resource):
     def get(self,category_id, latitude, longitude, radius):
-        logging.debug(f"Getting companies by category id and location")        
-        distance = f"(6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude)))) AS distance"
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distance, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where distance < {radius} and {databaseFieldCategoryId}='{category_id}'", "ORDER BY distance")
+        logging.debug(f"Getting companies by category id and location")   
+        distanceSearch = f"(6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude))))"
+        distanceColumn = f"{distanceSearch} AS distance"
+        where = f"where {distanceSearch} < {radius} and {databaseFieldCategoryId}='{category_id}'"
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distanceColumn, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, where, "ORDER BY distance")
         
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
@@ -131,7 +128,7 @@ class PostCompany(Resource):
 
         newCompanyId = db.generateId()
 
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage], args[argumentMapLink]}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
 
     @api.route('/company/<company_id>')
