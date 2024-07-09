@@ -19,6 +19,8 @@ const TEXTPost = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
+    const url = 'http://192.168.127.93:5500/';
+
     useEffect(() => {
         fetchCategories();
     }, []);
@@ -44,17 +46,22 @@ const TEXTPost = () => {
     }; 
 
     const getCoordinates = async (location) => {
-        const apiKey = '08bb878c2d3d4eb6af9ef8f0c7fa16fb'; // Replace with your OpenCage API key
-        const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
+        const response = await fetch(`${url}Locations/location/${location}`);
         const data = await response.json();
+        console.log(data);
         
-        if (data.results && data.results.length > 0) {
-            const { lat, lng } = data.results[0].geometry;
+        if (data && data.lat !== undefined && data.lng !== undefined) {
+            const lat = data.lat;
+            console.log(lat);
+            const lng = data.lng;
+            console.log(lng);
+    
             return { lat, lng };
         } else {
             throw new Error('Location not found');
         }
     };
+    
     
     const handleNextClick = async () => {
         if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
@@ -91,7 +98,7 @@ const TEXTPost = () => {
 
             const postAdvert = async (details) => {
                 try {
-                    const response = await fetch(`http://192.168.127.93:5500/Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}`, {
+                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -119,7 +126,7 @@ const TEXTPost = () => {
                             const companyID = companyIdData;
                             console.log('Company ID:', companyID);
                             
-                            const response = await fetch(`http://192.168.127.93:5500/Companies/company/${companyID}/advertPreview`);
+                            const response = await fetch(`${url}Companies/company/${companyID}/advertPreview`);
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
@@ -146,8 +153,6 @@ const TEXTPost = () => {
         AsyncStorage.removeItem('details');
         navigation.goBack();
     };
-
-    const url = 'http://192.168.127.93:5500/';
 
     const fetchCategories = async () => {
         try {

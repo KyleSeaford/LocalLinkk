@@ -1,5 +1,6 @@
 from flask_restx import Api, Namespace, Resource, reqparse
 from flask import Flask
+from flask_cors import CORS
 import requests
 from database_extensions import database_extensions
 import logging
@@ -12,6 +13,7 @@ logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat
 app = Flask(__name__)
 api = Api(app)
 api = Namespace('Locations', description='Locations Endpoint')
+CORS(app)  # Allow CORS for all routes
 db = database_extensions()
 databaseTableName = 'locations'
 databaseFieldLocationId = 'id'
@@ -114,5 +116,5 @@ class GetLocation(Resource):
             lat = data["results"][0]["geometry"]["lat"]
             lng = data["results"][0]["geometry"]["lng"]
             return {"lat": lat, "lng": lng}
-        else:
+        else:    
             raise Exception("Location not found")
