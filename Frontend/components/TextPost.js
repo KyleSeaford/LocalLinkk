@@ -24,6 +24,7 @@ const TEXTPost = () => {
     }, []);
 
     const handleBackToHomeClick = () => {
+        AsyncStorage.removeItem('advertPreview');
         navigation.navigate('LocalLinkk - Home');
     };
 
@@ -40,7 +41,7 @@ const TEXTPost = () => {
     const validateWebsite = (website) => {
         const websiteRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
         return websiteRegex.test(website);
-    };
+    }; 
 
     const getCoordinates = async (location) => {
         const apiKey = '08bb878c2d3d4eb6af9ef8f0c7fa16fb'; // Replace with your OpenCage API key
@@ -79,7 +80,7 @@ const TEXTPost = () => {
         setIsLoading(true); // Start loading indicator
         setErrorMessage(''); // Clear any previous error messages
         setAdvertPreview(null); // Clear previous preview
-
+    
         try {
             const { lat, lng } = await getCoordinates(townCity);
             console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
@@ -123,7 +124,7 @@ const TEXTPost = () => {
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
                             await AsyncStorage.removeItem('companyID');
-                            setAdvertPreview(advertData); // Set the advert preview data
+                            setAdvertPreview(advertData.advert_text); // Set the advert preview text
                         });
                     } catch (error) {
                         console.error('Error fetching advert preview:', error);
@@ -234,14 +235,12 @@ const TEXTPost = () => {
             />
 
             <TouchableOpacity style={styles.categoryButton} onPress={handleCategoryClick}>
-                <Text style={styles.categoryButtonText}>{selectedCategory || 'Select a Category'}</Text>
+                <Text style={styles.categoryButtonText}>
+                    {selectedCategory ? selectedCategory : "Select Category"}
+                </Text>
             </TouchableOpacity>
 
-            {dropdownVisible && (
-                <View style={styles.dropdown}>
-                    {renderCategoryDropdown()}
-                </View>
-            )}
+            {dropdownVisible && renderCategoryDropdown()}
 
             <TextInput
                 style={styles.input}
@@ -294,10 +293,15 @@ const TEXTPost = () => {
             )}
 
             {advertPreview && (
-                <View style={styles.previewContainer}>
-                    <Text style={styles.previewText}>Advert Preview:{"\n"}{"\n"}</Text>
-                    <Text style={styles.previewText}>{JSON.stringify(advertPreview.advert_text, null, 2)}</Text>
-                </View>
+                <><View style={styles.previewContainer}>
+                    {advertPreview.split('\n').map((line, index) => (
+                        <Text key={index} style={styles.previewText}>{line}</Text>
+                    ))}
+                </View><View style={styles.PostButton}>
+                        <TouchableOpacity style={styles.backNextButton} onPress={handleBackToHomeClick}>
+                            <Text style={styles.backNextButtonText}>Post</Text>
+                        </TouchableOpacity>
+                </View></>
             )}
         </ScrollView>
     );
@@ -413,11 +417,15 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#333',
         borderRadius: 5,
+        width: '100%',
     },
     previewText: {
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
+    },
+    PostButton: {
+        marginTop: 25,
     },
 });
 

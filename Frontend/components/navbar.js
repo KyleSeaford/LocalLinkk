@@ -118,7 +118,7 @@ const Navbar = () => {
     };
 
     const handleNameClick = () => {
-        window.location.reload();
+        //window.location.reload();
         navigation.navigate('LocalLinkk - Home');
     };
 
@@ -457,6 +457,8 @@ const styles = StyleSheet.create({
         height: 40,
         marginRight: 10,
         borderRadius: 50,
+        borderWidth: 1,
+        borderColor: 'black',
     },
     titleContainer: {
         flex: 1,
@@ -490,7 +492,7 @@ const styles = StyleSheet.create({
         marginTop: 0,
         margin: 10,
         borderRadius: 5,
-        maxHeight: height * 0.7, // Adjust max height as needed
+        maxHeight: height * 0.6, // Adjust max height as needed
     },
     dropdownScroll: {
         maxHeight: height * 0.6, // Adjust max height for scrollable content
