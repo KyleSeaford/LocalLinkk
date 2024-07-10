@@ -101,39 +101,48 @@ class PostCompany(Resource):
         recordExists = db.fetchSingleValue(f"SELECT COUNT(*) FROM {databaseTableName} WHERE {databaseFieldCompanyName}='{companyName}' and {databaseFieldCompanyId}='{categoryId}'")
         if recordExists > 0:
             return {'message': f'company {companyName} already exists'}, 400
-        
-        # Check the category exists
-        #TODO add category check
-        #recordExists = db.fetchSingleValue(f"SELECT COUNT(*) FROM categories WHERE category_id='{categoryId}'")
-        #if recordExists != 1:
-        #    return {'message': f'Category {categoryId} does not exists'}, 400
 
+        # check if the phone number is valid
         phone = args[argumentCompanyPhone]
         if phone != "" and phone != None:
             if is_valid_uk_phone_number(phone) == False:
                 return {'message': f'Invalid phone number'}, 400
 
+        # set the advert text
         advertText = args[argumentAdvertText]
+        # set the advert link
+        advertLink = args[argumentCompanyWebsite]
+
+        # if the advert text is empty or None, generate a default advert
         if advertText == "" or advertText == None:
-            city = "" #TODO get city
+            city = "" 
             advertText = generateDefaultTextAdvert(companyName, city, phone)
 
+        # if the advert text is not empty or None, generate a custom advert
+        elif advertText != "" and advertText != None:
+            advertText = generateTextAdvert(companyName, advertText, advertLink)
+
+        # check if the advert text is valid
         if is_valid_advert(advertText) == False:
             #TODO send message explaining why the advert text is invalid
-            return {'message': f'Invalid advert text'}, 400
-        
+            return {'message': f'Invalid advert text: {advertText}'}, 400
+
+        # set the advert type        
         advertType = args[argumentAdvertType]
         if advertType == "" or advertType == None:
             advertType = "Text"
 
+        # set the advert image
         mapLink = args[argumentMapLink]
         if mapLink == "" or mapLink == None:
             mapLink = " "
 
+        # generate a new company id
         newCompanyId = db.generateId()
 
+        # add the company to the database
         db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}')") 
-        return {'message': 'Company added successfully', 'company_id':newCompanyId}, 201
+        return {'message': 'Company added successfully', 'company_id':newCompanyId, 'advertText':advertText}, 201
 
 @api.route('/company/<company_id>')
 class PutCompany(Resource):
