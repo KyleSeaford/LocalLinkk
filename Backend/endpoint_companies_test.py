@@ -234,5 +234,137 @@ class endpoint_companies_tests(unittest.TestCase):
             self.assertIn('message', response_json) # Ensure the 'message' key is in the response
             self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
     
+    def test_post_company_withAdvertText(self):
+        """Test confirms that POST /company will add a new company with basic advert text"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expectedCompanyName = 'zcomp1'
+            expectedCategoryId = '04030201-0605-0807-0910-111213141530'
+            expectedLatitude = '1'
+            expectedLongitude = '2'
+            expectedAdvert = "Hi1"
+            expectedType = "Text"
+            expected_results = [
+                {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520', 'advert_type':'Text', 'advert_text':None},
+                {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530', 'advert_type':'Text', 'advert_text':None},
+                {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': expectedCompanyName, 'category_id': expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'advert_type':expectedType, 'advert_text':expectedAdvert}
+            ]        
+            expected_message = 'Company added successfully'
+
+            # Act
+            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
+
+            # Assert
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+            self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
+            self.assertEqual(len(response_json['company_id']), 36) # Check that the response message contains a 36 character company id
+            self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
+            response = self.client.get('/companies') # Make a GET request to the Categories/Categories endpoint
+            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            actual_results = json.loads(response.data) # Parse the JSON response  
+            for i in range(len(expected_results)):
+                self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
+                self.assertEqual(actual_results[i]['category_id'], expected_results[i]['category_id']) # Check the category id
+                self.assertEqual(actual_results[i]['advert_type'], expected_results[i]['advert_type'])
+                self.assertEqual(actual_results[i]['advert_text'], expected_results[i]['advert_text'])
+    
+    def test_post_company_withBadAdvertTest(self):
+        """Test confirms that POST /company will NOT add a new company with basic advert that contains bad text"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expectedCompanyName = 'zcomp1'
+            expectedCategoryId = '04030201-0605-0807-0910-111213141530'
+            expectedLatitude = '1'
+            expectedLongitude = '2'
+            expectedAdvert = "This advert contains ass word and an email example@example.com"
+            expectedType = "Text"
+            expected_message = "Invalid advert text because Basic advert must not contain an email address, Advert must not contain word ass"
+
+            # Act
+            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
+
+            # Assert
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+
+    def test_post_company_withCustomAdvertText(self):
+        """Test confirms that POST /company will add a new company with custom advert text"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expectedCompanyName = 'zcomp1'
+            expectedCategoryId = '04030201-0605-0807-0910-111213141530'
+            expectedLatitude = '1'
+            expectedLongitude = '2'
+            expectedAdvert = "Hi1"
+            expectedType = "TextCustom"
+            expected_results = [
+                {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520', 'advert_type':'Text', 'advert_text':None},
+                {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': 'mansfield', 'category_id': '04030201-0605-0807-0910-111213141530', 'advert_type':'Text', 'advert_text':None},
+                {'company_id': '04030201-0605-0807-0910-111213141512', 'company_name': expectedCompanyName, 'category_id': expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'advert_type':expectedType, 'advert_text':expectedAdvert}
+            ]        
+            expected_message = 'Company added successfully'
+
+            # Act
+            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
+
+            # Assert
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+            self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
+            self.assertEqual(len(response_json['company_id']), 36) # Check that the response message contains a 36 character company id
+            self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
+            response = self.client.get('/companies') # Make a GET request to the Categories/Categories endpoint
+            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            actual_results = json.loads(response.data) # Parse the JSON response  
+            for i in range(len(expected_results)):
+                self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
+                self.assertEqual(actual_results[i]['category_id'], expected_results[i]['category_id']) # Check the category id
+                self.assertEqual(actual_results[i]['advert_type'], expected_results[i]['advert_type'])
+                self.assertEqual(actual_results[i]['advert_text'], expected_results[i]['advert_text'])
+
+    def test_post_company_withBadCustomAdvertTest(self):
+        """Test confirms that POST /company will NOT add a new company with custom advert that contains bad text"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expectedCompanyName = 'zcomp1'
+            expectedCategoryId = '04030201-0605-0807-0910-111213141530'
+            expectedLatitude = '1'
+            expectedLongitude = '2'
+            expectedAdvert = "This advert contains ass word and an email example@example.com"
+            expectedType = "TextCustom"
+            expected_message = "Invalid advert text because Advert must not contain word ass"
+
+            # Act
+            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
+
+            # Assert
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+
+    def test_post_company_withBadAdvertType(self):
+        """Test confirms that POST /company will NOT add a new company with basic advert that contains bad text"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expectedCompanyName = 'zcomp1'
+            expectedCategoryId = '04030201-0605-0807-0910-111213141530'
+            expectedLatitude = '1'
+            expectedLongitude = '2'
+            expectedAdvert = "This is a valid advert text."
+            expectedType = "BadAdvertType"
+            expected_message = "Invalid advert type: BadAdvertType, valid types are Text, TextCustom, ImageSmall, ImageMedium, ImageLarge"
+
+            # Act
+            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
+
+            # Assert
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+
 if __name__ == '__main__':
     unittest.main()

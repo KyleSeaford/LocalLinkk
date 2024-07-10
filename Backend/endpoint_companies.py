@@ -4,7 +4,7 @@ from database_extensions import database_extensions
 import logging
 import os
 from dotenv import load_dotenv
-from function_is_valid_advert import is_valid_advert
+from function_is_valid_advert import is_valid_basic_advert, is_valid_custom_advert
 from function_generate_default_text_advert import *
 
 load_dotenv()
@@ -113,24 +113,35 @@ class PostCompany(Resource):
         # set the advert link
         advertLink = args[argumentCompanyWebsite]
 
-        # if the advert text is empty or None, generate a default advert
-        if advertText == "" or advertText == None:
-            city = "" 
-            advertText = generateDefaultTextAdvert(companyName, city, phone)
-
-        # if the advert text is not empty or None, generate a custom advert
-        elif advertText != "" and advertText != None:
-            advertText = generateTextAdvert(companyName, advertText, advertLink)
-
-        # check if the advert text is valid
-        if is_valid_advert(advertText) == False:
-            #TODO send message explaining why the advert text is invalid
-            return {'message': f'Invalid advert text: {advertText}'}, 400
-
         # set the advert type        
         advertType = args[argumentAdvertType]
         if advertType == "" or advertType == None:
             advertType = "Text"
+        
+        # Check advert type is valid
+        advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge"]
+        if advertType not in advertTypes:
+            return {'message': f'Invalid advert type: {advertType}, valid types are {", ".join(advertTypes)}'}, 400
+        
+        # if the advert type is basic and the text is empty or None, generate a default advert
+        if advertType == "Text" and (advertText == "" or advertText == None):
+            city = "" 
+            advertText = generateDefaultTextAdvert(companyName, city, phone)
+
+        # if the advert type is custom and the text is empty or None, generate a custom advert
+        if advertType == "TextCustom" and (advertText == "" or advertText == None):
+            advertText = generateTextAdvert(companyName, advertText, advertLink)
+
+        # check if the advert text is valid
+        if advertType == "Text":
+            basicValidationIssues = is_valid_basic_advert(advertText)            
+            if basicValidationIssues != None and len(basicValidationIssues) > 0:
+                return {'message': f'Invalid advert text because {", ".join(basicValidationIssues)}'}, 400
+            
+        if advertType == "TextCustom":
+            customValidationIssues = is_valid_custom_advert(advertText)            
+            if customValidationIssues != None and len(customValidationIssues) > 0:
+                return {'message': f'Invalid advert text because {", ".join(customValidationIssues)}'}, 400
 
         # set the advert image
         mapLink = args[argumentMapLink]
@@ -185,6 +196,8 @@ class PutCompany(Resource):
         if not update_fields:
             return {'message': 'No data provided to update'}, 400
         
+        #todo add advert text validation
+
         # Update the company details
         update_set = ", ".join([f"{key}='{value}'" for key, value in update_fields.items()])
         db.execute(f"UPDATE {databaseTableName} SET {update_set} WHERE {databaseFieldCompanyId}='{company_id}'")
