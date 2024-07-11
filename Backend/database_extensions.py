@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import sql
 from datetime import datetime
+from datetime import date
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -28,7 +29,7 @@ class database_extensions():
         records = cursor.fetchall()  
         conn.close() 
         return records  
-         
+
     def fetchSingleRecord(self, sql):
         """Fetch one record from the database"""
         logging.debug(f"fetchSingleRecord from postgres sql {sql}")
@@ -63,8 +64,11 @@ class database_extensions():
         result = []
         for record in self.fetchAll(sql):
             resultRow = {}
-            for i in range(len(fields)):                    
-                resultRow[fields[i]] = record[i]           
+            for i in range(len(fields)):  
+                v = record[i]
+                if isinstance(v, date):
+                    v = str(v)
+                resultRow[fields[i]] = v           
             result.append(resultRow)
         return result
 

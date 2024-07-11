@@ -7,6 +7,7 @@ from flask_restx import Api
 from unittest.mock import patch
 from database_extensions import database_extensions
 from endpoint_companies import api as namespaceCompanies
+from datetime import date
 
 class endpoint_companies_tests(unittest.TestCase):
     @classmethod
@@ -133,7 +134,7 @@ class endpoint_companies_tests(unittest.TestCase):
         """Test confirms that GET /company/<company_id>/details will return a company details"""
         with patch.dict(os.environ, {'dbDatabase': self.unittest}):
             # Arrange 
-            expected_result = {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520','email':None,'latitude':53.293571,'longitude':-2.11014,'phone':None,'website':None}        
+            expected_result = {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520','email':None,'latitude':53.293571,'longitude':-2.11014,'phone':None,'website':None,'created_by_user_id': None,'created_date': None}        
 
             # Act
             response = self.client.get('/company/04030201-0605-0807-0910-111213141511/details') # Make a GET request to the company endpoint
@@ -294,11 +295,12 @@ class endpoint_companies_tests(unittest.TestCase):
         """Test confirms that POST /company will add a new company with custom advert text"""
         with patch.dict(os.environ, {'dbDatabase': self.unittest}):
             # Arrange 
+            advert = "Hi1"
             expectedCompanyName = 'zcomp1'
             expectedCategoryId = '04030201-0605-0807-0910-111213141530'
             expectedLatitude = '1'
             expectedLongitude = '2'
-            expectedAdvert = "Hi1"
+            expectedAdvert = "zcomp1\nHi1"
             expectedType = "TextCustom"
             expected_results = [
                 {'company_id': '04030201-0605-0807-0910-111213141511', 'company_name': 'bollington', 'category_id': '04030201-0605-0807-0910-111213141520', 'advert_type':'Text', 'advert_text':None},
@@ -308,7 +310,7 @@ class endpoint_companies_tests(unittest.TestCase):
             expected_message = 'Company added successfully'
 
             # Act
-            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
+            response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': advert, 'Advert Type':expectedType})
 
             # Assert
             response_json = response.get_json() # Extract the JSON data from the response    
@@ -365,6 +367,29 @@ class endpoint_companies_tests(unittest.TestCase):
             response_json = response.get_json() # Extract the JSON data from the response    
             self.assertIn('message', response_json) # Ensure the 'message' key is in the response
             self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+
+    def test_post_company_with_used_id(self):
+        """Test confirms that POST /company will add a new company with user id and created date"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expectedUserId = '0348680a-fc37-4334-9bc7-51d247f50c11'
+
+            # Act
+            response = self.client.post('/company', json={'Company Name':'zcomp1', 'Category Id':'04030201-0605-0807-0910-111213141530', 'Latitude': '1', 'Longitude':'2', 'User Id':expectedUserId})
+
+            # Assert
+            self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], 'Company added successfully') # Check that the response message contains the expected message
+            self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
+            newCompanyId = response_json['company_id']
+            self.assertEqual(len(newCompanyId), 36) # Check that the response message contains a 36 character company id
+            response = self.client.get(f'/company/{newCompanyId}/details') # Make a GET request to the company details endpoint
+            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            actual_results = json.loads(response.data) # Parse the JSON response  
+            self.assertEqual(actual_results['created_by_user_id'], expectedUserId) # Check id of the user that created the company
+            self.assertEqual(actual_results['created_date'],  date.today().strftime('%Y-%m-%d')) # Check date the company was created
 
 if __name__ == '__main__':
     unittest.main()

@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 from function_is_valid_advert import is_valid_basic_advert, is_valid_custom_advert
 from function_generate_default_text_advert import *
+from datetime import date
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("logLevel"), format=str(os.getenv("logFormat")), filename=os.getenv("logFilename")) 
@@ -28,6 +29,8 @@ databaseFieldAdvertText = 'advert_text'
 databaseFieldAdvertImage = 'advert_image'
 databaseFieldAdvertExpires = 'advert_expires'
 databaseFieldMapLink = 'google_maps_link'
+databaseFieldCreatedDate = "created_date"
+databaseFieldCreatedBy = "created_by_user_id"
 argumentCompanyName = 'Company Name'
 argumentCategoryId = 'Category Id'
 argumentCompanyEmail = 'Company Email'
@@ -40,6 +43,7 @@ argumentAdvertText = 'Advert Text'
 argumentAdvertImage = 'Advert Image'
 argumentAdvertExpires = 'Advert Expiry Date'
 argumentMapLink = 'Google Maps Link'
+argumentUserId = "User Id"
 
 @api.route('/companies', doc={"description": "Get all companies"})
 class GetCompanies(Resource):
@@ -71,7 +75,7 @@ class GetCompaniesByCategoryAndLocation(Resource):
 class GetCompany(Resource):
     def get(self,company_id):
         logging.debug(f"Getting company details for {company_id}")        
-        result = db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldEmail, databaseFieldPhone, databaseFieldWebsite, databaseFieldLongitude, databaseFieldLatitude], databaseTableName, f"where {databaseFieldCompanyId}='{company_id}'", '')
+        result = db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldEmail, databaseFieldPhone, databaseFieldWebsite, databaseFieldLongitude, databaseFieldLatitude, databaseFieldCreatedBy, databaseFieldCreatedDate], databaseTableName, f"where {databaseFieldCompanyId}='{company_id}'", '')
         if len(result) == 0:
             return {'message': f'Company {company_id} does not exists'}, 400
         return result[0]
@@ -90,6 +94,7 @@ class PostCompany(Resource):
     parserAdd.add_argument(argumentAdvertType, type=str, help='Advert Type', required=False)
     parserAdd.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
     parserAdd.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
+    parserAdd.add_argument(argumentUserId, type=str, help='Id of the user', required=False)
 
     @api.doc(parser=parserAdd)
     def post(self):
@@ -150,9 +155,10 @@ class PostCompany(Resource):
 
         # generate a new company id
         newCompanyId = db.generateId()
+        createdDate = date.today()
 
         # add the company to the database
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}', '{args[argumentUserId]}', '{createdDate}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId, 'advertText':advertText}, 201
 
 @api.route('/company/<company_id>')
