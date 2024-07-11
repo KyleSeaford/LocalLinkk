@@ -14,6 +14,7 @@ const TEXTLinkPost = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [website, setWebsite] = useState("");
     const [townCity, setTownCity] = useState("");
+    const [advertText, setAdvertText] = useState("");
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [advertPreview, setAdvertPreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -92,12 +93,13 @@ const TEXTLinkPost = () => {
             console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
     
-            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, lat, lng, advert_type: 'Text'});
+            const advert_type = 'TextCustom';
+            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, advertText, lat, lng, advert_type});
             await AsyncStorage.setItem('details', details);
 
             const postAdvert = async (details) => {
                 try {
-                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}`, {
+                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}&Advert%20Type=${advert_type}&Advert%20Text=${advertText}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -282,6 +284,14 @@ const TEXTLinkPost = () => {
                 autoCapitalize="words"
             />
 
+            <TextInput
+                style={styles.input}
+                placeholder="Advert Text"
+                placeholderTextColor="#999"
+                value={advertText}
+                onChangeText={setAdvertText}
+            />
+
             <View style={styles.buttonRow}>
                 <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
                     <Text style={styles.backNextButtonText}>Back</Text>
@@ -339,7 +349,7 @@ const styles = StyleSheet.create({
     instructionText: {
         fontSize: 16,
         color: '#aaa',
-        marginBottom: 25,
+        marginBottom: 15,
         marginTop: 10,
         textAlign: 'center',
     },
@@ -365,6 +375,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginVertical: 20,
+        marginTop: 5,
+        marginBottom: 5,
     },
     backNextButton: {
         backgroundColor: '#4CAF50',
@@ -419,7 +431,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     previewContainer: {
-        marginTop: 15,
+        marginTop: 5,
         padding: 10,
         backgroundColor: '#333',
         borderRadius: 5,
@@ -431,7 +443,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     PostButton: {
-        marginTop: 25,
+        marginTop: 10,
     },
 });
 

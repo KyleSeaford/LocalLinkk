@@ -129,7 +129,7 @@ class PostCompany(Resource):
             advertText = generateDefaultTextAdvert(companyName, city, phone)
 
         # if the advert type is custom and the text is empty or None, generate a custom advert
-        if advertType == "TextCustom" and (advertText == "" or advertText == None):
+        if advertType == "TextCustom" and (advertText != "" or advertText != None):
             advertText = generateTextAdvert(companyName, advertText, advertLink)
 
         # check if the advert text is valid
