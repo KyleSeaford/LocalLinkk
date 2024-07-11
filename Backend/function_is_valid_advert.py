@@ -21,7 +21,7 @@ def is_valid_basic_advert(text):
 def is_valid_custom_advert(text):
     errors = []
 
-    if isAdvertTooLong(text, 1000):
+    if isAdvertTooLong(text, 400):
         errors.append("Basic advert text must be less than 1000 characters")
     
     isSwear = isSwearWordInAdvert(text)

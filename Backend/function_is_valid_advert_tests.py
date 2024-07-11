@@ -87,6 +87,18 @@ class TestIsValidAdvert(unittest.TestCase):
         # Assert
         self.assertEqual("ass", result)
     
+    def test_isSwearWordInAdvert_containsSwear2(self):
+        ### Text confirms isSwearWordInAdvert can find swear in advert 2##
+
+        # Arrange
+        text = "This advert contains hello word"
+
+        # Act
+        result = isSwearWordInAdvert(text)
+
+        # Assert
+        self.assertEqual("", result)
+    
     def test_isSwearWordInAdvert_doesNotContainsSwear(self):
         ### Text confirms isSwearWordInAdvert can find swear in advert ##
 

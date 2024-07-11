@@ -5,10 +5,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import SignupPage from './screens/signup';
 import LoginScreen from './screens/login';
+
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
+
+import DurationScreen from './screens/durationScreen';
+
 import ScreenPostSize from './screens/PostSizeScreen';
 import ScreenPostTEXT from './screens/PostTEXTScreen';
 import ScreenPostTEXTLink from './screens/PostTEXTLinkScreen';
@@ -73,6 +77,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Help"
           component={HelpScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Duration"
+          component={DurationScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

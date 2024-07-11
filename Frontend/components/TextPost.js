@@ -64,7 +64,7 @@ const TEXTPost = () => {
     
     
     const handleNextClick = async () => {
-        if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
+        if (!companyName || !selectedCategory || !email || !phoneNumber || !townCity) {
             setErrorMessage('Please fill in all fields');
             return;
         };
@@ -79,11 +79,6 @@ const TEXTPost = () => {
             return;
         };
     
-        if (!validateWebsite(website)) {
-            setErrorMessage('Invalid website URL');
-            return;
-        };
-    
         setIsLoading(true); // Start loading indicator
         setErrorMessage(''); // Clear any previous error messages
         setAdvertPreview(null); // Clear previous preview
@@ -93,12 +88,12 @@ const TEXTPost = () => {
             console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
     
-            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, lat, lng, advert_type: 'Text'});
+            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
             await AsyncStorage.setItem('details', details);
 
             const postAdvert = async (details) => {
                 try {
-                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}`, {
+                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -280,14 +275,6 @@ const TEXTPost = () => {
                 keyboardType="phone-pad"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
-            />
-
-            <TextInput
-                style={styles.input}
-                placeholder="Website"
-                placeholderTextColor="#999"
-                value={website}
-                onChangeText={setWebsite}
             />
 
             <TextInput

@@ -32,6 +32,12 @@ const TEXTLinkPost = () => {
         navigation.navigate('LocalLinkk - Home');
     };
 
+    const handleContinueClick = () => {
+        console.log('Continue clicked!');
+        AsyncStorage.removeItem('advertPreview');
+        navigation.navigate('LocalLinkk - Duration');
+    };
+
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
@@ -65,7 +71,7 @@ const TEXTLinkPost = () => {
     };
     
     const handleNextClick = async () => {
-        if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity) {
+        if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity || !advertText) {
             setErrorMessage('Please fill in all fields');
             return;
         };
@@ -347,7 +353,7 @@ const TEXTLinkPost = () => {
                         {renderAdvertPreview(advertPreview)}
                     </View>
                     <View style={styles.PostButton}>
-                        <TouchableOpacity style={styles.backNextButton} onPress={handleBackToHomeClick}>
+                        <TouchableOpacity style={styles.backNextButton} onPress={handleContinueClick}>
                             <Text style={styles.backNextButtonText}>Continue</Text>
                         </TouchableOpacity>
                     </View>
