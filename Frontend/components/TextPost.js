@@ -197,6 +197,23 @@ const TEXTPost = () => {
         });
     };
 
+    const handlePostClick = async () => {
+        AsyncStorage.removeItem('advertPreview');
+        try {
+            const userId = await AsyncStorage.getItem('userId')
+            const response = await fetch(`${url}Users/users/TypeChange?userID=${userId}&userType=Poster`, {
+                method: 'PUT'
+            });
+            const data = await response.json();
+            console.log('User type changed:', data);
+        
+        } catch (error) {
+            console.error('Error changing user type:', error);
+        }
+        navigation.navigate('LocalLinkk - Home');
+    };
+
+
     const renderCategoryDropdown = () => {
         const filteredCategories = categories.filter(category =>
             category.category_name.toLowerCase().includes(searchCategory.toLowerCase())
@@ -304,7 +321,7 @@ const TEXTPost = () => {
                         <Text key={index} style={styles.previewText}>{line}</Text>
                     ))}
                 </View><View style={styles.PostButton}>
-                        <TouchableOpacity style={styles.backNextButton} onPress={handleBackToHomeClick}>
+                        <TouchableOpacity style={styles.backNextButton} onPress={handlePostClick}>
                             <Text style={styles.backNextButtonText}>Post</Text>
                         </TouchableOpacity>
                 </View></>

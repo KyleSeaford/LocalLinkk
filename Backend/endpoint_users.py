@@ -273,6 +273,21 @@ class Users(Resource):
             logging.error(f"Error changing image: {e}")
             return {'message': 'Failed to change image', 'error': str(e)}, 500
         
+@api.route("/users/TypeChange", doc={"description": "Changes a users type by id"})
+class Users(Resource):
+    parserChange = reqparse.RequestParser()
+    parserChange.add_argument(userID2, type=str, help='User ID', required=True)
+    parserChange.add_argument(userType, type=str, help='User Type', required=True)
+
+    @api.doc(parser=parserChange)
+    def put(self):
+        logging.debug(f"Changing type by ID")
+        data = self.parserChange.parse_args()
+        db.execute(f"UPDATE users SET {userType} = '{data[userType]}' WHERE {userID} = '{data[userID2]}'")
+        logging.debug(f"Type changed")
+        return {'message': 'Type changed'}, 200
+
+        
 @api.route("/users/admins", doc={"description": "gets all the admins"})
 class Users(Resource):
     def get(self):

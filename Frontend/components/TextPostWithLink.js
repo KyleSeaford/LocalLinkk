@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator, Linking } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +19,7 @@ const TEXTLinkPost = () => {
     const [advertPreview, setAdvertPreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [charCount, setCharCount] = useState(0);
 
     const url = 'http://192.168.127.93:5500/';
 
@@ -90,11 +91,11 @@ const TEXTLinkPost = () => {
     
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
+            console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email, phoneNumber, website, townCity}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
     
             const advert_type = 'TextCustom';
-            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, advertText, lat, lng, advert_type});
+            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, advertText, lat, lng, advert_type });
             await AsyncStorage.setItem('details', details);
 
             const postAdvert = async (details) => {
@@ -155,7 +156,6 @@ const TEXTLinkPost = () => {
         navigation.goBack();
     };
 
-
     const fetchCategories = async () => {
         try {
             const response = await fetch(`${url}Categories/category/0/children`);
@@ -199,6 +199,13 @@ const TEXTLinkPost = () => {
         });
     };
 
+    const handleAdvertTextChange = (text) => {
+        if (text.length <= 84) {
+            setAdvertText(text);
+            setCharCount(text.length);
+        }
+    };
+
     const renderCategoryDropdown = () => {
         const filteredCategories = categories.filter(category =>
             category.category_name.toLowerCase().includes(searchCategory.toLowerCase())
@@ -218,6 +225,28 @@ const TEXTLinkPost = () => {
                 ))}
             </ScrollView>
         );
+    };
+
+    const renderAdvertPreview = (advertPreview) => {
+        const renderPreviewLine = (line, index) => {
+            const regex = /(https?:\/\/[^\s]+)/g;
+            const parts = line.split(regex);
+            return (
+                <Text key={index} style={styles.previewText}>
+                    {parts.map((part, i) => (
+                        regex.test(part) ? (
+                            <Text key={i} style={styles.linkText} onPress={() => Linking.openURL(part)}>
+                                {part}
+                            </Text>
+                        ) : (
+                            part
+                        )
+                    ))}
+                </Text>
+            );
+        };
+
+        return advertPreview.split('\n').map((line, index) => renderPreviewLine(line, index));
     };
 
     return (
@@ -284,13 +313,17 @@ const TEXTLinkPost = () => {
                 autoCapitalize="words"
             />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Advert Text"
-                placeholderTextColor="#999"
-                value={advertText}
-                onChangeText={setAdvertText}
-            />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TextInput
+                    style={styles.input2}
+                    placeholder="Advert Text"
+                    placeholderTextColor="#999"
+                    value={advertText}
+                    onChangeText={handleAdvertTextChange}
+                    maxLength={84}
+                />
+                <Text style={styles.charCountText}>{charCount}/84</Text>
+            </View>
 
             <View style={styles.buttonRow}>
                 <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
@@ -309,15 +342,16 @@ const TEXTLinkPost = () => {
             )}
 
             {advertPreview && (
-                <><View style={styles.previewContainer}>
-                    {advertPreview.split('\n').map((line, index) => (
-                        <Text key={index} style={styles.previewText}>{line}</Text>
-                    ))}
-                </View><View style={styles.PostButton}>
+                <>
+                    <View style={styles.previewContainer}>
+                        {renderAdvertPreview(advertPreview)}
+                    </View>
+                    <View style={styles.PostButton}>
                         <TouchableOpacity style={styles.backNextButton} onPress={handleBackToHomeClick}>
-                            <Text style={styles.backNextButtonText}>Post</Text>
+                            <Text style={styles.backNextButtonText}>Continue</Text>
                         </TouchableOpacity>
-                </View></>
+                    </View>
+                </>
             )}
         </ScrollView>
     );
@@ -333,7 +367,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 15,
         marginTop: 70,
     },
     backButton: {
@@ -349,8 +383,8 @@ const styles = StyleSheet.create({
     instructionText: {
         fontSize: 16,
         color: '#aaa',
-        marginBottom: 15,
-        marginTop: 10,
+        marginBottom: 10,
+        marginTop: 0,
         textAlign: 'center',
     },
     input: {
@@ -431,7 +465,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     previewContainer: {
-        marginTop: 5,
+        marginTop: 10,
         padding: 10,
         backgroundColor: '#333',
         borderRadius: 5,
@@ -442,8 +476,30 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
     },
+    linkText: {
+        color: '#4CAF50',
+        textDecorationLine: 'underline',
+    },
     PostButton: {
-        marginTop: 10,
+        marginTop: 15,
+    },
+    charCountText: {
+        color: '#aaa',
+        textAlign: 'right',
+        fontSize: 13,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 5,
+        marginTop: 20,
+    },
+    input2: {
+        backgroundColor: '#333',
+        color: '#fff',
+        padding: 15,
+        marginVertical: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+        width: '95%',
     },
 });
 
