@@ -66,6 +66,22 @@ class endpoint_companies_tests(unittest.TestCase):
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
 
+    def test_get_companies_by_user(self):
+        """Test confirms that GET /companies/user/<user_id> will return a list of all the companies created by user"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            self.db.execute("INSERT INTO companies (company_id, company_name, created_by_user_id,latitude,longitude) VALUES ('04030201-0605-0807-0910-111213141519', 'comp9', '04030201-0605-0807-0910-111213141999',53.143871, -1.199110)")
+        
+            # Act
+            response = self.client.get('/companies/user/04030201-0605-0807-0910-111213141999') # Make a GET request to the companies endpoint
+
+            # Assert
+            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            actual_results = json.loads(response.data) # Parse the JSON response   
+            self.assertEqual(len(actual_results), 1) # Check the number of results     
+            self.assertEqual(actual_results[0]['company_id'], '04030201-0605-0807-0910-111213141519') # Check that the response contains the expected company id
+            self.assertEqual(actual_results[0]['company_name'], 'comp9') # Check that the response contains the expected company name
+
     def test_get_companies_by_distance16(self):
         """Test confirms that GET /companies will return a list of all the companies by distance """
         with patch.dict(os.environ, {'dbDatabase': self.unittest}):

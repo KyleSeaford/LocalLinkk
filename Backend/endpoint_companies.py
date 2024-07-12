@@ -69,7 +69,14 @@ class GetCompaniesByCategoryAndLocation(Resource):
         distanceColumn = f"{distanceSearch} AS distance"
         where = f"where {distanceSearch} < {radius} and {databaseFieldCategoryId}='{category_id}'"
         return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distanceColumn, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, where, "ORDER BY distance")
-        
+
+@api.route('/companies/user/<string:user_id>')
+@api.param(argumentUserId, 'User id')
+class GetCompaniesByUser(Resource):
+    def get(self,user_id):
+        logging.debug(f"Getting companies created by user id")        
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCreatedBy}='{user_id}'", '')
+
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
 class GetCompany(Resource):
