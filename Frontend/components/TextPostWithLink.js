@@ -106,7 +106,9 @@ const TEXTLinkPost = () => {
 
             const postAdvert = async (details) => {
                 try {
-                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}&Advert%20Type=${advert_type}&Advert%20Text=${advertText}`, {
+                    const category_id = categories.find(category => category.category_name === selectedCategory).category_id;
+                    const userID = await AsyncStorage.getItem('userId');
+                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${category_id}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}&Advert%20Type=${advert_type}&Advert%20Text=${advertText}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

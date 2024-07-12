@@ -93,7 +93,9 @@ const TEXTPost = () => {
 
             const postAdvert = async (details) => {
                 try {
-                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${selectedCategory}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}`, {
+                    const category_id = categories.find(category => category.category_name === selectedCategory).category_id;
+                    const userID = await AsyncStorage.getItem('userId');
+                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${category_id}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
