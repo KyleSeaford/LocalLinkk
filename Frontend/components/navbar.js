@@ -157,6 +157,7 @@ const Navbar = () => {
         setLocation(selectedLocation);
         setLocationDropdownVisible(false);
         ChangeUsersLocation(selectedLocation);
+        setMenuVisible(!menuVisible);
     };
 
     const handleCategory = (category) => {
@@ -312,17 +313,19 @@ const Navbar = () => {
                         >
                             <Text style={styles.menuContainerTEXT}>All</Text>
                         </TouchableOpacity>
+                    </View>
 
+                    <View style={styles.inlineButtonsContainer}>
                         <TouchableOpacity
                             onPress={() => handleButtonClick('Businesses')}
-                            style={[styles.button, activeButton === 'Businesses' ? styles.activeButton : null]}
+                            style={[styles.inlineButton, activeButton === 'Businesses' ? styles.activeButton2 : null]}
                         >
                             <Text style={styles.menuContainerTEXT}>Businesses</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => handleButtonClick('Events')}
-                            style={[styles.button, activeButton === 'Events' ? styles.activeButton : null]}
+                            style={[styles.inlineButton, activeButton === 'Events' ? styles.activeButton2 : null]}
                         >
                             <Text style={styles.menuContainerTEXT}>Events</Text>
                         </TouchableOpacity>
@@ -377,6 +380,7 @@ const Navbar = () => {
     );
 };
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -412,12 +416,19 @@ const styles = StyleSheet.create({
         marginTop: 0,
         padding: 10,
     },
+    inlineButtonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginBottom: 15,
+        padding: 5,
+    },
     postContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
-        marginTop: 460,
+        marginTop: 400,
     },
     postContainerTEXT: {
         fontSize: 20,
@@ -490,7 +501,7 @@ const styles = StyleSheet.create({
         marginTop: 0,
         margin: 10,
         borderRadius: 5,
-        maxHeight: height * 0.6, // Adjust max height as needed
+        maxHeight: height * 0.5, // Adjust max height as needed
     },
     dropdownScroll: {
         maxHeight: height * 0.6, // Adjust max height for scrollable content
@@ -504,15 +515,21 @@ const styles = StyleSheet.create({
     activeButton: {
         backgroundColor: '#d3d3d3',
         borderRadius: 5,
-        padding: 5,
+    },
+    activeButton2: {
+        backgroundColor: '#d3d3d3',
+        borderRadius: 5,
+        padding: 0,
     },
     button: {
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         borderRadius: 5,
+        padding: 5,
+        marginBottom: 0,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -532,6 +549,5 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
-
 export default Navbar;
 
