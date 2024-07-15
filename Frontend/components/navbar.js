@@ -45,7 +45,7 @@ const Navbar = () => {
     const [searchLocation, setSearchLocation] = useState('');
 
     const [activeButton, setActiveButton] = useState('All');
-    const [breadcrumbPath, setBreadcrumbPath] = useState('Category');
+    const [breadcrumbPath, setBreadcrumbPath] = useState('Category / Genre');
     const [userImage, setUserImage] = useState(null);
 
     const [categories, setCategories] = useState([]);
@@ -143,10 +143,12 @@ const Navbar = () => {
         }).start();
         setLocationDropdownVisible(false) 
         setDropdownVisible(false);
+        setGenreDropdownVisible(false);
     };
 
     const handleProfileClick = () => {
         navigation.navigate('LocalLinkk - Profile');
+        setBreadcrumbs('');
     };
 
     const handleNameClick = () => {
@@ -155,21 +157,31 @@ const Navbar = () => {
     };
 
     const handleCategoryClick = () => {
-        AsyncStorage.removeItem('category');
         setBreadcrumbs('');
+        setGenreDropdownVisible(false);
+        setLocationDropdownVisible(false);
+        AsyncStorage.removeItem('category');
+        AsyncStorage.removeItem('genre');
         setDropdownVisible(!dropdownVisible);
     };
 
     const handleGenreClick = () => {
-        AsyncStorage.removeItem('genre');
         setBreadcrumbs('');
+        setDropdownVisible(false);
+        setLocationDropdownVisible(false);
+        AsyncStorage.removeItem('genre');
+        AsyncStorage.removeItem('category');
         setGenreDropdownVisible(!genreDropdownVisible);
     };
 
     const handleLocationClick = () => {
         setBreadcrumbs('');
+        AsyncStorage.removeItem('genre');
+        AsyncStorage.removeItem('category');
+        setDropdownVisible(false);
+        setGenreDropdownVisible(false);
         setLocationDropdownVisible(!locationDropdownVisible);
-        setDropdownVisible(false); // Hide category dropdown if open
+        setDropdownVisible(false); 
     };
     
 
@@ -200,6 +212,7 @@ const Navbar = () => {
     };
 
     const handleCategory = (category) => {
+        setBreadcrumbs('');
         console.log(`Category clicked: ${category.category_name}`);
         console.log('Category ID:', category.category_id);
         AsyncStorage.setItem('category', category.category_id.toString());
@@ -221,6 +234,7 @@ const Navbar = () => {
     };
 
     const handleGenre = (genre) => {
+        setBreadcrumbs('');
         console.log(`Genre clicked: ${genre.genre_name}`);
         console.log('Genre ID:', genre.genre_id);
         AsyncStorage.setItem('genre', genre.genre_id.toString());
@@ -249,18 +263,21 @@ const Navbar = () => {
         console.log("Settings clicked!");
         //navigation.navigate('LocalLinkk - Settings');
         navigation.navigate('LocalLinkk - Settings', { screen: 'SettingScreen' });
+        setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
 
     const handleHelpClick = () => {
         console.log("Help clicked!");
         navigation.navigate('LocalLinkk - Help', { screen: 'HelpScreen' });
+        setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
 
     const handlePostClick = () => {
         console.log("Post clicked!");
         navigation.navigate('LocalLinkk - Post');
+        setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
 
@@ -295,7 +312,7 @@ const Navbar = () => {
         AsyncStorage.getItem('categories').then(data => {
             setCategories(JSON.parse(data));
         });
-        setBreadcrumbPath('Category');
+        setBreadcrumbs('');
         AsyncStorage.getItem('genres').then(data => {
             setGenres(JSON.parse(data));
         }
@@ -426,7 +443,7 @@ const Navbar = () => {
                     <TouchableOpacity onPress={handleLocationClick}>
                         <View style={styles.menuContainer}>
                             <Text style={styles.menuContainerTEXT}>Location</Text>
-                            <FontAwesome5 name="map-marker-alt" size={24} color="#1a1a1a" />
+                            <FontAwesome5 name="map-marked-alt" size={24} color="black" />
                         </View>
                     </TouchableOpacity>
 
@@ -451,8 +468,8 @@ const Navbar = () => {
 
                     <TouchableOpacity onPress={handleGenreClick}>
                         <View style={styles.menuContainer}>
-                            <Text style={styles.menuContainerTEXT}>Genre</Text>
-                            <MaterialIcons name="category" size={24} color="black" />
+                            <Text style={styles.menuContainerTEXT2}>Genres</Text>
+                            <MaterialIcons name="event" size={25} color="black" />                        
                         </View>
                     </TouchableOpacity>
 
@@ -550,6 +567,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#222222',
         padding: 3,
+    },
+    menuContainerTEXT2: {
+        fontSize: 20,
+        color: '#222222',
+        padding: 5,
+        marginLeft: 20,
     },
     navBar: {
         height: 110,
