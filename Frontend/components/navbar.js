@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
-        marginTop: 400,
+        marginTop: 345,
     },
     postContainerTEXT: {
         fontSize: 20,
