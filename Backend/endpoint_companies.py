@@ -207,7 +207,7 @@ class PutCompany(Resource):
         update_fields = {field_mapping[arg]: value for arg, value in args.items() if value is not None}
         
         if not update_fields:
-            return {'message': 'No data provided to update'}, 400
+            return {'message': 'No data provided to update'}, 400 
         
         #todo add advert text validation
 
