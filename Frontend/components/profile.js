@@ -155,9 +155,8 @@ const Profile = () => {
       </View>
 
       <View style={styles.pastContainer}>
-        <Entypo name="triangle-down" size={24} color="white" />
-        <Text style={styles.pastText}>Your Previous Posts Are Shown Below</Text>
-        <Entypo name="triangle-down" size={24} color="white" />
+        <Text style={styles.pastText}>Your Past Posts:</Text>
+        <Text style={styles.pastText2}>Total Posts:</Text>
       </View>
 
       <Modal
@@ -280,8 +279,15 @@ const styles = StyleSheet.create({
     width: '110%',
   },
   pastText: {
+    marginTop: 10,
     fontSize: 18,
     color: '#fff',
+  },
+  pastText2: {
+    marginTop: 10,
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'right',
   },
   modalContainer: {
     flex: 1,

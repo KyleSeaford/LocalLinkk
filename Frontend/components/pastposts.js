@@ -1,3 +1,5 @@
+// NEED TO: make the post load all of the posts that the user has made, and display them in a scrollable list.
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
@@ -65,7 +67,8 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer: {
         flexGrow: 1, // Allows ScrollView content to grow and be scrollable
-        alignItems: 'center',
+        alignItems: 'left',
+        padding: 20,
     },
     postContainer: {
         flex: 1,
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#333',
         borderRadius: 5,
-        width: '90%', // Adjust width to fit within the screen
+        width: '75%',
     },
     postText: {
         color: '#fff',
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     loadingContainer: {
-        flex: 1, // Ensures the loading container takes up available space
+        marginTop: 150,
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 999, // Ensures the loading container is on top of other content
