@@ -1,5 +1,4 @@
 import unittest
-from function_is_valid_advert import *
 
 class TestIsValidAdvert(unittest.TestCase):
 
