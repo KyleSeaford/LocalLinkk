@@ -50,6 +50,13 @@ class GetCompanies(Resource):
     def get(self):        
         return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC')
 
+@api.route('/companiespagination/<string:page_offset>/<string:page_limit>', doc={"description": "Get all companies with pagination"})
+@api.param('page_offset', 'Page Offset')
+@api.param('page_limit', 'Page Limit')
+class GetCompaniesPagination(Resource):
+    def get(self, page_offset, page_limit):        
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCreatedDate} ASC offset {page_offset} limit {page_limit}')
+
 @api.route('/companies/<string:category_id>')
 @api.param('category_id', 'Category id')
 class GetCompaniesByCategory(Resource):
