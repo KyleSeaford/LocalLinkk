@@ -1,9 +1,10 @@
 import unittest
+from function_is_valid_advert import *
 
 class TestIsValidAdvert(unittest.TestCase):
 
     def test_isAdvertTooLong_TextTooLong(self):
-        ### Text confirms if the advert is too long ###
+        ### Test confirms if the advert is too long ###
 
         # Arrange
         long_text = "a" * 101
@@ -15,7 +16,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertTrue(result)
 
     def test_isAdvertTooLong_okLength(self):
-        ### Text confirms if the advert is too long ###
+        ### Test confirms if the advert is not too long ###
 
         # Arrange
         short_text = "a" * 50
@@ -27,7 +28,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertFalse(result)
 
     def test_isEmailInAdvert_containsEmail(self):
-        ### Text confirms isEmailInAdvert can find email in advert ##
+        ### Test confirms isEmailInAdvert can find email in advert ##
 
         # Arrange
         text = "Contact us at example@example.com"
@@ -39,7 +40,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertTrue(result)
     
     def test_isEmailInAdvert_doesNotContainsEmail(self):
-        ### Text confirms isEmailInAdvert can find email in advert ##
+        ### Test confirms isEmailInAdvert does not find email when none is present ##
 
         # Arrange
         text = "This is a valid advert text."
@@ -51,7 +52,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertFalse(result)
 
     def test_isWebAddressInAdvert_containsLink(self):
-        ### Text confirms isEmailInAdvert can find link in advert ##
+        ### Test confirms isWebAddressInAdvert can find link in advert ##
 
         # Arrange
         text = "Visit our website at http://example.com"
@@ -63,7 +64,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertTrue(result)
     
     def test_isWebAddressInAdvert_doesNotContainsLink(self):
-        ### Text confirms isEmailInAdvert can find link in advert ##
+        ### Test confirms isWebAddressInAdvert does not find link when none is present ##
 
         # Arrange
         text = "This is a valid advert text."
@@ -75,7 +76,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertFalse(result)
 
     def test_isSwearWordInAdvert_containsSwear(self):
-        ### Text confirms isSwearWordInAdvert can find swear in advert ##
+        ### Test confirms isSwearWordInAdvert can find swear in advert ##
 
         # Arrange
         text = "This advert contains ass word"
@@ -87,7 +88,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertEqual("ass", result)
     
     def test_isSwearWordInAdvert_containsSwear2(self):
-        ### Text confirms isSwearWordInAdvert can find swear in advert 2##
+        ### Test confirms isSwearWordInAdvert does not find non-swear word ##
 
         # Arrange
         text = "This advert contains hello word"
@@ -99,7 +100,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertEqual("", result)
     
     def test_isSwearWordInAdvert_doesNotContainsSwear(self):
-        ### Text confirms isSwearWordInAdvert can find swear in advert ##
+        ### Test confirms isSwearWordInAdvert does not find swear when none is present ##
 
         # Arrange
         text = "This is a valid advert text."
@@ -111,7 +112,7 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertEqual("", result)
 
     def test_is_valid_basic_advert_containsSwearAndEmail(self):
-        ### Text confirms is_valid_basic_advert will return a list of validation issues ###
+        ### Test confirms is_valid_basic_advert will return a list of validation issues ###
 
         # Arrange 
         text = "This advert contains ass word and an email example@example.com"
@@ -124,8 +125,8 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertEqual("Basic advert must not contain an email address", result[0])
         self.assertEqual("Advert must not contain word ass", result[1])
 
-    def test_is_valid_basic_advert_containsIsValid(self):
-        ### Text confirms is_valid_basic_advert will return a list of validation issues ###
+    def test_is_valid_basic_advert_isValid(self):
+        ### Test confirms is_valid_basic_advert returns no validation issues for valid text ###
 
         # Arrange 
         text = "This is a valid advert text."
@@ -137,10 +138,10 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertEqual(0, len(result))
 
     def test_is_valid_custom_advert_containsSwear(self):
-        ### Text confirms is_valid_custom_advert will return a list of validation issues ###
+        ### Test confirms is_valid_custom_advert will return a list of validation issues ###
 
         # Arrange 
-        text = "This advert contains ass word and an email example@example.com"
+        text = "This advert contains ass word"
 
         # Act
         result = is_valid_custom_advert(text)
@@ -149,9 +150,8 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertEqual(1, len(result))
         self.assertEqual("Advert must not contain word ass", result[0])
 
-
-    def test_is_valid_custom_advert_containsIsValid(self):
-        ### Text confirms is_valid_custom_advert will return a list of validation issues ###
+    def test_is_valid_custom_advert_isValid(self):
+        ### Test confirms is_valid_custom_advert returns no validation issues for valid text ###
 
         # Arrange 
         text = "This is a valid advert text."

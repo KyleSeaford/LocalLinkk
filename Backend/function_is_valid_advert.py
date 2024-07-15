@@ -10,7 +10,7 @@ def is_valid_basic_advert(text):
         errors.append("Basic advert must not contain an email address")
 
     if isWebAddressInAdvert(text):
-        errors.append("Basic advert must not contain an web address")
+        errors.append("Basic advert must not contain a web address")
     
     isSwear = isSwearWordInAdvert(text)
     if (isSwear != ""):
@@ -22,7 +22,7 @@ def is_valid_custom_advert(text):
     errors = []
 
     if isAdvertTooLong(text, 400):
-        errors.append("Basic advert text must be less than 400 characters")
+        errors.append("Custom advert text must be less than 400 characters")
     
     isSwear = isSwearWordInAdvert(text)
     if (isSwear != ""):
@@ -37,21 +37,15 @@ def isAdvertTooLong(text, length):
 def isEmailInAdvert(text):
     ### Check if there is an email in the advert text ##
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    if re.search(email_pattern, text):
-        return True
-    else:
-        return False 
+    return bool(re.search(email_pattern, text))
 
 def isWebAddressInAdvert(text):
     ### Check if there is a web address in the advert text ###
     website_pattern = r'\b(https?://|www\.)[^\s/$.?#].[^\s]*\b'
-    if re.search(website_pattern, text):
-        return True
-    else:
-        return False
+    return bool(re.search(website_pattern, text))
 
 def isSwearWordInAdvert(text):
-    ### Check is the advert contains swear words and offensive terms ###
+    ### Check if the advert contains swear words and offensive terms ###
     swear_words = [
         "ass",
         "asshole",
@@ -154,15 +148,11 @@ def isSwearWordInAdvert(text):
         "weed"
     ]
 
-    # Check for swear words
-    for swear_word in swear_words:
-        if swear_word.lower() in text.lower():
-            return swear_word
+    # Join the swear words into a single regex pattern with word boundaries
+    swear_pattern = r'\b(?:' + '|'.join(map(re.escape, swear_words)) + r')\b'
+    match = re.search(swear_pattern, text, re.IGNORECASE)
 
-    # If all checks pass, return True
+    if match:
+        return match.group(0)
+
     return ""
-
-
-
-def is_valid_advert(text):
-    return "bobo"
