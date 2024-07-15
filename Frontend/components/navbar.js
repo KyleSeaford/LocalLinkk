@@ -38,22 +38,32 @@ const Navbar = () => {
     }
 
     const [menuVisible, setMenuVisible] = useState(false);
-    const [dropdownVisible, setDropdownVisible] = useState(false);
+
     const [locationDropdownVisible, setLocationDropdownVisible] = useState(false);
-    const [categories, setCategories] = useState([]);
     const [location, setLocation] = useState('');
     const [locations, setLocations] = useState([]);
-    const [activeButton, setActiveButton] = useState('All');
     const [searchLocation, setSearchLocation] = useState('');
-    const [searchCategory, setSearchCategory] = useState('');
+
+    const [activeButton, setActiveButton] = useState('All');
     const [breadcrumbPath, setBreadcrumbPath] = useState('Category');
     const [userImage, setUserImage] = useState(null);
+
+    const [categories, setCategories] = useState([]);
+    const [searchCategory, setSearchCategory] = useState('');
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
+
+    const [genres, setGenres] = useState([]);
+    const [searchGenre, setSearchGenre] = useState('');
+    const [genreDropdownVisible, setGenreDropdownVisible] = useState(false);
+
 
     const slideAnim = useState(new Animated.Value(-width))[0];
 
     useEffect(() => {
         fetchCategories();
         fetchLocations();
+        fetchGenres();
         fetchAndSetUserLocation();
     }, []);
 
@@ -83,6 +93,28 @@ const Navbar = () => {
             return [];
         }
     }
+
+    const fetchGenres = async () => {
+        try {
+            const response = await fetch(`${url}Genres/genre/0/children`);
+            const data = await response.json();
+            AsyncStorage.setItem('genres', JSON.stringify(data));
+            setGenres(data);
+        } catch (error) {
+            console.error('Error fetching genres:', error);
+        }
+    };
+    
+    const fetchGenreChildren = async (genre_id) => {
+        try {
+            const response = await fetch(`${url}Genres/genre/${genre_id}/children`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching genre children:', error);
+            return [];
+        }
+    };
 
     const fetchLocations = async () => {
         try {
@@ -128,7 +160,14 @@ const Navbar = () => {
         setDropdownVisible(!dropdownVisible);
     };
 
+    const handleGenreClick = () => {
+        AsyncStorage.removeItem('genre');
+        setBreadcrumbs('');
+        setGenreDropdownVisible(!genreDropdownVisible);
+    };
+
     const handleLocationClick = () => {
+        setBreadcrumbs('');
         setLocationDropdownVisible(!locationDropdownVisible);
         setDropdownVisible(false); // Hide category dropdown if open
     };
@@ -179,6 +218,26 @@ const Navbar = () => {
                 setMenuVisible(false);
             }
         }); 
+    };
+
+    const handleGenre = (genre) => {
+        console.log(`Genre clicked: ${genre.genre_name}`);
+        console.log('Genre ID:', genre.genre_id);
+        AsyncStorage.setItem('genre', genre.genre_id.toString());
+        fetchGenreChildren(genre.genre_id).then(children => {
+            if (children.length > 0) {
+                setGenres(children);
+                console.log('Parent genre:', genre);
+                console.log('Children genres:', children);
+                setBreadcrumbPath(prev => `${prev} >> ${genre.genre_name}`);
+            } else {
+                console.log('No children genres found');
+                console.log(breadcrumbPath);
+                setBreadcrumbs(`${breadcrumbPath} >> ${genre.genre_name}`);
+                setGenreDropdownVisible(false);
+                setMenuVisible(false);
+            }
+        });
     };
 
     const handleButtonClick = (buttonName) => {
@@ -237,6 +296,11 @@ const Navbar = () => {
             setCategories(JSON.parse(data));
         });
         setBreadcrumbPath('Category');
+        AsyncStorage.getItem('genres').then(data => {
+            setGenres(JSON.parse(data));
+        }
+        );
+        setBreadcrumbs('');
     };
 
     const renderCategoryDropdown = () => {
@@ -265,6 +329,34 @@ const Navbar = () => {
             </ScrollView>
         );
     };
+
+    const renderGenreDropdown = () => {
+        const filteredGenres = genres.filter(genre =>
+            genre.genre_name.toLowerCase().includes(searchGenre.toLowerCase())
+        );
+    
+        return (
+            <ScrollView style={styles.dropdownScroll}>
+                <View style={styles.searchContainer}>
+                    <TouchableOpacity style={styles.back} onPress={handleBackClick}>
+                        <AntDesign name="back" size={24} color="black" />                    
+                    </TouchableOpacity>
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search Genre"
+                        value={searchGenre}
+                        onChangeText={setSearchGenre}
+                    />
+                </View>
+                {filteredGenres.map((genre) => (
+                    <TouchableOpacity key={genre.genre_id} onPress={() => handleGenre(genre)}>
+                        <Text style={styles.dropdownItem}>{genre.genre_name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        );
+    };
+
 
     return (
         <View style={styles.container}>
@@ -354,6 +446,19 @@ const Navbar = () => {
                     {dropdownVisible && (
                         <View style={styles.dropdown}>
                             {renderCategoryDropdown()}
+                        </View>
+                    )}
+
+                    <TouchableOpacity onPress={handleGenreClick}>
+                        <View style={styles.menuContainer}>
+                            <Text style={styles.menuContainerTEXT}>Genre</Text>
+                            <MaterialIcons name="category" size={24} color="black" />
+                        </View>
+                    </TouchableOpacity>
+
+                    {genreDropdownVisible && (
+                        <View style={styles.dropdown}>
+                            {renderGenreDropdown()}
                         </View>
                     )}
 
