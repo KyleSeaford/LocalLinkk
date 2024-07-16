@@ -1,10 +1,12 @@
-// NEED TO: make the post load all of the posts that the user has made, and display them in a scrollable list.
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const PastPosts = () => {
+    const navigation = useNavigation();
+
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const url = 'http://192.168.127.93:5500/';
@@ -41,13 +43,28 @@ const PastPosts = () => {
         );
     }
 
+    // Function to handle the re-post button click
+    const handlePostClick = () => {
+        console.log('Re-post button clicked');
+        navigation.navigate('LocalLinkk - Post');
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 {posts.length > 0 ? (
                     posts.map((post, index) => (
-                        <View key={post.id || index} style={styles.postContainer}>
-                            <Text style={styles.postText}>{post.advert_text}</Text>
+                        <View key={post.id || index} style={styles.postWrapper}>
+                            <View style={styles.postContentContainer}>
+                                <View style={styles.postContainer}>
+                                    <Text style={styles.postText}>{post.advert_text}</Text>
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity style={styles.postButton} onPress={handlePostClick} >
+                                        <Text style={styles.postButtonText}>Re-Post</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
                     ))
                 ) : (
@@ -60,28 +77,46 @@ const PastPosts = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         marginTop: 110, // Adds top margin for positioning
-        alignContent: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     scrollViewContainer: {
-        flexGrow: 1, // Allows ScrollView content to grow and be scrollable
-        alignItems: 'left',
         padding: 20,
+        flexGrow: 1, // Allows ScrollView content to grow and be scrollable
+    },
+    postWrapper: {
+        marginBottom: 20, // Space between posts
+    },
+    postContentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     postContainer: {
         flex: 1,
-        marginTop: 10,
         padding: 10,
         backgroundColor: '#333',
         borderRadius: 5,
-        width: '75%',
     },
     postText: {
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
+    },
+    buttonContainer: {
+        marginLeft: 25,
+        marginRight: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    postButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        backgroundColor: '#4CAF50',
+        borderRadius: 5,
+    },
+    postButtonText: {
+        color: '#fff',
+        fontSize: 16,
     },
     loadingContainer: {
         marginTop: 150,
