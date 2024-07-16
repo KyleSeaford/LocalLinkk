@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const PastPosts = () => {
     const navigation = useNavigation();
-
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const url = 'http://192.168.127.93:5500/';
@@ -78,11 +77,10 @@ const PastPosts = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 110, // Adds top margin for positioning
+        marginTop: 135, // Adds top margin for positioning
     },
     scrollViewContainer: {
         padding: 20,
-        flexGrow: 1, // Allows ScrollView content to grow and be scrollable
     },
     postWrapper: {
         marginBottom: 20, // Space between posts
@@ -119,10 +117,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     loadingContainer: {
-        marginTop: 150,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 999, // Ensures the loading container is on top of other content
+        marginTop: 135, // Adds top margin for positioning
     },
     loadingText: {
         color: '#4CAF50',
@@ -130,9 +128,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     noPostsText: {
+        textAlign: 'center',
         color: '#888', // Light grey color for no posts message
         fontSize: 16,
-        marginTop: 20,
+        marginTop: 30,
     },
 });
 

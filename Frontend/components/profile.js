@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 20,
-    marginTop: -130,
+    marginTop: -85,
     backgroundColor: '#045757',
   },
   logo: {
