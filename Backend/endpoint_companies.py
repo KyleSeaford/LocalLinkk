@@ -84,6 +84,14 @@ class GetCompaniesByUser(Resource):
         logging.debug(f"Getting companies created by user id")        
         return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCreatedBy}='{user_id}'", '')
 
+
+@api.route('/company/user/advertCount/<string:user_id>')
+@api.param(argumentUserId, 'User id')
+class GetAdvertCountByUser(Resource):
+    def get(self,user_id):
+        logging.debug(f"Getting advert count for user id")        
+        return db.fetchSingleValue(f"SELECT COUNT(*) FROM {databaseTableName} WHERE {databaseFieldCreatedBy}='{user_id}'")
+
 @api.route('/company/<string:company_id>/details')
 @api.param('company_id', 'Company id')
 class GetCompany(Resource):
