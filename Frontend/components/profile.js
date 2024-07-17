@@ -43,6 +43,7 @@ const Profile = () => {
       }
     };
     fetchUserData();
+    UserPostCount();
   }, []);
 
   const handleProfileClick = () => {
@@ -130,8 +131,41 @@ const Profile = () => {
         const errorData = await response.json();
         console.error('Error updating image:', errorData);
     }
-}
+  }
+
+  const UserPostCount = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.get(`${url}Companies/company/user/advertCount/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      console.log(response.data);
+      return response.data;
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   
+  const [postCount, setPostCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPostCount = async () => {
+      try {
+        const count = await UserPostCount();
+        setPostCount(count);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPostCount();
+  }, []);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleProfileClick}>
@@ -156,7 +190,7 @@ const Profile = () => {
 
       <View style={styles.pastContainer}>
         <Text style={styles.pastText}>Your Past Posts:</Text>
-        <Text style={styles.pastText2}>Total Posts:</Text>
+        <Text style={styles.pastText2}>Total Posts: {postCount}</Text>
       </View>
 
       <Modal
