@@ -1,20 +1,34 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
-const postTypes = [
-    { type: 'Text Post', size: 'Text', sizeInPixels: 'One Sentence', price: 'Free'},
-    { type: 'Text Post With Web Link', size: 'Text-Link', sizeInPixels: 'One Sentence With a Link', price: '£2.00'},
-    { type: 'Small Image - Coming soon!', size: 'Small', sizeInPixels: '600x600', price: '£2.00'},
-    { type: 'Medium Image - Coming soon!', size: 'Medium', sizeInPixels: '800x800', price: '£3.50'},
-    { type: 'Large Image - Coming soon!', size: 'Large', sizeInPixels: '1000x1000', price: '£5.00'},
-    { type: 'Custom Design - Coming soon!', size: 'Large', sizeInPixels: '1000x1000', price: '£45.00' }
-];
+import axios from 'axios';
 
 const PostSize = () => {
     const navigation = useNavigation();
+    const [postTypes, setPostTypes] = useState([]);
     const [selectedPostType, setSelectedPostType] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        axios.get('http://192.168.127.93:5500/Posts/posts')
+            .then(response => {
+                const formattedPostTypes = response.data.map(post => ({
+                    id: post[0],
+                    type: post[1],
+                    size: post[2],
+                    sizeInPixels: post[3],
+                    price: post[4]
+                }));
+                setPostTypes(formattedPostTypes);
+                setLoading(false);
+            })
+            .catch(error => {
+                setError(error);
+                setLoading(false);
+            });
+    }, []);
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
@@ -40,11 +54,26 @@ const PostSize = () => {
         if (selectedPostType) {
             console.log(`Proceeding with ${selectedPostType.type}`);
             navigation.navigate(`LocalLinkk - ${selectedPostType.type}`);
-            // Handle navigation to the next page or other actions
         } else {
             console.log('Please select a post type first');
         }
     };
+
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#00ff00" />
+            </View>
+        );
+    }
+
+    if (error) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>Error fetching post types. Please try again later.</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -52,13 +81,13 @@ const PostSize = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.text}>Chose a Post Size</Text>
+                <Text style={styles.text}>Choose a Post Size</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.postTypesContainer}>
-                {postTypes.map((postType, index) => (
+                {postTypes.map((postType) => (
                     <TouchableOpacity
-                        key={index}
+                        key={postType.id}
                         style={[
                             styles.postTypeButton,
                             selectedPostType === postType && styles.postTypeButtonSelected
@@ -176,6 +205,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginHorizontal: 5,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 18,
+        textAlign: 'center',
+        marginTop: 20,
     },
 });
 
