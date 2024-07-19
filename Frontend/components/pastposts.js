@@ -76,14 +76,14 @@ const PastPosts = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 2,
         marginTop: 135, // Adds top margin for positioning
     },
     scrollViewContainer: {
         padding: 20,
     },
     postWrapper: {
-        marginBottom: 20, // Space between posts
+        marginBottom: 10, // Space between posts
     },
     postContentContainer: {
         flexDirection: 'row',

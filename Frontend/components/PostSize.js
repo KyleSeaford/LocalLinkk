@@ -14,13 +14,15 @@ const PostSize = () => {
     useEffect(() => {
         axios.get('http://192.168.127.93:5500/Posts/posts')
             .then(response => {
-                const formattedPostTypes = response.data.map(post => ({
-                    id: post[0],
-                    type: post[1],
-                    size: post[2],
-                    sizeInPixels: post[3],
-                    price: post[4]
-                }));
+                console.log(response.data);
+                const formattedPostTypes = response.data 
+                    .map(postType => ({
+                        id: postType.post_id,
+                        type: postType.post_name,
+                        size: postType.post_size,
+                        sizeInPixels: postType.post_sizeinpixels,
+                        price: postType.post_price,
+                    }));
                 setPostTypes(formattedPostTypes);
                 setLoading(false);
             })

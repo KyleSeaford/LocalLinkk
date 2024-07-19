@@ -26,5 +26,12 @@ databaseFieldPostPrice = 'post_price'
 @api.route('/posts')
 class Posts(Resource):
     def get(self):
-        posts = db.fetchAll(f"SELECT * FROM {databaseTableName}")
+        posts = db.fetchJson([databaseFieldPostId, databaseFieldPostName, databaseFieldPostSize, databaseFieldPostSizeInPixels, databaseFieldPostPrice],databaseTableName, " ","ORDER BY " + databaseFieldPostId)
         return posts, 200
+    
+
+@api.route('/posts/<int:post_id>')
+class Post(Resource):
+    def get(self, post_id):
+        post = db.fetchSingleValue(f"SELECT * FROM {databaseTableName} WHERE {databaseFieldPostId} = {post_id}")
+        return post, 200
