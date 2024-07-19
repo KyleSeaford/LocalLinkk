@@ -69,3 +69,13 @@ CREATE TABLE settings (
     Sname varchar(255),
     Svalue varchar(255)
 );
+
+-- posttypes
+CREATE TABLE posttypes(
+    post_id text NOT NULL,
+    post_name text,
+    post_size text,
+    post_sizeinpixels text,
+    post_price text,
+    PRIMARY KEY(post_id)
+);
