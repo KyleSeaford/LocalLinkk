@@ -9,6 +9,7 @@ from endpoint_users import api as namespaceUsers
 from endpoint_locations import api as namespaceLocations
 from endpoint_genres import api as namespaceGenres
 from endpoint_posts import api as namespacePosts
+from endpoint_events import api as namespaceEvents
 import os
 from dotenv import load_dotenv
 
@@ -28,6 +29,7 @@ api.add_namespace(namespaceUsers)
 api.add_namespace(namespaceLocations)
 api.add_namespace(namespaceGenres)
 api.add_namespace(namespacePosts)
+api.add_namespace(namespaceEvents)
 
 if __name__ == '__main__':
     logging.info("=== Application Start ===")

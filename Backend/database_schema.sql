@@ -79,3 +79,31 @@ CREATE TABLE posttypes(
     post_price text,
     PRIMARY KEY(post_id)
 );
+
+create table series(
+    series_id text not null,
+    created_date date,
+    created_by_user_id varchar(50)
+);
+
+CREATE TABLE events(
+    event_id text NOT NULL,
+    event_name text NOT NULL,
+    company_id text,
+    genre_id text,
+    series_id text,
+    email varchar(255),
+    phone varchar(15),
+    website varchar(255),
+    latitude double precision NOT NULL,
+    longitude double precision NOT NULL,
+    advert_type varchar(255) DEFAULT 'Text'::character varying,
+    advert_text varchar(1000),
+    advert_image varchar(255),
+    advert_expires date,
+    event_address text,
+    google_maps_link text,
+    created_date date,
+    created_by_user_id varchar(50),
+    PRIMARY KEY(event_id)
+);
