@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 import { Calendar } from 'react-native-calendars';
@@ -6,9 +6,16 @@ import { useNavigation } from '@react-navigation/native';
 
 const Duration = () => {
     const navigation = useNavigation();
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0];
+
     const [selectedDates, setSelectedDates] = useState({});
-    const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+
+    useEffect(() => {
+        const markedDates = getMarkedDates();
+        setSelectedDates(markedDates);
+    }, []);
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
@@ -21,15 +28,14 @@ const Duration = () => {
     };
 
     const handleNextClick = () => {
-        if (startDate && endDate) {
+        if (endDate) {
             console.log(`End date: ${endDate}`);
         } else {
-            console.log('Please select a date range');
+            console.log('Please select an end date');
         }
     };
 
     const getMarkedDates = () => {
-        const today = new Date();
         const markedDates = {};
 
         for (let i = 0; i < 7; i++) {
@@ -46,27 +52,25 @@ const Duration = () => {
         const date = new Date(day.timestamp);
         const dateString = date.toISOString().split('T')[0];
 
-        if (!startDate || (startDate && endDate)) {
-            setStartDate(dateString);
-            setEndDate(null);
-            setSelectedDates({ [dateString]: { selected: true, marked: true, selectedColor: '#00adf5' } });
-        } else if (startDate && !endDate) {
-            const newSelectedDates = {};
-            const start = new Date(startDate);
-            const end = date;
-            const range = [];
-
-            if (end > start) {
-                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                    range.push(new Date(d).toISOString().split('T')[0]);
-                }
-                range.forEach(date => {
-                    newSelectedDates[date] = { selected: true, marked: true, selectedColor: '#00adf5' };
-                });
-                setEndDate(dateString);
-                setSelectedDates(newSelectedDates);
-            }
+        if (new Date(dateString) <= new Date(todayString)) {
+            return;
         }
+
+        const newSelectedDates = getMarkedDates();
+        const start = new Date(todayString);
+        const end = date;
+        const range = [];
+
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            range.push(new Date(d).toISOString().split('T')[0]);
+        }
+        
+        range.forEach(date => {
+            newSelectedDates[date] = { selected: true, marked: true, selectedColor: '#00adf5' };
+        });
+
+        setEndDate(dateString);
+        setSelectedDates(newSelectedDates);
     };
 
     return (
@@ -82,7 +86,7 @@ const Duration = () => {
 
             <Calendar
                 onDayPress={handleDayPress}
-                markedDates={{ ...getMarkedDates(), ...selectedDates }}
+                markedDates={{ ...selectedDates }}
                 theme={{
                     calendarBackground: '#1A1A1A',
                     textSectionTitleColor: '#ffffff',

@@ -151,6 +151,9 @@ class PostCompany(Resource):
         if advertDate == "" or advertDate == None:
             advertDate = "31/12/9999"
 
+        if advertType == "TextCustom":
+            advertDate = "11/11/1111"
+
         # Check advert type is valid
         advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge"]
         if advertType not in advertTypes:
