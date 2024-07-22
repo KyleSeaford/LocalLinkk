@@ -117,6 +117,7 @@ class PostCompany(Resource):
     parserAdd.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
     parserAdd.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
     parserAdd.add_argument(argumentUserId, type=str, help='Id of the user', required=False)
+    parserAdd.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
 
     @api.doc(parser=parserAdd)
     def post(self):
@@ -144,7 +145,12 @@ class PostCompany(Resource):
         advertType = args[argumentAdvertType]
         if advertType == "" or advertType == None:
             advertType = "Text"
-        
+
+        # set the advert expiry date
+        advertDate = args[argumentAdvertExpires]
+        if advertDate == "" or advertDate == None:
+            advertDate = "31/12/9999"
+
         # Check advert type is valid
         advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge"]
         if advertType not in advertTypes:
@@ -180,7 +186,7 @@ class PostCompany(Resource):
         createdDate = date.today()
 
         # add the company to the database
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}', '{args[argumentUserId]}', '{createdDate}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}, {databaseFieldAdvertExpires}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}', '{args[argumentUserId]}', '{createdDate}', '{advertDate}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId, 'advertText':advertText}, 201
 
 @api.route('/company/<company_id>')
