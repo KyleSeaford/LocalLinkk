@@ -3,8 +3,11 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { Octicons } from '@expo/vector-icons';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Duration = () => {
+    const url = 'http://192.168.127.93:5500/';
+
     const navigation = useNavigation();
     const today = new Date();
     const todayString = today.toISOString().split('T')[0];
@@ -30,9 +33,31 @@ const Duration = () => {
         navigation.goBack();
     };
 
-    const handleNextClick = () => {
+    const handleNextClick = async () => {
         if (endDate) {
+            // sets end date in 
             console.log(`End date: ${endDate}`);
+            await AsyncStorage.setItem('endDate', endDate);
+
+            // fetches post types
+            const companyID = await AsyncStorage.getItem('companyID');
+            const Response = await fetch(`${url}/Companies/company/${companyID}/PostType`);
+            const data = await Response.json();
+            console.log(data.message);
+            // sets post type in AsyncStorage
+            await AsyncStorage.setItem('postType', data.message);
+
+            // if the end date is the default end date, the duration is 7 days, if it is not, the duration is the difference between the chosen end date and selected end date in days 
+            // so if the post is 7 days it cost £2 but if its 10 days it £2 + £0.50 for each extra day
+            // if the post is 7 days the cost is £2
+            // if the post is 10 days the cost is £2 + £0.50 + £0.50 + £0.50 = £3.50
+            // if the post is 14 days the cost is £2 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p = £5.50
+            // if the post is 21 days the cost is £2 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p = £8.50
+
+            // need to calculate the duration of the post
+
+            // fetches the cost of the post
+
         } else {
             console.log('Please select an end date');
         }

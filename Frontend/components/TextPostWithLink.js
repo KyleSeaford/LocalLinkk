@@ -140,7 +140,7 @@ const TEXTLinkPost = () => {
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
-                            await AsyncStorage.removeItem('companyID');
+                            //await AsyncStorage.removeItem('companyID');
                             setAdvertPreview(advertData.advert_text); // Set the advert preview text
                         });
                     } catch (error) {

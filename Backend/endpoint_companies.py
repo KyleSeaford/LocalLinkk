@@ -155,7 +155,7 @@ class PostCompany(Resource):
             advertDate = "11/11/1111"
 
         # Check advert type is valid
-        advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge"]
+        advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge", "ImageCustom"]
         if advertType not in advertTypes:
             return {'message': f'Invalid advert type: {advertType}, valid types are {", ".join(advertTypes)}'}, 400
         
@@ -261,3 +261,27 @@ class GetAdvertPreview(Resource):
         if len(result) == 0:
             return {'message': f'Company {company_id} does not exists'}, 400
         return result[0]
+    
+@api.route('/company/<company_id>/PostType')
+@api.param('company_id', 'Company id')
+class GetCompanyAdvertType(Resource):
+    def get(self,company_id):
+        logging.debug(f"Getting advert type for {company_id}")        
+        result = db.fetchSingleValue(f"SELECT {databaseFieldAdvertType} FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
+        if result == "Text":
+            return {'message': 'Text Post'}, 200
+        
+        elif result == "TextCustom":
+            return {'message': 'Text Post With Web Link'}, 200
+    
+        elif result == "ImageSmall":
+            return {'message': 'Small Image - Coming soon!'}, 200
+        
+        elif result == "ImageMedium":
+            return {'message': 'Medium Image - Coming soon!'}, 200
+        
+        elif result == "ImageLarge":
+            return {'message': 'Large Image - Coming soon!'}, 200
+        
+        elif result == "ImageCustom":
+            return {'message': 'Custom Design - Coming soon!'}, 200

@@ -35,3 +35,20 @@ class Post(Resource):
     def get(self, post_id):
         post = db.fetchSingleValue(f"SELECT * FROM {databaseTableName} WHERE {databaseFieldPostId} = {post_id}")
         return post, 200
+
+
+@api.route('/posts/<string:post_type>/<int:duration>/cost')
+class PostType(Resource):
+    def get(self, post_type, duration):
+        post = db.fetchSingleValue(f"SELECT {databaseFieldPostPrice} FROM {databaseTableName} WHERE {databaseFieldPostName} = '{post_type}'")
+        post = post * duration
+
+        # if the end date is the default end date, the duration is 7 days, if it is not, the duration is the difference between the chosen end date and selected end date in days 
+        # so if the post is 7 days it cost £2 but if its 10 days it £2 + £0.50 for each extra day
+        # if the post is 7 days the cost is £2
+        # if the post is 10 days the cost is £2 + £0.50 + £0.50 + £0.50 = £3.50
+        # if the post is 14 days the cost is £2 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p = £5.50
+        # if the post is 21 days the cost is £2 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p = £8.50
+
+        # need to use the post cost and the duration to calculate the cost
+        return post, 200
