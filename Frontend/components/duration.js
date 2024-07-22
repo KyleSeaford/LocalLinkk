@@ -8,12 +8,15 @@ const Duration = () => {
     const navigation = useNavigation();
     const today = new Date();
     const todayString = today.toISOString().split('T')[0];
+    const defaultEndDate = new Date(today);
+    defaultEndDate.setDate(defaultEndDate.getDate() + 7);
+    const defaultEndDateString = defaultEndDate.toISOString().split('T')[0];
 
     const [selectedDates, setSelectedDates] = useState({});
-    const [endDate, setEndDate] = useState(null);
+    const [endDate, setEndDate] = useState(defaultEndDateString);
 
     useEffect(() => {
-        const markedDates = getMarkedDates();
+        const markedDates = getMarkedDates(defaultEndDateString);
         setSelectedDates(markedDates);
     }, []);
 
@@ -35,8 +38,9 @@ const Duration = () => {
         }
     };
 
-    const getMarkedDates = () => {
+    const getMarkedDates = (endDateString) => {
         const markedDates = {};
+        const endDate = new Date(endDateString);
 
         for (let i = 0; i < 7; i++) {
             const date = new Date(today);
@@ -45,6 +49,18 @@ const Duration = () => {
             markedDates[dateString] = { selected: true, marked: true, selectedColor: '#00adf5' };
         }
 
+        const start = new Date(todayString);
+        const end = new Date(endDateString);
+        const range = [];
+
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            range.push(new Date(d).toISOString().split('T')[0]);
+        }
+
+        range.forEach(date => {
+            markedDates[date] = { selected: true, marked: true, selectedColor: '#00adf5' };
+        });
+
         return markedDates;
     };
 
@@ -52,24 +68,16 @@ const Duration = () => {
         const date = new Date(day.timestamp);
         const dateString = date.toISOString().split('T')[0];
 
-        if (new Date(dateString) <= new Date(todayString)) {
+        // Ensure the selected date is on or after the 7th day from today
+        const minEndDate = new Date(today);
+        minEndDate.setDate(minEndDate.getDate() + 6);
+        
+        if (date < minEndDate) {
             return;
         }
 
-        const newSelectedDates = getMarkedDates();
-        const start = new Date(todayString);
-        const end = date;
-        const range = [];
-
-        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-            range.push(new Date(d).toISOString().split('T')[0]);
-        }
-        
-        range.forEach(date => {
-            newSelectedDates[date] = { selected: true, marked: true, selectedColor: '#00adf5' };
-        });
-
         setEndDate(dateString);
+        const newSelectedDates = getMarkedDates(dateString);
         setSelectedDates(newSelectedDates);
     };
 
