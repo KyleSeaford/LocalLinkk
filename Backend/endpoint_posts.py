@@ -40,6 +40,9 @@ class Post(Resource):
 @api.route('/posts/<string:post_type>/<int:duration>/cost')
 class PostType(Resource):
     def get(self, post_type, duration):
+
+        dayCost = 0.50
+
         post = db.fetchSingleValue(f"SELECT {databaseFieldPostPrice} FROM {databaseTableName} WHERE {databaseFieldPostName} = '{post_type}'")
         
         post_cost = float(post.replace('£', ''))  # Remove the currency symbol
@@ -48,7 +51,7 @@ class PostType(Resource):
         elif duration < 7:
             cost = post_cost
         else:
-            cost = post_cost + (duration - 7) * 0.50
+            cost = post_cost + (duration - 7) * dayCost
         
         return {'cost': cost}, 200
 

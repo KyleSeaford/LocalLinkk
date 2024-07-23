@@ -17,6 +17,8 @@ const Duration = () => {
 
     const [selectedDates, setSelectedDates] = useState({});
     const [endDate, setEndDate] = useState(defaultEndDateString);
+    const [cost, setCost] = useState(null);
+    const [duration, setDuration] = useState(null);
 
     useEffect(() => {
         const markedDates = getMarkedDates(defaultEndDateString);
@@ -35,43 +37,34 @@ const Duration = () => {
 
     const handleNextClick = async () => {
         if (endDate) {
-            // sets end date in 
             console.log(`End date: ${endDate}`);
             await AsyncStorage.setItem('endDate', endDate);
 
-            // fetches post types
             const companyID = await AsyncStorage.getItem('companyID');
             const Response = await fetch(`${url}/Companies/company/${companyID}/PostType`);
             const data = await Response.json();
             console.log(data.message);
-            // sets post type in AsyncStorage
             await AsyncStorage.setItem('postType', data.message);
 
-            // duration of post
             const startDate = todayString;
             const duration = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
             console.log(`Duration: ${duration} days`);
             await AsyncStorage.setItem('duration', duration.toString());
-            
+            setDuration(duration);
 
-            // Calculate costs with api call 
             AsyncStorage.getItem('postType').then((postType) => {
                 AsyncStorage.getItem('duration').then((duration) => {
-                  fetch(`${url}/Posts/posts/${postType}/${duration}/cost`)
-                    .then((Response2) => Response2.json())
-                    .then((data2) => {
-                        console.log(data2);
-                        AsyncStorage.setItem('cost', data2.cost.toString());
-                    })
+                    fetch(`${url}/Posts/posts/${postType}/${duration}/cost`)
+                        .then((Response2) => Response2.json())
+                        .then((data2) => {
+                            console.log(data2);
+                            AsyncStorage.setItem('cost', data2.cost.toString());
+                            setCost(data2.cost);
+                        });
                 });
             });
 
             await AsyncStorage.removeItem('postType');
-
-            // show the user the cost of the post and the duration, and a breakdown of the cost eg Total Cost: £2.50, Free Duration 7 days, Paid Duration 1 days: £0.50 total duration 8 days
-            // duration of post is in the async storage, always 7 days free and the rest is paid for
-            // cost of post is in the async storage 
-
         } else {
             console.log('Please select an end date');
         }
@@ -107,10 +100,9 @@ const Duration = () => {
         const date = new Date(day.timestamp);
         const dateString = date.toISOString().split('T')[0];
 
-        // Ensure the selected date is on or after the 7th day from today
         const minEndDate = new Date(today);
         minEndDate.setDate(minEndDate.getDate() + 6);
-        
+
         if (date < minEndDate) {
             return;
         }
@@ -155,6 +147,30 @@ const Duration = () => {
                     <Text style={styles.backNextButtonText}>Calculate Cost</Text>
                 </TouchableOpacity>
             </View>
+
+            {cost && duration && (
+                <View style={styles.costBreakdownContainer}>
+                    <View style={styles.row}>
+                        <Text style={styles.costBreakdownFDays}>
+                            Free Days: 7 days
+                        </Text>
+                        <Text style={styles.costBreakdownFDays}>
+                            Total Duration: {duration} days
+                        </Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.costBreakdownPDays}>
+                            Paid Days: {duration > 7 ? duration - 7 : 0} days
+                        </Text>
+                        <Text style={styles.costBreakdownPDays}>
+                            Expire Date: {endDate}
+                        </Text>
+                    </View>
+                    <Text style={styles.costBreakdownText}>
+                        Total Cost: £{cost}
+                    </Text>
+                </View>
+            )}
         </ScrollView>
     );
 };
@@ -214,6 +230,31 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginHorizontal: 5,
+    },
+    costBreakdownContainer: {
+        marginTop: 20,
+        backgroundColor: '#2A2A2A',
+        padding: 15,
+        borderRadius: 5,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+    costBreakdownFDays: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    costBreakdownPDays: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    costBreakdownText: {
+        color: '#00adf5',
+        fontSize: 20,
+        marginVertical: 5,
+        textAlign: 'center',
     },
 });
 

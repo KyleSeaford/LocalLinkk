@@ -266,22 +266,26 @@ class GetAdvertPreview(Resource):
 @api.param('company_id', 'Company id')
 class GetCompanyAdvertType(Resource):
     def get(self,company_id):
-        logging.debug(f"Getting advert type for {company_id}")        
-        result = db.fetchSingleValue(f"SELECT {databaseFieldAdvertType} FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
-        if result == "Text":
-            return {'message': 'Text Post'}, 200
-        
-        elif result == "TextCustom":
-            return {'message': 'Text Post With Web Link'}, 200
-    
-        elif result == "ImageSmall":
-            return {'message': 'Small Image - Coming soon!'}, 200
-        
-        elif result == "ImageMedium":
-            return {'message': 'Medium Image - Coming soon!'}, 200
-        
-        elif result == "ImageLarge":
-            return {'message': 'Large Image - Coming soon!'}, 200
-        
-        elif result == "ImageCustom":
-            return {'message': 'Custom Design - Coming soon!'}, 200
+        try:
+            logging.debug(f"Getting advert type for {company_id}")        
+            result = db.fetchSingleValue(f"SELECT {databaseFieldAdvertType} FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
+            if result == "Text":
+                return {'message': 'Text Post'}, 200
+
+            elif result == "TextCustom":
+                return {'message': 'Text Post With Web Link'}, 200
+
+            elif result == "ImageSmall":
+                return {'message': 'Small Image - Coming soon!'}, 200
+
+            elif result == "ImageMedium":
+                return {'message': 'Medium Image - Coming soon!'}, 200
+
+            elif result == "ImageLarge":
+                return {'message': 'Large Image - Coming soon!'}, 200
+
+            elif result == "ImageCustom":
+                return {'message': 'Custom Design - Coming soon!'}, 200
+            
+        except Exception as e:
+            return {'message': 'Error occurred while fetching advert type'}, 500
