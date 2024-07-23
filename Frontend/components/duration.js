@@ -47,16 +47,30 @@ const Duration = () => {
             // sets post type in AsyncStorage
             await AsyncStorage.setItem('postType', data.message);
 
-            // if the end date is the default end date, the duration is 7 days, if it is not, the duration is the difference between the chosen end date and selected end date in days 
-            // so if the post is 7 days it cost £2 but if its 10 days it £2 + £0.50 for each extra day
-            // if the post is 7 days the cost is £2
-            // if the post is 10 days the cost is £2 + £0.50 + £0.50 + £0.50 = £3.50
-            // if the post is 14 days the cost is £2 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p = £5.50
-            // if the post is 21 days the cost is £2 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + £0.50 + 0.50p = £8.50
+            // duration of post
+            const startDate = todayString;
+            const duration = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
+            console.log(`Duration: ${duration} days`);
+            await AsyncStorage.setItem('duration', duration.toString());
+            
 
-            // need to calculate the duration of the post
+            // Calculate costs with api call 
+            AsyncStorage.getItem('postType').then((postType) => {
+                AsyncStorage.getItem('duration').then((duration) => {
+                  fetch(`${url}/Posts/posts/${postType}/${duration}/cost`)
+                    .then((Response2) => Response2.json())
+                    .then((data2) => {
+                        console.log(data2);
+                        AsyncStorage.setItem('cost', data2.cost.toString());
+                    })
+                });
+            });
 
-            // fetches the cost of the post
+            await AsyncStorage.removeItem('postType');
+
+            // show the user the cost of the post and the duration, and a breakdown of the cost eg Total Cost: £2.50, Free Duration 7 days, Paid Duration 1 days: £0.50 total duration 8 days
+            // duration of post is in the async storage, always 7 days free and the rest is paid for
+            // cost of post is in the async storage 
 
         } else {
             console.log('Please select an end date');
