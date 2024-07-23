@@ -136,6 +136,8 @@ const Duration = () => {
                     arrowColor: '#ffffff',
                     monthTextColor: '#ffffff',
                     indicatorColor: '#ffffff',
+                    marginTop: 10,
+                    marginBottom: 10,
                 }}
             />
 
@@ -169,6 +171,10 @@ const Duration = () => {
                     <Text style={styles.costBreakdownText}>
                         Total Cost: £{cost}
                     </Text>
+
+                    <TouchableOpacity style={styles.payButton} onPress={() => navigation.navigate('Payment')}>
+                        <Text style={styles.payButtonText}>Proceed to Payment</Text>
+                    </TouchableOpacity>
                 </View>
             )}
         </ScrollView>
@@ -232,7 +238,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     costBreakdownContainer: {
-        marginTop: 20,
+        marginTop: 25,
         backgroundColor: '#2A2A2A',
         padding: 15,
         borderRadius: 5,
@@ -251,10 +257,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     costBreakdownText: {
+        marginTop: 10,
         color: '#00adf5',
         fontSize: 20,
         marginVertical: 5,
         textAlign: 'center',
+    },
+    payButton: {
+        backgroundColor: '#00adf5',
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 15,
+    },
+    payButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 
