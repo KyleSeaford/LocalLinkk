@@ -3,9 +3,12 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 
 import { Octicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const Payment = () => {
     const navigation = useNavigation();
+
+    const url = 'http://192.168.127.93:5500/';
 
     const [nameOnCard, setNameOnCard] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -17,6 +20,8 @@ const Payment = () => {
     const [zipCode, setZipCode] = useState('');
     const [country, setCountry] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
@@ -27,12 +32,66 @@ const Payment = () => {
         if (!validateCardDetails()) {
             return;
         }
-        cost = await AsyncStorage.getItem('cost');
-        console.log('Payment Submitted!');
-        console.log('details:', {nameOnCard, cardNumber, expirationDate, cvv, billingAddress, city, state, zipCode, country, cost});
+        setLoading(true);
+
+        try {
+            const cost = await AsyncStorage.getItem('cost');
+            console.log('Payment Submitted!');
+            console.log('details:', {nameOnCard, cardNumber, expirationDate, cvv, billingAddress, city, state, zipCode, country, cost});
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                setLoading(false);
+                handlePaymentSuccess();
+            }, 2000); // Simulate a 2-second delay for the payment process
+
+        } catch (error) {
+            setLoading(false);
+            handlePaymentFailure();
+        }
+    };
+
+    const changeExpDate = async () => {
+
+        // get company ID and expiration date from AsyncStorage
+        const CId = await AsyncStorage.getItem('companyID');
+        const ExpDate = await AsyncStorage.getItem('endDate');
+
+        // send a PUT request to update the expiration date
+        const response = await fetch(`${url}/Companies/company/${CId}?Advert%20Expiry%20Date=${ExpDate}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ expirationDate }),
+        });
+
+        if (response.ok) {
+            // if successful, remove companyID and endDate and set a success message
+            setSuccessMessage('Payment processed successfully.');
+            await AsyncStorage.removeItem('companyID');
+            await AsyncStorage.removeItem('endDate');
+
+            setTimeout(() => {
+                navigation.navigate('LocalLinkk - Home');
+            }, 1500); // 1.5-second delay for the success message
+
+        } else {
+            console.log('Failed to change expiration date.');
+            handlePaymentFailure();
+        }
+    };
+
+    const handlePaymentSuccess = () => {
+        console.log('Payment Success!');
         AsyncStorage.removeItem('cost');
         AsyncStorage.removeItem('duration');
-        // Add payment processing logic here
+        changeExpDate();
+    };
+
+    const handlePaymentFailure = () => {
+        console.log('Payment Failed!');
+        setErrorMessage('Payment processing failed. Please try again.');
     };
 
     const validateCardDetails = () => {
@@ -75,6 +134,7 @@ const Payment = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Spinner visible={loading} textContent={"Processing Payment..."} textStyle={styles.spinnerTextStyle} />
             <View style={styles.headerContainer}>
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
@@ -85,6 +145,7 @@ const Payment = () => {
             <Text style={styles.instructionText}>Please enter your payment details below</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+            {successMessage ? <Text style={styles.errorText2}>{successMessage}</Text> : null}
 
             <TextInput
                 style={styles.input}
@@ -218,6 +279,12 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: 'center',
     },
+    errorText2: {
+        color: 'green',
+        fontSize: 16,
+        marginBottom: 15,
+        textAlign: 'center',
+    },
     input: {
         height: 50,
         backgroundColor: '#333',
@@ -237,6 +304,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    spinnerTextStyle: {
+        color: '#FFF'
+    }
 });
 
 export default Payment;

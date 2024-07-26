@@ -289,3 +289,5 @@ class GetCompanyAdvertType(Resource):
             
         except Exception as e:
             return {'message': 'Error occurred while fetching advert type'}, 500
+
+
