@@ -42,9 +42,11 @@ class PostType(Resource):
     def get(self, post_type, duration):
 
         dayCost = 0.50
+        try:
+            post = db.fetchSingleValue(f"SELECT {databaseFieldPostPrice} FROM {databaseTableName} WHERE {databaseFieldPostName} = '{post_type}'")
+        except:
+            return {'message': 'Post type not found'}, 404
 
-        post = db.fetchSingleValue(f"SELECT {databaseFieldPostPrice} FROM {databaseTableName} WHERE {databaseFieldPostName} = '{post_type}'")
-        
         post_cost = float(post.replace('£', ''))  # Remove the currency symbol
         if duration == 7:
             cost = post_cost

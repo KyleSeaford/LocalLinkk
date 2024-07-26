@@ -172,7 +172,7 @@ const Duration = () => {
                         Total Cost: £{cost}
                     </Text>
 
-                    <TouchableOpacity style={styles.payButton} onPress={() => navigation.navigate('Payment')}>
+                    <TouchableOpacity style={styles.payButton} onPress={() => navigation.navigate('LocalLinkk - Payment')}>
                         <Text style={styles.payButtonText}>Proceed to Payment</Text>
                     </TouchableOpacity>
                 </View>
