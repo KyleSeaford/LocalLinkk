@@ -26,8 +26,8 @@ const Settings= () => {
     const handleDeleteAccountClick = async () => {
         if (deleteConfirm === 'DELETE') {
             try {
-                const userId = await AsyncStorage.getItem('userId');
-                const token = await AsyncStorage.getItem('token');
+                const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+                const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
                 await axios.delete(`${url}Users/users/remove/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -64,8 +64,8 @@ const Settings= () => {
         }
 
         try {
-            const userId = await AsyncStorage.getItem('userId');
-            const token = await AsyncStorage.getItem('token');
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+            const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
             await axios.put(`${url}Users/users/EmailChange`, null, {
                 params: {
                     userID: userId,
@@ -97,8 +97,8 @@ const Settings= () => {
         }
 
         try {
-            const userId = await AsyncStorage.getItem('userId');
-            const token = await AsyncStorage.getItem('token');
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+            const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
             await axios.put(`${url}Users/users/passwordChange`, null, {
                 params: {
                     userID: userId,
@@ -126,8 +126,8 @@ const Settings= () => {
 
     const handleChangeName = async () => {
         try {
-          const userId = await AsyncStorage.getItem('userId');
-          const token = await AsyncStorage.getItem('token');
+          const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+          const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
           await axios.put(`${url}Users/users/nameChange`, null, {
             params: {
               userID: userId,

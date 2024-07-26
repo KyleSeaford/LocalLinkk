@@ -68,9 +68,9 @@ const SignupPage = () => {
       const data = await response.json();
 
       if (response.status === 201) {
-        await AsyncStorage.setItem('token', data.access_token);
-        await AsyncStorage.setItem('isAuthenticated', 'true');
-        await AsyncStorage.setItem("userId", data.userID);
+        await AsyncStorage.setItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d', data.access_token);
+        await AsyncStorage.setItem('LL-0a85ee01463d2b959ec02504285cfccc', 'b326b5062b2f0e69046810717534cb09');
+        await AsyncStorage.setItem("LL-8e44f0089b076e18a718eb9ca3d94674", data.userID);
 
         console.log('User added successfully:', data);
         navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });

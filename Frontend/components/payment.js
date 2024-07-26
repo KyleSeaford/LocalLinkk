@@ -40,6 +40,7 @@ const Payment = () => {
             console.log('details:', {nameOnCard, cardNumber, expirationDate, cvv, billingAddress, city, state, zipCode, country, cost});
             
             // Simulate payment processing
+            // TODO: Replace this with actual payment processing
             setTimeout(() => {
                 setLoading(false);
                 handlePaymentSuccess();

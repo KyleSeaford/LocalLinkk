@@ -26,8 +26,8 @@ const App = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      const authStatus = await AsyncStorage.getItem('isAuthenticated');
-      setIsAuthenticated(authStatus === 'true');
+      const authStatus = await AsyncStorage.getItem('LL-0a85ee01463d2b959ec02504285cfccc');
+      setIsAuthenticated(authStatus === 'b326b5062b2f0e69046810717534cb09');
     };
 
     checkAuthStatus();

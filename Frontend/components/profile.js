@@ -23,8 +23,8 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
+        const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+        const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
         const response = await axios.get(`${url}Users/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,8 +66,8 @@ const Profile = () => {
 
   const handleSaveChanges = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+      const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
       await axios.put(`${url}Users/users/nameChange`, null, {
         params: {
           userID: userId,
@@ -110,7 +110,7 @@ const Profile = () => {
 
     console.log('Selected image URI: ', selectedImage);
     
-    const userId = await AsyncStorage.getItem('userId');
+    const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
     updateImage(userId, selectedImage);
   };
   
@@ -135,8 +135,8 @@ const Profile = () => {
 
   const UserPostCount = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+      const token = await AsyncStorage.getItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
       const response = await axios.get(`${url}Companies/company/user/advertCount/${userId}`,
         {
           headers: {

@@ -13,7 +13,7 @@ const PastPosts = () => {
     // Function to fetch past posts
     const GetPastPosts = async () => {
         try {
-            const userId = await AsyncStorage.getItem('userId');
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
             if (userId) {
                 const response = await fetch(`${url}Companies/companies/user/${userId}`);
                 const data = await response.json();
