@@ -12,6 +12,7 @@ import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
 
 import DurationScreen from './screens/durationScreen';
+import PaymentScreen from './screens/paymentScreen';
 
 import ScreenPostSize from './screens/PostSizeScreen';
 import ScreenPostTEXT from './screens/PostTEXTScreen';
@@ -25,8 +26,8 @@ const App = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      const authStatus = await AsyncStorage.getItem('isAuthenticated');
-      setIsAuthenticated(authStatus === 'true');
+      const authStatus = await AsyncStorage.getItem('LL-0a85ee01463d2b959ec02504285cfccc');
+      setIsAuthenticated(authStatus === 'b326b5062b2f0e69046810717534cb09');
     };
 
     checkAuthStatus();
@@ -82,6 +83,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Duration"
           component={DurationScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Payment"
+          component={PaymentScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

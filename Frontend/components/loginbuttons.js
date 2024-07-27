@@ -46,9 +46,9 @@ const LoginPage = () => {
             });
 
             const data = await response.json();
-            await AsyncStorage.setItem('token', data.access_token);
-            await AsyncStorage.setItem("isAuthenticated", "true");
-            await AsyncStorage.setItem("userId", data.userID);
+            await AsyncStorage.setItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d', data.access_token);
+            await AsyncStorage.setItem("LL-0a85ee01463d2b959ec02504285cfccc", "b326b5062b2f0e69046810717534cb09");
+            await AsyncStorage.setItem("LL-8e44f0089b076e18a718eb9ca3d94674", data.userID);
 
             if (response.status === 200) {
                 console.log('User logged in successfully:', data);
@@ -56,9 +56,9 @@ const LoginPage = () => {
             } else {
                 console.error('Login failed:', data.message);
                 setErrorMessage(data.message);
-                AsyncStorage.removeItem('token');
-                AsyncStorage.removeItem('isAuthenticated');
-                AsyncStorage.removeItem('userId');
+                AsyncStorage.removeItem('LL_459a6f79ad9b13cbcb5f692d2cc7a94d');
+                AsyncStorage.removeItem('LL-0a85ee01463d2b959ec02504285cfccc');
+                AsyncStorage.removeItem('LL-8e44f0089b076e18a718eb9ca3d94674');
             }
         } catch (error) {
             console.error('An error occurred:', error);

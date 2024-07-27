@@ -19,7 +19,7 @@ const Navbar = () => {
 
     const fetchUsersLocation = async () => {
         try {
-            const userId = await AsyncStorage.getItem('userId');
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
             const response = await fetch(`${url}Users/users/locations/${userId}`);
             const userLOC = await response.json();
 
@@ -76,7 +76,7 @@ const Navbar = () => {
         try {
             const response = await fetch(`${url}Categories/category/0/children`);
             const data = await response.json();
-            AsyncStorage.setItem('categories', JSON.stringify(data));
+            AsyncStorage.setItem('LL-b0b5ccb4a195a07fd3eed14affb8695f', JSON.stringify(data));
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -98,7 +98,7 @@ const Navbar = () => {
         try {
             const response = await fetch(`${url}Genres/genre/0/children`);
             const data = await response.json();
-            AsyncStorage.setItem('genres', JSON.stringify(data));
+            AsyncStorage.setItem('LL-f90f211700b6afeaafe2f8016ddfad3d', JSON.stringify(data));
             setGenres(data);
         } catch (error) {
             console.error('Error fetching genres:', error);
@@ -187,7 +187,7 @@ const Navbar = () => {
 
     const ChangeUsersLocation = async (newLocation) => {
         try {
-            const userId = await AsyncStorage.getItem('userId');
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
             const response = await fetch(`${url}Users/users/locations/change/${userId}/${newLocation}`, {
                 method: 'PUT',
                 headers: {
@@ -309,11 +309,11 @@ const Navbar = () => {
 
     const handleBackClick = () => {
         console.log('Back clicked!');
-        AsyncStorage.getItem('categories').then(data => {
+        AsyncStorage.getItem('LL-b0b5ccb4a195a07fd3eed14affb8695f').then(data => {
             setCategories(JSON.parse(data));
         });
         setBreadcrumbs('');
-        AsyncStorage.getItem('genres').then(data => {
+        AsyncStorage.getItem('LL-f90f211700b6afeaafe2f8016ddfad3d').then(data => {
             setGenres(JSON.parse(data));
         }
         );

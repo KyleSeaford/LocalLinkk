@@ -117,6 +117,7 @@ class PostCompany(Resource):
     parserAdd.add_argument(argumentAdvertText, type=str, help='Advert Text', required=False)
     parserAdd.add_argument(argumentAdvertImage, type=str, help='Advert Image', required=False)
     parserAdd.add_argument(argumentUserId, type=str, help='Id of the user', required=False)
+    parserAdd.add_argument(argumentAdvertExpires, type=str, help='Advert Expiry Date', required=False)
 
     @api.doc(parser=parserAdd)
     def post(self):
@@ -144,9 +145,17 @@ class PostCompany(Resource):
         advertType = args[argumentAdvertType]
         if advertType == "" or advertType == None:
             advertType = "Text"
-        
+
+        # set the advert expiry date
+        advertDate = args[argumentAdvertExpires]
+        if advertDate == "" or advertDate == None:
+            advertDate = "31/12/9999"
+
+        if advertType == "TextCustom":
+            advertDate = "11/11/1111"
+
         # Check advert type is valid
-        advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge"]
+        advertTypes = ["Text", "TextCustom", "ImageSmall", "ImageMedium", "ImageLarge", "ImageCustom"]
         if advertType not in advertTypes:
             return {'message': f'Invalid advert type: {advertType}, valid types are {", ".join(advertTypes)}'}, 400
         
@@ -180,7 +189,7 @@ class PostCompany(Resource):
         createdDate = date.today()
 
         # add the company to the database
-        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}', '{args[argumentUserId]}', '{createdDate}')") 
+        db.execute(f"INSERT INTO {databaseTableName} ({databaseFieldCompanyId}, {databaseFieldCompanyName}, {databaseFieldCategoryId}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEmail}, {databaseFieldPhone}, {databaseFieldWebsite}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldMapLink}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}, {databaseFieldAdvertExpires}) VALUES ('{newCompanyId}', '{companyName}', '{categoryId}', '{args[argumentLatitude]}','{args[argumentLongitude]}','{args[argumentCompanyEmail]}','{phone}','{args[argumentCompanyWebsite]}','{advertType}','{advertText}','{args[argumentAdvertImage]}','{args[argumentMapLink]}', '{args[argumentUserId]}', '{createdDate}', '{advertDate}')") 
         return {'message': 'Company added successfully', 'company_id':newCompanyId, 'advertText':advertText}, 201
 
 @api.route('/company/<company_id>')
@@ -252,3 +261,33 @@ class GetAdvertPreview(Resource):
         if len(result) == 0:
             return {'message': f'Company {company_id} does not exists'}, 400
         return result[0]
+    
+@api.route('/company/<company_id>/PostType')
+@api.param('company_id', 'Company id')
+class GetCompanyAdvertType(Resource):
+    def get(self,company_id):
+        try:
+            logging.debug(f"Getting advert type for {company_id}")        
+            result = db.fetchSingleValue(f"SELECT {databaseFieldAdvertType} FROM {databaseTableName} WHERE {databaseFieldCompanyId}='{company_id}'")
+            if result == "Text":
+                return {'message': 'Text Post'}, 200
+
+            elif result == "TextCustom":
+                return {'message': 'Text Post With Web Link'}, 200
+
+            elif result == "ImageSmall":
+                return {'message': 'Small Image - Coming soon!'}, 200
+
+            elif result == "ImageMedium":
+                return {'message': 'Medium Image - Coming soon!'}, 200
+
+            elif result == "ImageLarge":
+                return {'message': 'Large Image - Coming soon!'}, 200
+
+            elif result == "ImageCustom":
+                return {'message': 'Custom Design - Coming soon!'}, 200
+            
+        except Exception as e:
+            return {'message': 'Error occurred while fetching advert type'}, 500
+
+

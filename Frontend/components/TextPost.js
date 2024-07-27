@@ -94,7 +94,7 @@ const TEXTPost = () => {
             const postAdvert = async (details) => {
                 try {
                     const category_id = categories.find(category => category.category_name === selectedCategory).category_id;
-                    const userID = await AsyncStorage.getItem('userId');
+                    const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
                     const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${category_id}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
@@ -155,7 +155,7 @@ const TEXTPost = () => {
         try {
             const response = await fetch(`${url}Categories/category/0/children`);
             const data = await response.json();
-            await AsyncStorage.setItem('categories', JSON.stringify(data));
+            await AsyncStorage.setItem('LL-b0b5ccb4a195a07fd3eed14affb8695f', JSON.stringify(data));
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -189,7 +189,7 @@ const TEXTPost = () => {
     };
 
     const handleCategoryBackClick = () => {
-        AsyncStorage.getItem('categories').then(data => {
+        AsyncStorage.getItem('LL-b0b5ccb4a195a07fd3eed14affb8695f').then(data => {
             setCategories(JSON.parse(data));
         });
     };
@@ -197,7 +197,7 @@ const TEXTPost = () => {
     const handlePostClick = async () => {
         AsyncStorage.removeItem('advertPreview');
         try {
-            const userId = await AsyncStorage.getItem('userId')
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674')
             const response = await fetch(`${url}Users/users/TypeChange?userID=${userId}&userType=Poster`, {
                 method: 'PUT'
             });

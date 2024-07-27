@@ -107,7 +107,7 @@ const TEXTLinkPost = () => {
             const postAdvert = async (details) => {
                 try {
                     const category_id = categories.find(category => category.category_name === selectedCategory).category_id;
-                    const userID = await AsyncStorage.getItem('userId');
+                    const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
                     const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${category_id}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}&Advert%20Type=${advert_type}&Advert%20Text=${advertText}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
@@ -140,7 +140,7 @@ const TEXTLinkPost = () => {
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
-                            await AsyncStorage.removeItem('companyID');
+                            //await AsyncStorage.removeItem('companyID');
                             setAdvertPreview(advertData.advert_text); // Set the advert preview text
                         });
                     } catch (error) {
@@ -168,7 +168,7 @@ const TEXTLinkPost = () => {
         try {
             const response = await fetch(`${url}Categories/category/0/children`);
             const data = await response.json();
-            await AsyncStorage.setItem('categories', JSON.stringify(data));
+            await AsyncStorage.setItem('LL-b0b5ccb4a195a07fd3eed14affb8695f', JSON.stringify(data));
             setCategories(data);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -202,7 +202,7 @@ const TEXTLinkPost = () => {
     };
 
     const handleCategoryBackClick = () => {
-        AsyncStorage.getItem('categories').then(data => {
+        AsyncStorage.getItem('LL-b0b5ccb4a195a07fd3eed14affb8695f').then(data => {
             setCategories(JSON.parse(data));
         });
     };
