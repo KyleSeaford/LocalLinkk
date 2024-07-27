@@ -83,7 +83,8 @@ CREATE TABLE posttypes(
 create table series(
     series_id text not null,
     created_date date,
-    created_by_user_id varchar(50)
+    created_by_user_id varchar(50),
+    recurrence varchar(100)
 );
 
 CREATE TABLE events(

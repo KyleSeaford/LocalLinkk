@@ -15,8 +15,10 @@ app = Flask(__name__)
 api = Api(app)
 api = Namespace('Events', description='Events Endpoint')
 db = database_extensions()
-databaseTableName = 'events'
+databaseTableEvents = 'events'
+databaseTableSeries = 'series'
 databaseFieldEventId = 'event_id'
+databaseFieldSeriesId = 'series_id'
 databaseFieldEventName = 'event_name'
 databaseFieldCompanyId = 'company_id'
 databaseFieldGenreId = 'genre_id'
@@ -32,6 +34,7 @@ databaseFieldAdvertExpires = 'advert_expires'
 databaseFieldMapLink = 'google_maps_link'
 databaseFieldCreatedDate = "created_date"
 databaseFieldCreatedBy = "created_by_user_id"
+databaseFieldRecurrence = "recurrence"
 argumentEventName = 'Event Name'
 argumentCompanyName = "Company Name"
 argumentGenreId = 'Genre Id'
@@ -47,9 +50,22 @@ argumentAdvertExpires = 'Advert Expiry Date'
 argumentMapLink = 'Google Maps Link'
 argumentUserId = "User Id"
 
-@api.route('/events/<string:page_offset>/<string:page_limit>', doc={"description": "Get all events with pagination"})
-@api.param('page_offset', 'Page Offset')
-@api.param('page_limit', 'Page Limit')
+@api.route('/', defaults={'page_offset':'0', 'page_limit': '100'})
+@api.route('/<int:page_offset>/<int:page_limit>', doc={"description": "Get all events with pagination"})
 class GetEventsPagination(Resource):
     def get(self, page_offset, page_limit):        
-        return db.fetchJson([databaseFieldEventId, databaseFieldEventName, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCreatedDate} ASC offset {page_offset} limit {page_limit}')
+        return db.fetchJson([databaseFieldEventId, databaseFieldEventName, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableEvents, '', f'ORDER BY {databaseFieldCreatedDate} ASC offset {page_offset} limit {page_limit}')
+
+@api.route('/series', defaults={'page_offset':'0', 'page_limit': '100'})
+@api.route('/series/<int:page_offset>/<int:page_limit>', doc={"description": "Get all series with pagination"})
+class GetSeriesPagination(Resource):
+    def get(self, page_offset, page_limit):        
+        return db.fetchJson([databaseFieldSeriesId, databaseFieldCreatedDate, databaseFieldCreatedBy, databaseFieldRecurrence], databaseTableSeries, '', f'ORDER BY {databaseFieldCreatedDate} ASC offset {page_offset} limit {page_limit}')
+
+
+# todo get events by cat log lat 
+# todo get events by user
+# todo get events in series
+# todo post event
+# todo post series
+
