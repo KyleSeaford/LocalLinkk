@@ -365,7 +365,7 @@ class endpoint_companies_tests(unittest.TestCase):
             self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
 
     def test_post_company_withBadAdvertType(self):
-        """Test confirms that POST /company will NOT add a new company with basic advert that contains bad text"""
+        """Test confirms that POST /company will NOT add a new company with basic advert that contains bad advert type"""
         with patch.dict(os.environ, {'dbDatabase': self.unittest}):
             # Arrange 
             expectedCompanyName = 'zcomp1'
@@ -374,7 +374,7 @@ class endpoint_companies_tests(unittest.TestCase):
             expectedLongitude = '2'
             expectedAdvert = "This is a valid advert text."
             expectedType = "BadAdvertType"
-            expected_message = "Invalid advert type: BadAdvertType, valid types are Text, TextCustom, ImageSmall, ImageMedium, ImageLarge"
+            expected_message = "Invalid advert type: BadAdvertType, valid types are Text, TextCustom, ImageSmall, ImageMedium, ImageLarge, ImageCustom"
 
             # Act
             response = self.client.post('/company', json={'Company Name':expectedCompanyName, 'Category Id':expectedCategoryId, 'Latitude': expectedLatitude, 'Longitude':expectedLongitude, 'Advert Text': expectedAdvert, 'Advert Type':expectedType})
