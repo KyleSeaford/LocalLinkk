@@ -106,5 +106,6 @@ CREATE TABLE events(
     google_maps_link text,
     created_date date,
     created_by_user_id varchar(50),
+    event_date date,
     PRIMARY KEY(event_id)
 );
