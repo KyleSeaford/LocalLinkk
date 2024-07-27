@@ -33,6 +33,8 @@ class endpoint_companies_tests(unittest.TestCase):
             self.db.execute("INSERT INTO events (event_id, event_name, genre_id,latitude,longitude) VALUES ('04030201-0605-0807-0910-111213141511', 'event1', '04030201-0605-0807-0910-111213141520', 53.293571, -2.110140)")
             self.db.execute("delete from series")
             self.db.execute("insert into series (series_id, created_by_user_id, recurrence) values ('04030201-0605-0807-0910-111213141522', '04030201-0605-0807-0910-111213141533', 'weekly on monday')")
+            self.db.execute("delete from users")
+            self.db.execute("insert into users (userid) values ('04030201-0605-0807-0910-111213141500')")
 
     def test_get_events(self):
         """Test confirms that GET / will return a list of all the events"""
@@ -66,5 +68,52 @@ class endpoint_companies_tests(unittest.TestCase):
             actual_result = json.loads(response.data) # Parse the JSON response     
             self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
 
+    def test_post_series(self):
+        """Test confirms that POST /series will create a new event series"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expected_message = 'Series added successfully'
+
+            # Act
+            response = self.client.post('/series', json={'created_by_user_id':'04030201-0605-0807-0910-111213141500', 'recurrence':'weekly on monday'})
+
+            # Assert
+            self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+            self.assertIn('series_id', response_json) # Ensure the 'series_id' key is in the response
+            self.assertEqual(len(response_json['series_id']), 36) # Check that the response message contains a 36 character series id
+
+    def test_post_series_should_check_user_id(self):
+        """Test confirms that POST /series will check user id"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expected_message = 'Invalid user id'
+
+            # Act
+            response = self.client.post('/series', json={'created_by_user_id':'bad user id', 'recurrence':'weekly on monday'})
+
+            # Assert
+            self.assertEqual(response.status_code, 400) # Check that the response status code is 201 CREATED
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+
+    def test_post_series_should_check_recurrence(self):
+        """Test confirms that POST /series will check recurrence"""
+        with patch.dict(os.environ, {'dbDatabase': self.unittest}):
+            # Arrange 
+            expected_message = 'Invalid recurrence type: bad recurrence, valid types are daily, weekly on monday, weekly on tuesday, weekly on wednesday, weekly on thursday, weekly on friday, weekly on saturday, weekly on sunday, monthly first monday, monthly first tuesday, monthly last monday, monthly last tuesday'
+
+            # Act
+            response = self.client.post('/series', json={'created_by_user_id':'04030201-0605-0807-0910-111213141500', 'recurrence':'bad recurrence'})
+
+            # Assert
+            self.assertEqual(response.status_code, 400) # Check that the response status code is 201 CREATED
+            response_json = response.get_json() # Extract the JSON data from the response    
+            self.assertIn('message', response_json) # Ensure the 'message' key is in the response
+            self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
+            
 if __name__ == '__main__':
     unittest.main()
