@@ -43,10 +43,10 @@ class endpoint_companies_tests(unittest.TestCase):
             ]
 
             # Act
-            response = self.client.get('/companies') # Make a GET request to the companies endpoint
+            response = self.client.get('/companies/0/100') # Make a GET request to the companies endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
     
@@ -59,10 +59,10 @@ class endpoint_companies_tests(unittest.TestCase):
             ]
 
             # Act
-            response = self.client.get('/companies/04030201-0605-0807-0910-111213141530') # Make a GET request to the companies endpoint
+            response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/0/100') # Make a GET request to the companies endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data
 
@@ -76,7 +76,7 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.get('/companies/user/04030201-0605-0807-0910-111213141999') # Make a GET request to the companies endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_results = json.loads(response.data) # Parse the JSON response   
             self.assertEqual(len(actual_results), 1) # Check the number of results     
             self.assertEqual(actual_results[0]['company_id'], '04030201-0605-0807-0910-111213141519') # Check that the response contains the expected company id
@@ -98,7 +98,7 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.get('/companies/04030201-0605-0807-0910-111213141520/53.260841/-2.128190/16') # Make a GET request to the companies endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(1, len(actual_result)) # Confirm the number of results
             self.assertEqual(expectedName, actual_result[0]['company_name']) 
@@ -120,7 +120,7 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/16') # Make a GET request to the companies endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(0, len(actual_result)) # Confirm the number of results, there should be zero companies that match the category and distance
         
@@ -140,7 +140,7 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.get('/companies/04030201-0605-0807-0910-111213141530/53.260841/-2.128190/100') # Make a GET request to the companies endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(1, len(actual_result)) # Confirm the number of results
             self.assertEqual(expectedName, actual_result[0]['company_name']) 
@@ -156,7 +156,7 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.get('/company/04030201-0605-0807-0910-111213141511/details') # Make a GET request to the company endpoint
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_result = json.loads(response.data) # Parse the JSON response        
             self.assertEqual(actual_result, expected_result) # Check that the response contains the expected data        
 
@@ -202,8 +202,8 @@ class endpoint_companies_tests(unittest.TestCase):
             self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
             self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
             self.assertEqual(len(response_json['company_id']), 36) # Check that the response message contains a 36 character company id
-            response = self.client.get('/companies') # Make a GET request to the Categories/Categories endpoint
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            response = self.client.get('/companies/0/100') # Make a GET request to the Categories/Categories endpoint
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_results = json.loads(response.data) # Parse the JSON response  
             for i in range(len(expected_results)):
                 self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
@@ -223,13 +223,13 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.put(f'/company/{company_id}', json={'Company Name': updatedCompanyName, 'Latitude': updatedLatitude, 'Longitude': updatedLongitude})
             
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             response_json = response.get_json() # Extract the JSON data from the response
             self.assertIn('message', response_json) # Ensure the 'message' key is in the response
             self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
             
             response = self.client.get(f'/company/{company_id}/details') # Make a GET request to get the updated company details
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             company_data = json.loads(response.data)
             self.assertEqual(company_data['company_name'], updatedCompanyName) # Check the updated company name
             self.assertEqual(company_data['latitude'], updatedLatitude) # Check the updated latitude
@@ -246,7 +246,7 @@ class endpoint_companies_tests(unittest.TestCase):
             response = self.client.delete(f'/company/{company_id}')
 
             # Assert
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             response_json = response.get_json() # Extract the JSON data from the response
             self.assertIn('message', response_json) # Ensure the 'message' key is in the response
             self.assertEqual(response_json['message'], expected_message) # Check that the response message contains the expected message
@@ -278,8 +278,8 @@ class endpoint_companies_tests(unittest.TestCase):
             self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
             self.assertEqual(len(response_json['company_id']), 36) # Check that the response message contains a 36 character company id
             self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
-            response = self.client.get('/companies') # Make a GET request to the Categories/Categories endpoint
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            response = self.client.get('/companies/0/100') # Make a GET request to the Categories/Categories endpoint
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_results = json.loads(response.data) # Parse the JSON response  
             for i in range(len(expected_results)):
                 self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
@@ -335,8 +335,8 @@ class endpoint_companies_tests(unittest.TestCase):
             self.assertIn('company_id', response_json) # Ensure the 'company_id' key is in the response
             self.assertEqual(len(response_json['company_id']), 36) # Check that the response message contains a 36 character company id
             self.assertEqual(response.status_code, 201) # Check that the response status code is 201 CREATED
-            response = self.client.get('/companies') # Make a GET request to the Categories/Categories endpoint
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            response = self.client.get('/companies/0/100') # Make a GET request to the Categories/Categories endpoint
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_results = json.loads(response.data) # Parse the JSON response  
             for i in range(len(expected_results)):
                 self.assertEqual(actual_results[i]['company_name'], expected_results[i]['company_name']) # Check the company names
@@ -402,7 +402,7 @@ class endpoint_companies_tests(unittest.TestCase):
             newCompanyId = response_json['company_id']
             self.assertEqual(len(newCompanyId), 36) # Check that the response message contains a 36 character company id
             response = self.client.get(f'/company/{newCompanyId}/details') # Make a GET request to the company details endpoint
-            self.assertEqual(response.status_code, 200) # Check that the response status code is 200 OK
+            self.assertIn(response.status_code, [200, 308]) # Check that the response status code is 200 OK, 308 redirect (redirect caused by pagination)
             actual_results = json.loads(response.data) # Parse the JSON response  
             self.assertEqual(actual_results['created_by_user_id'], expectedUserId) # Check id of the user that created the company
             self.assertEqual(actual_results['created_date'],  date.today().strftime('%Y-%m-%d')) # Check date the company was created

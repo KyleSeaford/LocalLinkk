@@ -45,44 +45,35 @@ argumentAdvertExpires = 'Advert Expiry Date'
 argumentMapLink = 'Google Maps Link'
 argumentUserId = "User Id"
 
-@api.route('/companies', doc={"description": "Get all companies"})
+@api.route('/companies/', defaults={'page_offset':'0', 'page_limit': '100'})
+@api.route('/companies/<int:page_offset>/<int:page_limit>', doc={"description": "Get all companies"})
 class GetCompanies(Resource):
-    def get(self):        
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC')
-
-@api.route('/companiespagination/<string:page_offset>/<string:page_limit>', doc={"description": "Get all companies with pagination"})
-@api.param('page_offset', 'Page Offset')
-@api.param('page_limit', 'Page Limit')
-class GetCompaniesPagination(Resource):
     def get(self, page_offset, page_limit):        
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCreatedDate} ASC offset {page_offset} limit {page_limit}')
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, '', f'ORDER BY {databaseFieldCompanyName} ASC offset {page_offset} limit {page_limit}')
 
-@api.route('/companies/<string:category_id>')
-@api.param('category_id', 'Category id')
+@api.route('/companies/<string:category_id>/', defaults={'page_offset':'0', 'page_limit': '100'})
+@api.route('/companies/<string:category_id>/<int:page_offset>/<int:page_limit>')
 class GetCompaniesByCategory(Resource):
-    def get(self,category_id):
+    def get(self,category_id, page_offset, page_limit):
         logging.debug(f"Getting companies by category id")        
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCategoryId}='{category_id}'", '')
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCategoryId}='{category_id}'", f'offset {page_offset} limit {page_limit}')
 
-@api.route('/companies/<string:category_id>/<string:latitude>/<string:longitude>/<string:radius>')
-@api.param('category_id', 'Category id')
-@api.param('longitude', 'Longitude')
-@api.param('latitude', 'Latitude')
-@api.param('radius', 'Maximum Distance')
+@api.route('/companies/<string:category_id>/<string:latitude>/<string:longitude>/<string:radius>', defaults={'page_offset':'0', 'page_limit': '100'})
+@api.route('/companies/<string:category_id>/<int:latitude>/<int:longitude>/<int:radius>/<int:page_offset>/<int:page_limit>')
 class GetCompaniesByCategoryAndLocation(Resource):
-    def get(self,category_id, latitude, longitude, radius):
+    def get(self,category_id, latitude, longitude, radius, page_offset, page_limit):
         logging.debug(f"Getting companies by category id and location")   
         distanceSearch = f"(6371 * acos(cos(radians({latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({longitude})) + sin(radians({latitude})) * sin(radians(latitude))))"
         distanceColumn = f"{distanceSearch} AS distance"
         where = f"where {distanceSearch} < {radius} and {databaseFieldCategoryId}='{category_id}'"
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distanceColumn, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, where, "ORDER BY distance")
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, "latitude", "longitude", distanceColumn, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, where, f'ORDER BY distance offset {page_offset} limit {page_limit}')
 
-@api.route('/companies/user/<string:user_id>')
-@api.param(argumentUserId, 'User id')
+@api.route('/companies/user/<string:user_id>', defaults={'page_offset':'0', 'page_limit': '100'})
+@api.route('/companies/user/<string:user_id>/<int:page_offset>/<int:page_limit>')
 class GetCompaniesByUser(Resource):
-    def get(self,user_id):
+    def get(self,user_id, page_offset, page_limit):
         logging.debug(f"Getting companies created by user id")        
-        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCreatedBy}='{user_id}'", '')
+        return db.fetchJson([databaseFieldCompanyId, databaseFieldCompanyName, databaseFieldCategoryId, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableName, f"where {databaseFieldCreatedBy}='{user_id}'", f'offset {page_offset} limit {page_limit}')
 
 
 @api.route('/company/user/advertCount/<string:user_id>')
