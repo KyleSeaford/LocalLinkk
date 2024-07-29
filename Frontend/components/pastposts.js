@@ -45,7 +45,7 @@ const PastPosts = () => {
     // Function to handle the re-post button click
     const handlePostClick = () => {
         console.log('Re-post button clicked');
-        navigation.navigate('LocalLinkk - Post');
+        navigation.navigate('LocalLinkk - Post Type');
     };
 
     return (
