@@ -26,7 +26,7 @@ const TEXTPost = () => {
     }, []);
 
     const handleBackToHomeClick = () => {
-        AsyncStorage.removeItem('advertPreview');
+        AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
         navigation.navigate('LocalLinkk - Home');
     };
 
@@ -39,11 +39,6 @@ const TEXTPost = () => {
         const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
         return phoneRegex.test(phoneNumber);
     };
-    
-    const validateWebsite = (website) => {
-        const websiteRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-        return websiteRegex.test(website);
-    }; 
 
     const getCoordinates = async (location) => {
         const response = await fetch(`${url}Locations/location/${location}`);
@@ -89,7 +84,7 @@ const TEXTPost = () => {
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
     
             const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
-            await AsyncStorage.setItem('details', details);
+            await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
                 try {
@@ -104,13 +99,13 @@ const TEXTPost = () => {
                     });
                     const data = await response.json();
                     console.log('company added:', data);
-                    await AsyncStorage.setItem('companyID', data.company_id);
-                    await AsyncStorage.removeItem('details');
+                    await AsyncStorage.setItem('LL-866afa3572e9f6ca510cd75c79b8ff8f', data.company_id);
+                    await AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
                     return data;
                 }
                 catch (error) {
                     console.error('Error posting advert:', error);
-                    await AsyncStorage.removeItem('details');
+                    await AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
                 }
             };
 
@@ -119,15 +114,15 @@ const TEXTPost = () => {
             if (companyData) {
                 const showPreview = async () => {
                     try {
-                        await AsyncStorage.getItem('companyID').then(async companyIdData => {
+                        await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f').then(async companyIdData => {
                             const companyID = companyIdData;
                             console.log('Company ID:', companyID);
                             
                             const response = await fetch(`${url}Companies/company/${companyID}/advertPreview`);
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
-                            await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
-                            await AsyncStorage.removeItem('companyID');
+                            await AsyncStorage.setItem('LL-dc5d7d7557a8a2730c32bea281233f37', JSON.stringify(advertData));
+                            await AsyncStorage.removeItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
                             setAdvertPreview(advertData.advert_text); // Set the advert preview text
                         });
                     } catch (error) {
@@ -147,7 +142,7 @@ const TEXTPost = () => {
     
     const handleBackClick = () => {
         console.log('Back clicked!');
-        AsyncStorage.removeItem('details');
+        AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
         navigation.goBack();
     };
 
@@ -195,7 +190,7 @@ const TEXTPost = () => {
     };
 
     const handlePostClick = async () => {
-        AsyncStorage.removeItem('advertPreview');
+        AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
         try {
             const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674')
             const response = await fetch(`${url}Users/users/TypeChange?userID=${userId}&userType=Poster`, {

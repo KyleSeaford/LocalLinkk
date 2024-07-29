@@ -38,33 +38,33 @@ const Duration = () => {
     const handleNextClick = async () => {
         if (endDate) {
             console.log(`End date: ${endDate}`);
-            await AsyncStorage.setItem('endDate', endDate);
+            await AsyncStorage.setItem('LL-813e94378d42501d835b2ed6253dc463', endDate);
 
-            const companyID = await AsyncStorage.getItem('companyID');
+            const companyID = await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
             const Response = await fetch(`${url}/Companies/company/${companyID}/PostType`);
             const data = await Response.json();
             console.log(data.message);
-            await AsyncStorage.setItem('postType', data.message);
+            await AsyncStorage.setItem('LL-39be0ffe988694a761696118ff876ac0', data.message);
 
             const startDate = todayString;
             const duration = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
             console.log(`Duration: ${duration} days`);
-            await AsyncStorage.setItem('duration', duration.toString());
+            await AsyncStorage.setItem('LL-b85ec314bf443b797ef8a66b3b03f8a4', duration.toString());
             setDuration(duration);
 
-            AsyncStorage.getItem('postType').then((postType) => {
-                AsyncStorage.getItem('duration').then((duration) => {
+            AsyncStorage.getItem('LL-39be0ffe988694a761696118ff876ac0').then((postType) => {
+                AsyncStorage.getItem('LL-b85ec314bf443b797ef8a66b3b03f8a4').then((duration) => {
                     fetch(`${url}/Posts/posts/${postType}/${duration}/cost`)
                         .then((Response2) => Response2.json())
                         .then((data2) => {
                             console.log(data2);
-                            AsyncStorage.setItem('cost', data2.cost.toString());
+                            AsyncStorage.setItem('LL-4e1566f0798fb3d6f350720cacd74446', data2.cost.toString());
                             setCost(data2.cost);
                         });
                 });
             });
 
-            await AsyncStorage.removeItem('postType');
+            await AsyncStorage.removeItem('LL-39be0ffe988694a761696118ff876ac0');
         } else {
             console.log('Please select an end date');
         }

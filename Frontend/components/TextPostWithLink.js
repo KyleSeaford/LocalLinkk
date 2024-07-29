@@ -28,13 +28,13 @@ const TEXTLinkPost = () => {
     }, []);
 
     const handleBackToHomeClick = () => {
-        AsyncStorage.removeItem('advertPreview');
+        AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
         navigation.navigate('LocalLinkk - Home');
     };
 
     const handleContinueClick = () => {
         console.log('Continue clicked!');
-        AsyncStorage.removeItem('advertPreview');
+        AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
         navigation.navigate('LocalLinkk - Duration');
     };
 
@@ -102,7 +102,7 @@ const TEXTLinkPost = () => {
     
             const advert_type = 'TextCustom';
             const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, advertText, lat, lng, advert_type });
-            await AsyncStorage.setItem('details', details);
+            await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
                 try {
@@ -117,13 +117,13 @@ const TEXTLinkPost = () => {
                     });
                     const data = await response.json();
                     console.log('company added:', data);
-                    await AsyncStorage.setItem('companyID', data.company_id);
-                    await AsyncStorage.removeItem('details');
+                    await AsyncStorage.setItem('LL-866afa3572e9f6ca510cd75c79b8ff8f', data.company_id);
+                    await AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
                     return data;
                 }
                 catch (error) {
                     console.error('Error posting advert:', error);
-                    await AsyncStorage.removeItem('details');
+                    await AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
                 }
             };
 
@@ -132,15 +132,15 @@ const TEXTLinkPost = () => {
             if (companyData) {
                 const showPreview = async () => {
                     try {
-                        await AsyncStorage.getItem('companyID').then(async companyIdData => {
+                        await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f').then(async companyIdData => {
                             const companyID = companyIdData;
                             console.log('Company ID:', companyID);
                             
                             const response = await fetch(`${url}Companies/company/${companyID}/advertPreview`);
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
-                            await AsyncStorage.setItem('advertPreview', JSON.stringify(advertData));
-                            //await AsyncStorage.removeItem('companyID');
+                            await AsyncStorage.setItem('LL-dc5d7d7557a8a2730c32bea281233f37', JSON.stringify(advertData));
+                            //await AsyncStorage.removeItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
                             setAdvertPreview(advertData.advert_text); // Set the advert preview text
                         });
                     } catch (error) {
@@ -160,7 +160,7 @@ const TEXTLinkPost = () => {
     
     const handleBackClick = () => {
         console.log('Back clicked!');
-        AsyncStorage.removeItem('details');
+        AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
         navigation.goBack();
     };
 

@@ -160,8 +160,8 @@ const Navbar = () => {
         setBreadcrumbs('');
         setGenreDropdownVisible(false);
         setLocationDropdownVisible(false);
-        AsyncStorage.removeItem('category');
-        AsyncStorage.removeItem('genre');
+        AsyncStorage.removeItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d');
+        AsyncStorage.removeItem('LL-7f80095aea4d66af1121f1fbe916066d');
         setDropdownVisible(!dropdownVisible);
     };
 
@@ -169,15 +169,15 @@ const Navbar = () => {
         setBreadcrumbs('');
         setDropdownVisible(false);
         setLocationDropdownVisible(false);
-        AsyncStorage.removeItem('genre');
-        AsyncStorage.removeItem('category');
+        AsyncStorage.removeItem('LL-7f80095aea4d66af1121f1fbe916066d');
+        AsyncStorage.removeItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d');
         setGenreDropdownVisible(!genreDropdownVisible);
     };
 
     const handleLocationClick = () => {
         setBreadcrumbs('');
-        AsyncStorage.removeItem('genre');
-        AsyncStorage.removeItem('category');
+        AsyncStorage.removeItem('LL-7f80095aea4d66af1121f1fbe916066d');
+        AsyncStorage.removeItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d');
         setDropdownVisible(false);
         setGenreDropdownVisible(false);
         setLocationDropdownVisible(!locationDropdownVisible);
@@ -215,7 +215,7 @@ const Navbar = () => {
         setBreadcrumbs('');
         console.log(`Category clicked: ${category.category_name}`);
         console.log('Category ID:', category.category_id);
-        AsyncStorage.setItem('category', category.category_id.toString());
+        AsyncStorage.setItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d', category.category_id.toString());
         // Fetch and set children categories
         fetchCategoriechildren(category.category_id).then(children => {
             if (children.length > 0) {
@@ -237,7 +237,7 @@ const Navbar = () => {
         setBreadcrumbs('');
         console.log(`Genre clicked: ${genre.genre_name}`);
         console.log('Genre ID:', genre.genre_id);
-        AsyncStorage.setItem('genre', genre.genre_id.toString());
+        AsyncStorage.setItem('LL-7f80095aea4d66af1121f1fbe916066d', genre.genre_id.toString());
         fetchGenreChildren(genre.genre_id).then(children => {
             if (children.length > 0) {
                 setGenres(children);

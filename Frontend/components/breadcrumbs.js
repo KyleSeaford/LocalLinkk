@@ -19,7 +19,7 @@ const Crumbs = () => {
 
     const fetchCrumbs = async () => {
         try {
-            const category_id = await AsyncStorage.getItem('category');
+            const category_id = await AsyncStorage.getItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d');
             const response = await axios.get(`${url}Categories/category/${category_id}/breadcrumbs`);
             setBreadcrumbsState(response.data.breadcrumbs);
         } catch (error) {

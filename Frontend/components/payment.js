@@ -35,7 +35,7 @@ const Payment = () => {
         setLoading(true);
 
         try {
-            const cost = await AsyncStorage.getItem('cost');
+            const cost = await AsyncStorage.getItem('LL-4e1566f0798fb3d6f350720cacd74446');
             console.log('Payment Submitted!');
             console.log('details:', {nameOnCard, cardNumber, expirationDate, cvv, billingAddress, city, state, zipCode, country, cost});
             
@@ -55,8 +55,8 @@ const Payment = () => {
     const changeExpDate = async () => {
 
         // get company ID and expiration date from AsyncStorage
-        const CId = await AsyncStorage.getItem('companyID');
-        const ExpDate = await AsyncStorage.getItem('endDate');
+        const CId = await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
+        const ExpDate = await AsyncStorage.getItem('LL-813e94378d42501d835b2ed6253dc463');
 
         // send a PUT request to update the expiration date
         const response = await fetch(`${url}/Companies/company/${CId}?Advert%20Expiry%20Date=${ExpDate}`, {
@@ -70,8 +70,8 @@ const Payment = () => {
         if (response.ok) {
             // if successful, remove companyID and endDate and set a success message
             setSuccessMessage('Payment processed successfully.');
-            await AsyncStorage.removeItem('companyID');
-            await AsyncStorage.removeItem('endDate');
+            await AsyncStorage.removeItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
+            await AsyncStorage.removeItem('LL-813e94378d42501d835b2ed6253dc463');
 
             setTimeout(() => {
                 navigation.navigate('LocalLinkk - Home');
@@ -85,8 +85,8 @@ const Payment = () => {
 
     const handlePaymentSuccess = () => {
         console.log('Payment Success!');
-        AsyncStorage.removeItem('cost');
-        AsyncStorage.removeItem('duration');
+        AsyncStorage.removeItem('LL-4e1566f0798fb3d6f350720cacd74446');
+        AsyncStorage.removeItem('LL-b85ec314bf443b797ef8a66b3b03f8a4');
         changeExpDate();
     };
 

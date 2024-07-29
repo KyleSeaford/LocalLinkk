@@ -110,6 +110,7 @@ const Settings= () => {
             });
             console.log("Password updated successfully");
             setErrorMessage('Password updated successfully');
+            window.location.reload();
             setTimeout(() => {
                 setErrorMessage('');
             }, 5000);
@@ -144,6 +145,7 @@ const Settings= () => {
             2: profilelname,
           }));
           console.log("Profile Name updated successfully");
+          setErrorMessage('Profile Name updated successfully');
         } catch (error) {
           console.error(error);
         }
