@@ -11,6 +11,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
 
+import PostTypeScreen from './screens/postTypeScreen';
 import DurationScreen from './screens/durationScreen';
 import PaymentScreen from './screens/paymentScreen';
 
@@ -78,6 +79,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Help"
           component={HelpScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Post Type"
+          component={PostTypeScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

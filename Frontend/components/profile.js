@@ -93,7 +93,7 @@ const Profile = () => {
 
   const handlePostClick = () => {
     console.log("Post clicked!");
-    navigation.navigate('LocalLinkk - Post');
+    navigation.navigate('LocalLinkk - Post Type');
   };
 
   const changeimg = async () => {
@@ -250,11 +250,12 @@ const Profile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    flex: 7,
     alignItems: 'center',
     padding: 20,
-    marginTop: 40,
-    backgroundColor: '#045757',
+    marginTop: 60,
+    //backgroundColor: '#045757',
+    backgroundColor: 'white',
   },
   logo: {
     width: 150,

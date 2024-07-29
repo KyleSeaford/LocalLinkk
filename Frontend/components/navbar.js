@@ -276,7 +276,7 @@ const Navbar = () => {
 
     const handlePostClick = () => {
         console.log("Post clicked!");
-        navigation.navigate('LocalLinkk - Post');
+        navigation.navigate('LocalLinkk - Post Type');
         setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
