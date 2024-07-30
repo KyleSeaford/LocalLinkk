@@ -111,5 +111,27 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertIn(phone, result)
         self.assertIn(description, result)
 
+    def test_generateTextEventAdvert(self):
+        # Arrange 
+        eventName = "Widget Expo"
+        companyName = "Bob and Co"
+        date = "1st April 2022"
+        phone = "01625 611979"
+        description = "Come and see our latest widgets"
+        email = "kyle@kyle.com"
+        link = "www.bobandco.com"
+
+        # Act
+        result = generateTextEventAdvert(eventName, companyName, date, description, phone, email, link)
+
+        # Assert
+        self.assertIn(eventName, result)
+        self.assertIn(companyName, result)
+        self.assertIn(date, result) 
+        self.assertIn(description, result)
+        self.assertIn(phone, result)   
+        self.assertIn(email, result)
+        self.assertIn(link, result)
+
 if __name__ == '__main__':
     unittest.main()
