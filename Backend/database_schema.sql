@@ -33,6 +33,9 @@ CREATE TABLE companies(
     google_maps_link text,
     created_date date,
     created_by_user_id varchar(50),
+    rss_url varchar(500),
+    rss_last_read date,
+    rss_genre_id varchar(50),
     PRIMARY KEY(company_id)
 );
 
@@ -107,5 +110,6 @@ CREATE TABLE events(
     created_date date,
     created_by_user_id varchar(50),
     event_date date,
+    rss_event_id varchar(1000)
     PRIMARY KEY(event_id)
 );

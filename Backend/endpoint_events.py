@@ -36,6 +36,7 @@ databaseFieldCreatedDate = "created_date"
 databaseFieldCreatedBy = "created_by_user_id"
 databaseFieldRecurrence = "recurrence"
 databaseFieldEventDate = "event_date"
+databaseFieldRssEventId = "rss_event_id"
 
 
 #@api.route('/series/', defaults={'page_offset':'0', 'page_limit': '100'}, doc={"description": "Get all series with pagination"})
@@ -120,7 +121,9 @@ class PostEvent(Resource):
     parserAddEvent.add_argument(databaseFieldAdvertText, type=str, help='Advert Text', required=False)
     parserAddEvent.add_argument(databaseFieldAdvertImage, type=str, help='Advert Image', required=False)
     parserAddEvent.add_argument(databaseFieldAdvertExpires, type=str, help='Advert Expiry Date', required=False)
-    
+    parserAddEvent.add_argument(databaseFieldCompanyId, type=str, help='Company Id', required=False)
+    parserAddEvent.add_argument(databaseFieldRssEventId, type=str, help='RSS event Id', required=False)
+
     @api.doc(parser=parserAddEvent)
     def post(self):
         args = self.parserAddEvent.parse_args()
@@ -197,10 +200,8 @@ class PostEvent(Resource):
 
         # Insert the new event
         sql = f"INSERT INTO {databaseTableEvents} "
-        sql += f"({databaseFieldEventId}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}, {databaseFieldEventName}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEventDate}, {databaseFieldGenreId}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldAdvertExpires})"
+        sql += f"({databaseFieldEventId}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}, {databaseFieldEventName}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEventDate}, {databaseFieldGenreId}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldAdvertExpires}, {databaseFieldCompanyId}, {databaseFieldRssEventId})"
         sql += " VALUES "
-        sql += f"('{eventId}','{userId}','{createdDate}','{eventName}', {args[databaseFieldLatitude]}, {args[databaseFieldLongitude]}, '{eventDate}','{genreId}', '{advertType}', '{advertText}', '{args[databaseFieldAdvertImage]}', '{advertDate}')"
+        sql += f"('{eventId}','{userId}','{createdDate}','{eventName}', {args[databaseFieldLatitude]}, {args[databaseFieldLongitude]}, '{eventDate}','{genreId}', '{advertType}', '{advertText}', '{args[databaseFieldAdvertImage]}', '{advertDate}', '{args[databaseFieldCompanyId]}', '{args[databaseFieldRssEventId]}')"
         db.execute(sql) 
         return {'message': 'Event added successfully', 'event_id':eventId}, 201
-
-# todo get events by cat log lat
