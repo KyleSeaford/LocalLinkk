@@ -47,3 +47,25 @@ def generateDefaultEventAdvert(eventName, companyName, date, phoneNumber, descri
         advert += f"{newline}{description}"
     
     return advert
+
+# custom event advert needs: event name, company name, date, phoneNumber, description, email, link
+def generateTextEventAdvert(eventName, companyName, date, description, phoneNumber, email, link):
+    advert = f"{eventName} by {companyName}"
+    newline = "\n"
+
+    if date != None and date != "":
+        advert += f"{newline} on " + date
+
+    if description != None and description != "":
+        advert += f"{newline}{description}"
+    
+    if phoneNumber != None and phoneNumber != "" and is_valid_uk_phone_number(phoneNumber):
+        advert += f"{newline}Call " + phoneNumber
+
+    if email != None and email != "":
+        advert += f"{newline}Email " + email
+
+    if link != None and link != "":
+        advert += f"{newline}Visit " + link
+    
+    return advert
