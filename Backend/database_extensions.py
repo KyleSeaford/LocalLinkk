@@ -152,6 +152,6 @@ class database_extensions():
         return new_db_name
 
     def makeSafe(self, input):
-        output = input.replace("'", "\'")
-        output = output.replace("\"", "\\\"")
+        output = input.replace("'", "%27")
+        output = output.replace('"', "%22")
         return output

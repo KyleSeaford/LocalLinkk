@@ -133,54 +133,64 @@ class database_extensions_tests(unittest.TestCase):
             self.assertEqual(len(actual_results), len(set(actual_results)), "generateId did not produce unique IDs")
     
     def test_single_quote(self):
-        # Arrange 
+        # Arrange
+        input_string = "This is a test's input"
+        expected_output = "This is a test%27s input"
         systemUnderTest = database_extensions()
-
+        
         # Act
-        result = systemUnderTest.makeSafe("This is a test's input")
-
+        result = systemUnderTest.makeSafe(input_string)
+        
         # Assert
-        self.assertEqual(result, "This is a test\'s input")
+        self.assertEqual(result, expected_output)
 
     def test_double_quote(self):
-        # Arrange 
+        # Arrange
+        input_string = 'This is a test "input"'
+        expected_output = "This is a test %22input%22"
         systemUnderTest = database_extensions()
-
+        
         # Act
-        result = systemUnderTest.makeSafe('This is a test "input"')
-
+        result = systemUnderTest.makeSafe(input_string)
+        
         # Assert
-        self.assertEqual(result, 'This is a test \\\"input\\\"')
+        self.assertEqual(result, expected_output)
 
     def test_both_quotes(self):
-        # Arrange 
+        # Arrange
+        input_string = 'Test with both " and \' characters'
+        expected_output = "Test with both %22 and %27 characters"
         systemUnderTest = database_extensions()
-
+        
         # Act
-        result = systemUnderTest.makeSafe('Test with both " and \' characters')
-
+        result = systemUnderTest.makeSafe(input_string)
+        
         # Assert
-        self.assertEqual(result, 'Test with both \\\" and \' characters')
+        self.assertEqual(result, expected_output)
 
-    def test_no_quotes(self):
-        # Arrange 
+    def test_no_special_characters(self):
+        # Arrange
+        input_string = "No special characters"
+        expected_output = "No special characters"
         systemUnderTest = database_extensions()
-
+        
         # Act
-        result = systemUnderTest.makeSafe("No special characters")
-
+        result = systemUnderTest.makeSafe(input_string)
+        
         # Assert
-        self.assertEqual(result, "No special characters")
+        self.assertEqual(result, expected_output)
 
     def test_empty_string(self):
-        # Arrange 
+        # Arrange
+        input_string = ""
+        expected_output = ""
         systemUnderTest = database_extensions()
-
+        
         # Act
-        result = systemUnderTest.makeSafe("")
-
+        result = systemUnderTest.makeSafe(input_string)
+        
         # Assert
-        self.assertEqual(result, "")
+        self.assertEqual(result, expected_output)
 
 if __name__ == '__main__':
     unittest.main()
