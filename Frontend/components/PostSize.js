@@ -34,7 +34,7 @@ const PostSize = () => {
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
-        navigation.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk');
     };
 
     const handlePostTypeClick = (postType) => {

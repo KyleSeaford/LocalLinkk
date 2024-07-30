@@ -21,6 +21,8 @@ import ScreenPostSize from './screens/PostSizeScreen';
 import ScreenPostTEXT from './screens/PostTEXTScreen';
 import ScreenPostTEXTLink from './screens/PostTEXTLinkScreen';
 
+import ScreenPostTEXTEvent from './screens/PostTEXTScreenEvent';
+
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -50,7 +52,7 @@ const App = () => {
       <Stack.Navigator>
         {isAuthenticated ? (
           <Stack.Screen
-            name="LocalLinkk - Home"
+            name="LocalLinkk"
             options={{ headerShown: false }}
           >
             {(props) => <HomeScreen {...props} userImage={userImage} />}
@@ -121,6 +123,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Event Post"
           component={ScreenPostSizeEvents}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Text Post Event"
+          component={ScreenPostTEXTEvent}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

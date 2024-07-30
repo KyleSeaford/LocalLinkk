@@ -4,14 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-
 const PostType = () => {
     const navigation = useNavigation();
     const [selectedType, setSelectedType] = useState(null);
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
-        navigation.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk');
     };
 
     const handleTypeSelect = (type) => {
@@ -42,11 +41,23 @@ const PostType = () => {
             <Text style={styles.instructionText}>Please select the post type and continue to the next step</Text>
 
             <View style={styles.postTypeContainer}>
-                <TouchableOpacity style={styles.postTypeButton} onPress={() => handleTypeSelect('company')}>
+                <TouchableOpacity 
+                    style={[
+                        styles.postTypeButton, 
+                        selectedType === 'company' && styles.selectedButton
+                    ]} 
+                    onPress={() => handleTypeSelect('company')}
+                >
                     <MaterialIcons name="business" size={30} color="white" />
                     <Text style={styles.postTypeText}>Company Post</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.postTypeButton} onPress={() => handleTypeSelect('event')}>
+                <TouchableOpacity 
+                    style={[
+                        styles.postTypeButton, 
+                        selectedType === 'event' && styles.selectedButton
+                    ]} 
+                    onPress={() => handleTypeSelect('event')}
+                >
                     <MaterialIcons name="event" size={30} color="white" />
                     <Text style={styles.postTypeText}>Event Post</Text>
                 </TouchableOpacity>
@@ -57,8 +68,8 @@ const PostType = () => {
                     <View style={styles.speechBubble}>
                         <Text style={styles.infoText}>
                             {selectedType === 'company' 
-                                ? 'Company Post:\n Share information about your company, including news, updates, and more. This option allows you to connect with your audience by providing insights into your organization, showcasing recent achievements, announcing new products, and sharing behind-the-scenes stories. It’s a great way to keep your customers and followers informed about what’s happening within your company and engage with them on a deeper level.'
-                                : 'Event Post:\n Promote an upcoming event by sharing details that will attract attendees. This option is ideal for advertising conferences, workshops, webinars, or social gatherings. Highlight essential information such as the event date, time, location, and what attendees can expect. Use this opportunity to generate excitement, encourage registrations, and connect with potential participants who may benefit from your event.'}
+                                ? 'Company Post:\n Promote an upcoming event by sharing engaging details that will attract attendees. This option is perfect for advertising conferences, workshops, webinars, or social gatherings. Highlight crucial information such as the event date, time, location, and what attendees can expect to experience. Use this opportunity to spark excitement, encourage registrations, and connect with potential participants who might benefit from your event.'
+                                : 'Event Post:\n Share relevant information about your company, including news, updates, and other insights. This option enables you to connect meaningfully with your audience by offering a glimpse into your organization, showcasing recent achievements, announcing new products, and sharing behind-the-scenes stories. It’s an excellent way to keep your customers and followers informed about what’s taking place in your company and engage with them on a deeper, more personal level.'}
                         </Text>
                     </View>
 
@@ -116,6 +127,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         width: '45%',
+    },
+    selectedButton: {
+        backgroundColor: '#2E7D32', // Different shade of green for selected button
     },
     postTypeText: {
         color: '#fff',

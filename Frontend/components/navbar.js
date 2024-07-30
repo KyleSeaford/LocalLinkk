@@ -153,7 +153,7 @@ const Navbar = () => {
 
     const handleNameClick = () => {
         //window.location.reload();
-        navigation.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk');
     };
 
     const handleCategoryClick = () => {

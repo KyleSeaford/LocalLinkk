@@ -29,7 +29,7 @@ const TEXTLinkPost = () => {
 
     const handleBackToHomeClick = () => {
         AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
-        navigation.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk');
     };
 
     const handleContinueClick = () => {

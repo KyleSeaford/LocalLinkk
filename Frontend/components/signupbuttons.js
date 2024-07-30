@@ -73,7 +73,7 @@ const SignupPage = () => {
         await AsyncStorage.setItem("LL-8e44f0089b076e18a718eb9ca3d94674", data.userID);
 
         console.log('User added successfully:', data);
-        navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
+        navigation.navigate('LocalLinkk', { screen: 'HomeScreen' });
       } else {
         console.error('Signup failed:', data.message);
         setErrorMessage(data.message);

@@ -52,7 +52,7 @@ const LoginPage = () => {
 
             if (response.status === 200) {
                 console.log('User logged in successfully:', data);
-                navigation.navigate('LocalLinkk - Home', { screen: 'HomeScreen' });
+                navigation.navigate('LocalLinkk', { screen: 'HomeScreen' });
             } else {
                 console.error('Login failed:', data.message);
                 setErrorMessage(data.message);

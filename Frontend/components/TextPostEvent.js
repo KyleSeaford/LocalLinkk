@@ -233,10 +233,10 @@ const TEXTPost = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.text}>Your Company Details</Text>
+                <Text style={styles.text}>Your Events Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your company details. They will be used to generate your text advert.</Text>
+            <Text style={styles.instructionText}>Enter your Events details. They will be used to generate your text advert.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 

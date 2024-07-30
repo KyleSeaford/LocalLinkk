@@ -34,16 +34,16 @@ const PostSize = () => {
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
-        navigation.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk');
     };
 
     const handlePostTypeClick = (postType) => {
         if (selectedPostType === postType) {
             setSelectedPostType(null);
-            console.log(`${postType.type} closed!`);
+            console.log(`${postType.type} Event closed!`);
         } else {
             setSelectedPostType(postType);
-            console.log(`${postType.type} selected!`);
+            console.log(`${postType.type} Event selected!`);
         }
     };
 
@@ -54,8 +54,8 @@ const PostSize = () => {
 
     const handleNextClick = () => {
         if (selectedPostType) {
-            console.log(`Proceeding with ${selectedPostType.type}`);
-            navigation.navigate(`LocalLinkk - ${selectedPostType.type}`);
+            console.log(`Proceeding with ${selectedPostType.type} Event`);
+            navigation.navigate(`LocalLinkk - ${selectedPostType.type} Event`);
         } else {
             console.log('Please select a post type first');
         }

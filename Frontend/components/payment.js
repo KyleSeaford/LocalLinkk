@@ -25,7 +25,7 @@ const Payment = () => {
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
-        navigation.navigate('LocalLinkk - Home');
+        navigation.navigate('LocalLinkk');
     };
 
     const handlePaymentSubmit = async () => {
@@ -74,7 +74,7 @@ const Payment = () => {
             await AsyncStorage.removeItem('LL-813e94378d42501d835b2ed6253dc463');
 
             setTimeout(() => {
-                navigation.navigate('LocalLinkk - Home');
+                navigation.navigate('LocalLinkk');
             }, 1500); // 1.5-second delay for the success message
 
         } else {
