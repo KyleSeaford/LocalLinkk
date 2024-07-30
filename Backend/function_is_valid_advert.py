@@ -3,8 +3,8 @@ import re
 def is_valid_basic_advert(text):
     errors = []
 
-    if isAdvertTooLong(text, 100):
-        errors.append("Basic advert text must be less than 100 characters")
+    if isAdvertTooLong(text, 350):
+        errors.append("Basic advert text must be less than 350 characters")
     
     if isEmailInAdvert(text):
         errors.append("Basic advert must not contain an email address")
