@@ -131,6 +131,56 @@ class database_extensions_tests(unittest.TestCase):
 
             # Assert      
             self.assertEqual(len(actual_results), len(set(actual_results)), "generateId did not produce unique IDs")
+    
+    def test_single_quote(self):
+        # Arrange 
+        systemUnderTest = database_extensions()
+
+        # Act
+        result = systemUnderTest.makeSafe("This is a test's input")
+
+        # Assert
+        self.assertEqual(result, "This is a test\'s input")
+
+    def test_double_quote(self):
+        # Arrange 
+        systemUnderTest = database_extensions()
+
+        # Act
+        result = systemUnderTest.makeSafe('This is a test "input"')
+
+        # Assert
+        self.assertEqual(result, 'This is a test \\\"input\\\"')
+
+    def test_both_quotes(self):
+        # Arrange 
+        systemUnderTest = database_extensions()
+
+        # Act
+        result = systemUnderTest.makeSafe('Test with both " and \' characters')
+
+        # Assert
+        self.assertEqual(result, 'Test with both \\\" and \' characters')
+
+    def test_no_quotes(self):
+        # Arrange 
+        systemUnderTest = database_extensions()
+
+        # Act
+        result = systemUnderTest.makeSafe("No special characters")
+
+        # Assert
+        self.assertEqual(result, "No special characters")
+
+    def test_empty_string(self):
+        # Arrange 
+        systemUnderTest = database_extensions()
+
+        # Act
+        result = systemUnderTest.makeSafe("")
+
+        # Assert
+        self.assertEqual(result, "")
 
 if __name__ == '__main__':
     unittest.main()

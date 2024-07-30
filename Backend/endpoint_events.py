@@ -202,6 +202,6 @@ class PostEvent(Resource):
         sql = f"INSERT INTO {databaseTableEvents} "
         sql += f"({databaseFieldEventId}, {databaseFieldCreatedBy}, {databaseFieldCreatedDate}, {databaseFieldEventName}, {databaseFieldLatitude}, {databaseFieldLongitude}, {databaseFieldEventDate}, {databaseFieldGenreId}, {databaseFieldAdvertType}, {databaseFieldAdvertText}, {databaseFieldAdvertImage}, {databaseFieldAdvertExpires}, {databaseFieldCompanyId}, {databaseFieldRssEventId})"
         sql += " VALUES "
-        sql += f"('{eventId}','{userId}','{createdDate}','{eventName}', {args[databaseFieldLatitude]}, {args[databaseFieldLongitude]}, '{eventDate}','{genreId}', '{advertType}', '{advertText}', '{args[databaseFieldAdvertImage]}', '{advertDate}', '{args[databaseFieldCompanyId]}', '{args[databaseFieldRssEventId]}')"
+        sql += f"('{eventId}','{userId}','{createdDate}','{db.makeSafe(eventName)}', {args[databaseFieldLatitude]}, {args[databaseFieldLongitude]}, '{db.makeSafe(eventDate)}','{genreId}', '{advertType}', '{db.makeSafe(advertText)}', '{args[databaseFieldAdvertImage]}', '{advertDate}', '{args[databaseFieldCompanyId]}', '{args[databaseFieldRssEventId]}')"
         db.execute(sql) 
         return {'message': 'Event added successfully', 'event_id':eventId}, 201

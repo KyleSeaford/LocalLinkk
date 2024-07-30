@@ -110,6 +110,6 @@ CREATE TABLE events(
     created_date date,
     created_by_user_id varchar(50),
     event_date date,
-    rss_event_id varchar(1000)
+    rss_event_id varchar(1000),
     PRIMARY KEY(event_id)
 );

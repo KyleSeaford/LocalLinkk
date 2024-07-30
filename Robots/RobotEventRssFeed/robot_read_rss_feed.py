@@ -62,14 +62,23 @@ def readRssFeeds():
                         'phone':companyPhone,
                         'website':webLink,
                         'company_id': companyId,
-                        'advert_type':'TEXT',
+                        'advert_type':'Text',
                         'advert_text': advertText,
                         'rss_event_id': entry.id
                     }
                 
                 logging.info(f"JSON for Event POST {json}")
-                response = requests.post('http://192.168.127.223/events', json)
-                logging.info(f"Response Status={response.status_code}, Message={response}")
+                response = requests.post('http://192.168.127.223/Events', json=json)
+                logging.info(f"Response Status={response.status_code}")
+                try:
+                    response_data = response.json()
+                    logging.info(f"Response JSON={response_data}")
+                except ValueError:
+                    # Response is not in JSON format, print raw text
+                    response_data = response.text
+                    logging.info(f"Response Text={response_data}")
+                
+
 
 if __name__ == '__main__':
     logging.info("=== Application Start ===")

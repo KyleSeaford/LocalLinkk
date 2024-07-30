@@ -150,3 +150,8 @@ class database_extensions():
         conn.close()
 
         return new_db_name
+
+    def makeSafe(self, input):
+        output = input.replace("'", "\'")
+        output = output.replace("\"", "\\\"")
+        return output
