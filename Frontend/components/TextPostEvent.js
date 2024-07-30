@@ -1,3 +1,5 @@
+// need to sort out the backend to get the event to post to the database
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
@@ -6,10 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TEXTPost = () => {
     const navigation = useNavigation();
-    const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [searchCategory, setSearchCategory] = useState('');
-    const [companyName, setCompanyName] = useState("");
+    const [genres, setGenres] = useState([]);
+    const [selectedGenre, setSelectedGenre] = useState("");
+    const [searchGenre, setSearchGenre] = useState('');
+    const [eventName, setEventName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [website, setWebsite] = useState("");
@@ -22,7 +24,7 @@ const TEXTPost = () => {
     const url = 'http://192.168.127.93:5500/';
 
     useEffect(() => {
-        fetchCategories();
+        fetchGenres();
     }, []);
 
     const handleBackToHomeClick = () => {
@@ -34,7 +36,7 @@ const TEXTPost = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
-    
+
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
         return phoneRegex.test(phoneNumber);
@@ -44,53 +46,52 @@ const TEXTPost = () => {
         const response = await fetch(`${url}Locations/location/${location}`);
         const data = await response.json();
         console.log(data);
-        
+
         if (data && data.lat !== undefined && data.lng !== undefined) {
             const lat = data.lat;
             console.log(lat);
             const lng = data.lng;
             console.log(lng);
-    
+
             return { lat, lng };
         } else {
             throw new Error('Location not found');
         }
     };
-    
-    
+
     const handleNextClick = async () => {
-        if (!companyName || !selectedCategory || !email || !phoneNumber || !townCity) {
+        if (!eventName || !selectedGenre || !email || !phoneNumber || !townCity) {
             setErrorMessage('Please fill in all fields');
             return;
-        };
-    
+        }
+
         if (!validateEmail(email)) {
             setErrorMessage('Invalid email address');
             return;
-        };
-    
+        }
+
         if (!validatePhoneNumber(phoneNumber)) {
             setErrorMessage('Invalid phone number');
             return;
-        };
-    
+        }
+
         setIsLoading(true); // Start loading indicator
         setErrorMessage(''); // Clear any previous error messages
         setAdvertPreview(null); // Clear previous preview
-    
+
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
+            console.log(`Proceeding with details: ${eventName}, ${selectedGenre}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
-    
-            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
+
+            const details = JSON.stringify({ eventName, selectedGenre, email, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
             await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
                 try {
-                    const category_id = categories.find(category => category.category_name === selectedCategory).category_id;
+                    const genre_id = genres.find(genre => genre.genre_name === selectedGenre).genre_id;
                     const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
-                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${category_id}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&User%20Id=${userID}`, {
+                    const response = await fetch(`${url}Events/event?Event%20Name=${eventName}&Genre%20Id=${genre_id}&Latitude=${lat}&Longitude=${lng}&Event%20Email=${email}&Event%20Phone=${phoneNumber}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -98,8 +99,8 @@ const TEXTPost = () => {
                         body: JSON.stringify(details),
                     });
                     const data = await response.json();
-                    console.log('company added:', data);
-                    await AsyncStorage.setItem('LL-866afa3572e9f6ca510cd75c79b8ff8f', data.company_id);
+                    console.log('event added:', data);
+                    await AsyncStorage.setItem('LL-866afa3572e9f6ca510cd75c79b8ff8f', data.event_id);
                     await AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
                     return data;
                 }
@@ -109,16 +110,16 @@ const TEXTPost = () => {
                 }
             };
 
-            const companyData = await postAdvert();
+            const eventData = await postAdvert();
 
-            if (companyData) {
+            if (eventData) {
                 const showPreview = async () => {
                     try {
-                        await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f').then(async companyIdData => {
-                            const companyID = companyIdData;
-                            console.log('Company ID:', companyID);
-                            
-                            const response = await fetch(`${url}Companies/company/${companyID}/advertPreview`);
+                        await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f').then(async eventIdData => {
+                            const eventID = eventIdData;
+                            console.log('Event ID:', eventID);
+
+                            const response = await fetch(`${url}Events/event/${eventID}/advertPreview`);
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('LL-dc5d7d7557a8a2730c32bea281233f37', JSON.stringify(advertData));
@@ -129,7 +130,7 @@ const TEXTPost = () => {
                         console.error('Error fetching advert preview:', error);
                     }
                 };
-    
+
                 await showPreview();
             }
 
@@ -139,88 +140,87 @@ const TEXTPost = () => {
             setIsLoading(false); // Stop loading indicator
         }
     };
-    
+
     const handleBackClick = () => {
         console.log('Back clicked!');
         AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
         navigation.goBack();
     };
 
-    const fetchCategories = async () => {
+    const fetchGenres = async () => {
         try {
-            const response = await fetch(`${url}Categories/category/0/children`);
+            const response = await fetch(`${url}Genres/genre/0/children`);
             const data = await response.json();
             await AsyncStorage.setItem('LL-b0b5ccb4a195a07fd3eed14affb8695f', JSON.stringify(data));
-            setCategories(data);
+            setGenres(data);
         } catch (error) {
-            console.error('Error fetching categories:', error);
+            console.error('Error fetching genres:', error);
         }
     };
 
-    const handleCategoryClick = () => {
+    const handleGenreClick = () => {
         setDropdownVisible(!dropdownVisible);
     };
 
-    const fetchCategoryChildren = async (category_id) => {
+    const fetchGenreChildren = async (genre_id) => {
         try {
-            const response = await fetch(`${url}Categories/category/${category_id}/children`);
+            const response = await fetch(`${url}Genres/genre/${genre_id}/children`);
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Error fetching categories:', error);
+            console.error('Error fetching genres:', error);
             return [];
         }
     };
 
-    const handleCategory = (category) => {
-        fetchCategoryChildren(category.category_id).then(children => {
+    const handleGenre = (genre) => {
+        fetchGenreChildren(genre.genre_id).then(children => {
             if (children.length > 0) {
-                setCategories(children);
+                setGenres(children);
             } else {
                 setDropdownVisible(false);
-                setSelectedCategory(category.category_name);
+                setSelectedGenre(genre.genre_name);
             }
         });
     };
 
-    const handleCategoryBackClick = () => {
+    const handleGenreBackClick = () => {
         AsyncStorage.getItem('LL-b0b5ccb4a195a07fd3eed14affb8695f').then(data => {
-            setCategories(JSON.parse(data));
+            setGenres(JSON.parse(data));
         });
     };
 
     const handlePostClick = async () => {
         AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
         try {
-            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674')
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
             const response = await fetch(`${url}Users/users/TypeChange?userID=${userId}&userType=Poster`, {
                 method: 'PUT'
             });
             const data = await response.json();
             console.log('User type changed:', data);
-        
+
         } catch (error) {
             console.error('Error changing user type:', error);
         }
         navigation.navigate('LocalLinkk');
     };
 
-
-    const renderCategoryDropdown = () => {
-        const filteredCategories = categories.filter(category =>
-            category.category_name.toLowerCase().includes(searchCategory.toLowerCase())
+    const renderGenreDropdown = () => {
+        const filteredGenres = genres.filter(genre =>
+            genre.genre_name.toLowerCase().includes(searchGenre.toLowerCase())
         );
 
         return (
             <ScrollView style={styles.dropdownScroll}>
                 <View style={styles.searchContainer}>
-                    <TouchableOpacity style={styles.back} onPress={handleCategoryBackClick}>
+                    <TouchableOpacity style={styles.back} onPress={handleGenreBackClick}>
                         <AntDesign name="back" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
-                {filteredCategories.map((category) => (
-                    <TouchableOpacity key={category.category_id} onPress={() => handleCategory(category)}>
-                        <Text style={styles.dropdownItem}>{category.category_name}</Text>
+                {filteredGenres.map((genre) => (
+                    <TouchableOpacity key={genre.genre_id} onPress={() => handleGenre(genre)}>
+                        <Text style={styles.dropdownItem}>{genre.genre_name}</Text>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -233,28 +233,28 @@ const TEXTPost = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.text}>Your Events Details</Text>
+                <Text style={styles.text}>Your Event Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your Events details. They will be used to generate your text advert.</Text>
+            <Text style={styles.instructionText}>Enter your Event details. They will be used to generate your text advert.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
             <TextInput
                 style={styles.input}
-                placeholder="Company Name"
+                placeholder="Event Name"
                 placeholderTextColor="#999"
-                value={companyName}
-                onChangeText={setCompanyName}
+                value={eventName}
+                onChangeText={setEventName}
             />
 
-            <TouchableOpacity style={styles.categoryButton} onPress={handleCategoryClick}>
+            <TouchableOpacity style={styles.categoryButton} onPress={handleGenreClick}>
                 <Text style={styles.categoryButtonText}>
-                    {selectedCategory ? selectedCategory : "Select Category"}
+                    {selectedGenre ? selectedGenre : "Select Genre"}
                 </Text>
             </TouchableOpacity>
 
-            {dropdownVisible && renderCategoryDropdown()}
+            {dropdownVisible && renderGenreDropdown()}
 
             <TextInput
                 style={styles.input}
@@ -300,15 +300,18 @@ const TEXTPost = () => {
             )}
 
             {advertPreview && (
-                <><View style={styles.previewContainer}>
-                    {advertPreview.split('\n').map((line, index) => (
-                        <Text key={index} style={styles.previewText}>{line}</Text>
-                    ))}
-                </View><View style={styles.PostButton}>
+                <>
+                    <View style={styles.previewContainer}>
+                        {advertPreview.split('\n').map((line, index) => (
+                            <Text key={index} style={styles.previewText}>{line}</Text>
+                        ))}
+                    </View>
+                    <View style={styles.PostButton}>
                         <TouchableOpacity style={styles.backNextButton} onPress={handlePostClick}>
                             <Text style={styles.backNextButtonText}>Post</Text>
                         </TouchableOpacity>
-                </View></>
+                    </View>
+                </>
             )}
         </ScrollView>
     );
@@ -387,11 +390,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginHorizontal: 5,
-    },
-    dropdown: {
-        backgroundColor: '#333',
-        padding: 10,
-        borderRadius: 5,
     },
     dropdownScroll: {
         maxHeight: 470,
