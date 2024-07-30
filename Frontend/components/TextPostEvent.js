@@ -91,7 +91,7 @@ const TEXTPost = () => {
                 try {
                     const genre_id = genres.find(genre => genre.genre_name === selectedGenre).genre_id;
                     const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
-                    const response = await fetch(`${url}Events/event?Event%20Name=${eventName}&Genre%20Id=${genre_id}&Latitude=${lat}&Longitude=${lng}&Event%20Email=${email}&Event%20Phone=${phoneNumber}&User%20Id=${userID}`, {
+                    const response = await fetch(`${url}Events/?Event%20Name=${eventName}&Genre%20Id=${genre_id}&Latitude=${lat}&Longitude=${lng}&Event%20Email=${email}&Event%20Phone=${phoneNumber}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ const TEXTPost = () => {
                             const eventID = eventIdData;
                             console.log('Event ID:', eventID);
 
-                            const response = await fetch(`${url}Events/event/${eventID}/advertPreview`);
+                            const response = await fetch(`${url}Events/${eventID}/advertPreview`);
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('LL-dc5d7d7557a8a2730c32bea281233f37', JSON.stringify(advertData));

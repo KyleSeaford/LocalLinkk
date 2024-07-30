@@ -93,5 +93,23 @@ class TestIsValidAdvert(unittest.TestCase):
         self.assertFalse(is_valid_uk_phone_number("07a23456789"))  # Alphabetic character
         self.assertFalse(is_valid_uk_phone_number("07-23456789"))  # Hyphen
 
+    def test_generateDefaultEventAdvert(self):
+        # Arrange 
+        eventName = "Widget Expo"
+        companyName = "Bob and Co"
+        date = "1st April 2022"
+        phone = "01625 611979"
+        description = "Come and see our latest widgets"
+
+        # Act
+        result = generateDefaultEventAdvert(eventName, companyName, date, phone, description)
+
+        # Assert
+        self.assertIn(eventName, result)
+        self.assertIn(companyName, result)
+        self.assertIn(date, result)
+        self.assertIn(phone, result)
+        self.assertIn(description, result)
+
 if __name__ == '__main__':
     unittest.main()
