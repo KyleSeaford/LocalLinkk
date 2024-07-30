@@ -12,6 +12,8 @@ import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
 
 import PostTypeScreen from './screens/postTypeScreen';
+import ScreenPostSizeEvents from './screens/PostSizeEventScreen';
+
 import DurationScreen from './screens/durationScreen';
 import PaymentScreen from './screens/paymentScreen';
 
@@ -71,6 +73,7 @@ const App = () => {
         >
           {(props) => <ProfileScreen {...props} userImage={userImage} updateUserImage={updateUserImage} />}
         </Stack.Screen>
+
         <Stack.Screen
           name="LocalLinkk - Settings"
           component={SettingScreen}
@@ -81,11 +84,13 @@ const App = () => {
           component={HelpScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="LocalLinkk - Post Type"
           component={PostTypeScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="LocalLinkk - Duration"
           component={DurationScreen}
@@ -96,8 +101,9 @@ const App = () => {
           component={PaymentScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
-          name="LocalLinkk - Post"
+          name="LocalLinkk - Company Post"
           component={ScreenPostSize}
           options={{ headerShown: false }}
         />
@@ -109,6 +115,12 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Text Post With Web Link"
           component={ScreenPostTEXTLink}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="LocalLinkk - Event Post"
+          component={ScreenPostSizeEvents}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

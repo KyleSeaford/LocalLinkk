@@ -24,9 +24,9 @@ const PostType = () => {
 
     const handleNextClick = () => {
         if (selectedType === 'company') {
-            navigation.navigate('LocalLinkk - Post');
+            navigation.navigate('LocalLinkk - Company Post');
         } else if (selectedType === 'event') {
-            navigation.navigate('LocalLinkk - Event'); // Not built yet
+            navigation.navigate('LocalLinkk - Event Post');
         }
     };
 
