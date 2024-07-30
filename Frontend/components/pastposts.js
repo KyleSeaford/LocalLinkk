@@ -77,26 +77,26 @@ const PastPosts = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 9,
-        backgroundColor: 'green',
-        //marginTop: 135, // Adds top margin for positioning
+        //backgroundColor: 'green',
+        marginTop: 135, // Adds top margin for positioning
     },
     scrollViewContainer: {
         padding: 20,
     },
     postWrapper: {
         marginBottom: 10, // Space between posts
-        backgroundColor: 'yellow',
+        //backgroundColor: 'yellow',
     },
     postContentContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'blue',
+        //backgroundColor: 'blue',
     },
     postContainer: {
         flex: 3,
         padding: 10,
-        //backgroundColor: '#333',
-        backgroundColor: 'red',
+        backgroundColor: '#333',
+        //backgroundColor: 'red',
         borderRadius: 5,
     },
     postText: {

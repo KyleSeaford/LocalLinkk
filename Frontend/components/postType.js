@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+
 const PostType = () => {
     const navigation = useNavigation();
     const [selectedType, setSelectedType] = useState(null);
@@ -40,34 +41,35 @@ const PostType = () => {
 
             <Text style={styles.instructionText}>Please select the post type and continue to the next step</Text>
 
-            {selectedType ? (
-                <View style={styles.speechBubble}>
-                    <View style={styles.infoBox}>
+            <View style={styles.postTypeContainer}>
+                <TouchableOpacity style={styles.postTypeButton} onPress={() => handleTypeSelect('company')}>
+                    <MaterialIcons name="business" size={30} color="white" />
+                    <Text style={styles.postTypeText}>Company Post</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.postTypeButton} onPress={() => handleTypeSelect('event')}>
+                    <MaterialIcons name="event" size={30} color="white" />
+                    <Text style={styles.postTypeText}>Event Post</Text>
+                </TouchableOpacity>
+            </View>
+
+            {selectedType && (
+                <View style={styles.infoContainer}>
+                    <View style={styles.speechBubble}>
                         <Text style={styles.infoText}>
                             {selectedType === 'company' 
-                                ? 'Company Post: Share information about your company, news, updates, and more.'
-                                : 'Event Post: Promote an upcoming event, share details, and attract attendees.'}
+                                ? 'Company Post:\n Share information about your company, including news, updates, and more. This option allows you to connect with your audience by providing insights into your organization, showcasing recent achievements, announcing new products, and sharing behind-the-scenes stories. It’s a great way to keep your customers and followers informed about what’s happening within your company and engage with them on a deeper level.'
+                                : 'Event Post:\n Promote an upcoming event by sharing details that will attract attendees. This option is ideal for advertising conferences, workshops, webinars, or social gatherings. Highlight essential information such as the event date, time, location, and what attendees can expect. Use this opportunity to generate excitement, encourage registrations, and connect with potential participants who may benefit from your event.'}
                         </Text>
-                        <View style={styles.buttonRow}>
-                            <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
-                                <Text style={styles.backNextButtonText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.backNextButton} onPress={handleNextClick}>
-                                <Text style={styles.backNextButtonText}>Next</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
-                </View>
-            ) : (
-                <View style={styles.postTypeContainer}> 
-                    <TouchableOpacity style={styles.postTypeButton} onPress={() => handleTypeSelect('company')}>
-                        <MaterialIcons name="business" size={30} color="white" />
-                        <Text style={styles.postTypeText}>Company Post</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.postTypeButton} onPress={() => handleTypeSelect('event')}>
-                        <MaterialIcons name="event" size={30} color="white" />
-                        <Text style={styles.postTypeText}>Event Post</Text>
-                    </TouchableOpacity>
+
+                    <View style={styles.buttonRow}>
+                        <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
+                            <Text style={styles.backNextButtonText}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.backNextButton} onPress={handleNextClick}>
+                            <Text style={styles.backNextButtonText}>Next</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )}
         </View>
@@ -119,23 +121,22 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         marginTop: 10,
+        textAlign: 'center',
     },
-    speechBubble: {
-        position: 'relative',
-        backgroundColor: '#333',
-        borderRadius: 20,
-        padding: 20,
+    infoContainer: {
         marginTop: 20,
         alignItems: 'center',
     },
-    infoBox: {
+    speechBubble: {
+        backgroundColor: '#333',
+        borderRadius: 20,
+        padding: 20,
         width: '100%',
         alignItems: 'center',
     },
     infoText: {
         color: '#fff',
         fontSize: 16,
-        marginBottom: 20,
         textAlign: 'center',
     },
     buttonRow: {

@@ -253,9 +253,9 @@ const styles = StyleSheet.create({
     flex: 7,
     alignItems: 'center',
     padding: 20,
-    marginTop: 60,
-    //backgroundColor: '#045757',
-    backgroundColor: 'white',
+    marginTop: 75,
+    backgroundColor: '#045757',
+    //backgroundColor: 'white',
   },
   logo: {
     width: 150,

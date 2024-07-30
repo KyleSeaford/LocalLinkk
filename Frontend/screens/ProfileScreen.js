@@ -20,8 +20,8 @@ const ProfileScreen = ({ userImage, updateUserImage }) => {
 const styles = StyleSheet.create({
   container: {
       flex: 5,
-      //backgroundColor: '#045757',
-      backgroundColor: 'orange',
+      backgroundColor: '#045757',
+      //backgroundColor: 'orange',
   },
 });
 
