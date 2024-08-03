@@ -11,10 +11,12 @@ const TEXTPost = () => {
     const [genres, setGenres] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState("");
     const [searchGenre, setSearchGenre] = useState('');
+    const [Cname, setCname] = useState(""); // Company Name state
+    const [Edate, setEdate] = useState(""); // Event Date state
+    const [advertText, setAdvertText] = useState(""); // Advert Text state
+    const [charCount, setCharCount] = useState(0); // Character count for Advert Text
     const [eventName, setEventName] = useState("");
-    const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [website, setWebsite] = useState("");
     const [townCity, setTownCity] = useState("");
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [advertPreview, setAdvertPreview] = useState(null);
@@ -60,13 +62,8 @@ const TEXTPost = () => {
     };
 
     const handleNextClick = async () => {
-        if (!eventName || !selectedGenre || !email || !phoneNumber || !townCity) {
+        if (!eventName || !selectedGenre || !phoneNumber || !townCity) {
             setErrorMessage('Please fill in all fields');
-            return;
-        }
-
-        if (!validateEmail(email)) {
-            setErrorMessage('Invalid email address');
             return;
         }
 
@@ -81,17 +78,18 @@ const TEXTPost = () => {
 
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${eventName}, ${selectedGenre}, ${email}, ${phoneNumber}, ${website}, ${townCity}`);
+            console.log(`Proceeding with details: ${eventName}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Cname}, ${Edate}, ${userID}, ${eventID}, ${advertID}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
 
-            const details = JSON.stringify({ eventName, selectedGenre, email, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
+            const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
             await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
                 try {
                     const genre_id = genres.find(genre => genre.genre_name === selectedGenre).genre_id;
                     const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
-                    const response = await fetch(`${url}Events/?Event%20Name=${eventName}&Genre%20Id=${genre_id}&Latitude=${lat}&Longitude=${lng}&Event%20Email=${email}&Event%20Phone=${phoneNumber}&User%20Id=${userID}`, {
+                    // need to change the url to the correct one
+                    const response = await fetch(`${url}Events/?Event%20Name=${eventName}&Genre%20Id=${genre_id}&Latitude=${lat}&Longitude=${lng}&Event%20Phone=${phoneNumber}&User%20Id=${userID}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -206,6 +204,14 @@ const TEXTPost = () => {
         navigation.navigate('LocalLinkk');
     };
 
+    const handleAdvertTextChange = (text) => {
+        if (text.length <= 84) {
+            setAdvertText(text);
+            setCharCount(text.length);
+        }
+    };
+
+
     const renderGenreDropdown = () => {
         const filteredGenres = genres.filter(genre =>
             genre.genre_name.toLowerCase().includes(searchGenre.toLowerCase())
@@ -248,6 +254,14 @@ const TEXTPost = () => {
                 onChangeText={setEventName}
             />
 
+            <TextInput
+                style={styles.input}
+                placeholder="Company Name"
+                placeholderTextColor="#999"
+                value={Cname}
+                onChangeText={setCname}
+            />
+
             <TouchableOpacity style={styles.categoryButton} onPress={handleGenreClick}>
                 <Text style={styles.categoryButtonText}>
                     {selectedGenre ? selectedGenre : "Select Genre"}
@@ -258,11 +272,10 @@ const TEXTPost = () => {
 
             <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder="Event Date"
                 placeholderTextColor="#999"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
+                value={Edate}
+                onChangeText={setEdate}
             />
 
             <TextInput
@@ -282,6 +295,18 @@ const TEXTPost = () => {
                 onChangeText={(text) => setTownCity(text.charAt(0).toUpperCase() + text.slice(1))}
                 autoCapitalize="words"
             />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TextInput
+                    style={styles.input2}
+                    placeholder="Event Description"
+                    placeholderTextColor="#999"
+                    value={advertText}
+                    onChangeText={handleAdvertTextChange}
+                    maxLength={84}
+                />
+                <Text style={styles.charCountText}>{charCount}/84</Text>
+            </View>
 
             <View style={styles.buttonRow}>
                 <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
@@ -431,6 +456,24 @@ const styles = StyleSheet.create({
     },
     PostButton: {
         marginTop: 25,
+    },
+    charCountText: {
+        color: '#aaa',
+        textAlign: 'right',
+        fontSize: 13,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 5,
+        marginTop: 20,
+    },
+    input2: {
+        backgroundColor: '#333',
+        color: '#fff',
+        padding: 15,
+        marginVertical: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+        width: '95%',
     },
 });
 
