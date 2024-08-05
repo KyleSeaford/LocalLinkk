@@ -78,7 +78,7 @@ const TEXTPost = () => {
 
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${eventName}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Cname}, ${Edate}, ${userID}, ${eventID}, ${advertID}`);
+            console.log(`Proceeding with details: ${eventName}, ${Cname}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Edate}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
 
             const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
@@ -87,9 +87,10 @@ const TEXTPost = () => {
             const postAdvert = async (details) => {
                 try {
                     const genre_id = genres.find(genre => genre.genre_name === selectedGenre).genre_id;
-                    const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
-                    // need to change the url to the correct one
-                    const response = await fetch(`${url}Events/?Event%20Name=${eventName}&Genre%20Id=${genre_id}&Latitude=${lat}&Longitude=${lng}&Event%20Phone=${phoneNumber}&User%20Id=${userID}`, {
+                    const userID2 = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+                    console.log('User ID:', userID2);
+                    
+                    const response = await fetch(`${url}Events/?event_name=${eventName}&company_name=${Cname}&event_date=${Edate}&phone=${phoneNumber}&advert_text=${advertText}&created_by_user_id=${userID2}&latitude=${lat}&longitude=${lng}&genre_id=${genre_id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
