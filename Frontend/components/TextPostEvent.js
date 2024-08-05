@@ -1,5 +1,3 @@
-// need to sort out the backend to get the event to post to the database
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
@@ -34,16 +32,30 @@ const TEXTPost = () => {
         navigation.navigate('LocalLinkk');
     };
 
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
         return phoneRegex.test(phoneNumber);
     };
 
+    const validateDate = (date) => {
+        // Regular expression to match DD-MM-YYYY format
+        const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+        return dateRegex.test(date);
+    };
+
+    const formatDate = (input) => {
+        // Remove non-digit characters
+        const inputDigits = input.replace(/\D/g, '');
+    
+        // Format the date as DD-MM-YYYY while typing
+        if (inputDigits.length <= 2) return inputDigits; // Allow entering DD
+        if (inputDigits.length <= 4) return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2)}`; // Allow entering DD-MM
+        if (inputDigits.length <= 8) return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2, 4)}-${inputDigits.slice(4)}`; // Allow entering DD-MM-YYYY
+    
+        // Limit input to DD-MM-YYYY format
+        return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2, 4)}-${inputDigits.slice(4, 8)}`;
+    };
+    
     const getCoordinates = async (location) => {
         const response = await fetch(`${url}Locations/location/${location}`);
         const data = await response.json();
@@ -62,13 +74,18 @@ const TEXTPost = () => {
     };
 
     const handleNextClick = async () => {
-        if (!eventName || !selectedGenre || !phoneNumber || !townCity) {
+        if (!eventName || !selectedGenre || !phoneNumber || !townCity || !Edate) {
             setErrorMessage('Please fill in all fields');
             return;
         }
 
         if (!validatePhoneNumber(phoneNumber)) {
             setErrorMessage('Invalid phone number');
+            return;
+        }
+
+        if (!validateDate(Edate)) {
+            setErrorMessage('Invalid date format. Please use YYYY-MM-DD.');
             return;
         }
 
@@ -273,10 +290,12 @@ const TEXTPost = () => {
 
             <TextInput
                 style={styles.input}
-                placeholder="Event Date"
+                placeholder="Event Date (DD-MM-YYYY)"
                 placeholderTextColor="#999"
                 value={Edate}
-                onChangeText={setEdate}
+                onChangeText={(text) => setEdate(formatDate(text))}
+                maxLength={10}
+                keyboardType='numeric'
             />
 
             <TextInput
@@ -353,7 +372,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 15,
         marginTop: 70,
     },
     backButton: {
@@ -369,8 +388,7 @@ const styles = StyleSheet.create({
     instructionText: {
         fontSize: 16,
         color: '#aaa',
-        marginBottom: 25,
-        marginTop: 10,
+        marginBottom: 10,
         textAlign: 'center',
     },
     input: {
@@ -394,7 +412,7 @@ const styles = StyleSheet.create({
     buttonRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 20,
+        marginVertical: 10,
     },
     backNextButton: {
         backgroundColor: '#4CAF50',
@@ -444,7 +462,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     previewContainer: {
-        marginTop: 15,
+        marginTop: 10,
         padding: 10,
         backgroundColor: '#333',
         borderRadius: 5,
@@ -456,7 +474,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     PostButton: {
-        marginTop: 25,
+        marginTop: 15,
     },
     charCountText: {
         color: '#aaa',
