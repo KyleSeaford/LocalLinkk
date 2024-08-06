@@ -58,6 +58,25 @@ const TEXTLinkPost = () => {
         return websiteRegex.test(website);
     }; 
 
+    const validateDate = (date) => {
+        // Regular expression to match DD-MM-YYYY format
+        const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+        return dateRegex.test(date);
+    };
+
+    const formatDate = (input) => {
+        // Remove non-digit characters
+        const inputDigits = input.replace(/\D/g, '');
+    
+        // Format the date as DD-MM-YYYY while typing
+        if (inputDigits.length <= 2) return inputDigits; // Allow entering DD
+        if (inputDigits.length <= 4) return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2)}`; // Allow entering DD-MM
+        if (inputDigits.length <= 8) return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2, 4)}-${inputDigits.slice(4)}`; // Allow entering DD-MM-YYYY
+    
+        // Limit input to DD-MM-YYYY format
+        return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2, 4)}-${inputDigits.slice(4, 8)}`;
+    };
+
     const getCoordinates = async (location) => {
         const response = await fetch(`${url}Locations/location/${location}`);
         const data = await response.json();
