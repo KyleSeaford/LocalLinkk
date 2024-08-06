@@ -12,16 +12,18 @@ import SettingScreen from './screens/settingScreen';
 import HelpScreen from './screens/helpScreen';
 
 import PostTypeScreen from './screens/postTypeScreen';
-import ScreenPostSizeEvents from './screens/PostSizeEventScreen';
 
 import DurationScreen from './screens/durationScreen';
 import PaymentScreen from './screens/paymentScreen';
 
 import ScreenPostSize from './screens/PostSizeScreen';
+import ScreenPostSizeEvents from './screens/PostSizeEventScreen';
+
 import ScreenPostTEXT from './screens/PostTEXTScreen';
 import ScreenPostTEXTLink from './screens/PostTEXTLinkScreen';
 
 import ScreenPostTEXTEvent from './screens/PostTEXTScreenEvent';
+import ScreenPostTEXTLinkEvent from './screens/PostTEXTLinkScreenEvent';
 
 const Stack = createStackNavigator();
 
@@ -128,6 +130,11 @@ const App = () => {
         <Stack.Screen
           name="LocalLinkk - Text Post Event"
           component={ScreenPostTEXTEvent}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocalLinkk - Text Post With Web Link Event"
+          component={ScreenPostTEXTLinkEvent}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
