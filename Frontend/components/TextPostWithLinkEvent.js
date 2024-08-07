@@ -1,3 +1,6 @@
+// need to sort out the scroll view
+// need to navigate to the duration page after the post button is clicked
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
@@ -117,10 +120,11 @@ const TEXTLinkPost = () => {
 
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${eventName}, ${Cname}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Edate}`);
+            console.log(`Proceeding with details: ${eventName}, ${Cname}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Edate}, ${email}, ${website}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
 
-            const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
+            const advert_type = 'TextCustom';
+            const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type, Cname, email, website, Edate });
             await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
@@ -129,7 +133,7 @@ const TEXTLinkPost = () => {
                     const userID2 = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
                     console.log('User ID:', userID2);
                     
-                    const response = await fetch(`${url}Events/?event_name=${eventName}&company_name=${Cname}&event_date=${Edate}&phone=${phoneNumber}&advert_text=${advertText}&created_by_user_id=${userID2}&latitude=${lat}&longitude=${lng}&genre_id=${genre_id}`, {
+                    const response = await fetch(`${url}/Events/?event_name=${eventName}&company_name=${Cname}&event_date=${Edate}&phone=${phoneNumber}&advert_text=${advertText}&created_by_user_id=${userID2}&latitude=${lat}&longitude=${lng}&genre_id=${genre_id}&website=${website}&email=${email}&advert_type=${advert_type}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -282,7 +286,7 @@ const TEXTLinkPost = () => {
                 <Text style={styles.text}>Your Event Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your Event details. They will be used to generate your text advert with your HyperLink.</Text>
+            <Text style={styles.instructionText}>Your details will be used to generate a text advert with a HyperLink.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
@@ -406,6 +410,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingHorizontal: 20,
         backgroundColor: '#1A1A1A',
+        flexGrow: 1,
         paddingBottom: 20,
     },
     headerContainer: {
@@ -506,6 +511,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#333',
         borderRadius: 5,
         width: '100%',
+        flex: 2,
+        flexGrow: 2,
+
     },
     previewText: {
         color: '#fff',
