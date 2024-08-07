@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TEXTLinkPost = () => {
     const navigation = useNavigation();
-    const [categories, setCategories] = useState([]);
-    //const [selectedCategory, setSelectedCategory] = useState("");
+    const [genres, setGenres] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState("");
     const [searchGenre, setSearchGenre] = useState('');
-    //const [searchCategory, setSearchCategory] = useState('');
-    const [email, setEmail] = useState("");
+    const [Cname, setCname] = useState(""); // Company Name state
+    const [Edate, setEdate] = useState(""); // Event Date state
+    const [advertText, setAdvertText] = useState(""); // Advert Text state
+    const [charCount, setCharCount] = useState(0); // Character count for Advert Text
     const [eventName, setEventName] = useState("");
-    const [Cname, setCname] = useState("");
-    const [Edate, setEdate] = useState("");
-
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [website, setWebsite] = useState("");
     const [townCity, setTownCity] = useState("");
-    const [advertText, setAdvertText] = useState("");
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [advertPreview, setAdvertPreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [charCount, setCharCount] = useState(0);
 
     const url = 'http://192.168.127.93:5500/';
 
     useEffect(() => {
-        fetchCategories();
+        fetchGenres();
     }, []);
 
     const handleBackToHomeClick = () => {
@@ -37,26 +32,10 @@ const TEXTLinkPost = () => {
         navigation.navigate('LocalLinkk');
     };
 
-    const handleContinueClick = () => {
-        console.log('Continue clicked!');
-        AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
-        navigation.navigate('LocalLinkk - Duration');
-    };
-
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-    
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
         return phoneRegex.test(phoneNumber);
     };
-    
-    const validateWebsite = (website) => {
-        const websiteRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-        return websiteRegex.test(website);
-    }; 
 
     const validateDate = (date) => {
         // Regular expression to match DD-MM-YYYY format
@@ -76,63 +55,59 @@ const TEXTLinkPost = () => {
         // Limit input to DD-MM-YYYY format
         return `${inputDigits.slice(0, 2)}-${inputDigits.slice(2, 4)}-${inputDigits.slice(4, 8)}`;
     };
-
+    
     const getCoordinates = async (location) => {
         const response = await fetch(`${url}Locations/location/${location}`);
         const data = await response.json();
         console.log(data);
-        
+
         if (data && data.lat !== undefined && data.lng !== undefined) {
             const lat = data.lat;
             console.log(lat);
             const lng = data.lng;
             console.log(lng);
-    
+
             return { lat, lng };
         } else {
             throw new Error('Location not found');
         }
     };
-    
+
     const handleNextClick = async () => {
-        if (!companyName || !selectedCategory || !email || !phoneNumber || !website || !townCity || !advertText) {
+        if (!eventName || !selectedGenre || !phoneNumber || !townCity || !Edate) {
             setErrorMessage('Please fill in all fields');
             return;
-        };
-    
-        if (!validateEmail(email)) {
-            setErrorMessage('Invalid email address');
-            return;
-        };
-    
+        }
+
         if (!validatePhoneNumber(phoneNumber)) {
             setErrorMessage('Invalid phone number');
             return;
-        };
-    
-        if (!validateWebsite(website)) {
-            setErrorMessage('Invalid website URL');
+        }
+
+        if (!validateDate(Edate)) {
+            setErrorMessage('Invalid date format. Please use YYYY-MM-DD.');
             return;
-        };
-    
+        }
+
         setIsLoading(true); // Start loading indicator
         setErrorMessage(''); // Clear any previous error messages
         setAdvertPreview(null); // Clear previous preview
-    
+
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${companyName}, ${selectedCategory}, ${email, phoneNumber, website, townCity}`);
+            console.log(`Proceeding with details: ${eventName}, ${Cname}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Edate}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
-    
-            const advert_type = 'TextCustom';
-            const details = JSON.stringify({ companyName, selectedCategory, email, phoneNumber, website, townCity, advertText, lat, lng, advert_type });
+
+            const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
             await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
                 try {
-                    const category_id = categories.find(category => category.category_name === selectedCategory).category_id;
-                    const userID = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
-                    const response = await fetch(`${url}Companies/company?Company%20Name=${companyName}&Category%20Id=${category_id}&Latitude=${lat}&Longitude=${lng}&Company%20Email=${email}&Company%20Phone=${phoneNumber}&Company%20Website=${website}&Advert%20Type=${advert_type}&Advert%20Text=${advertText}&User%20Id=${userID}`, {
+                    const genre_id = genres.find(genre => genre.genre_name === selectedGenre).genre_id;
+                    const userID2 = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+                    console.log('User ID:', userID2);
+                    
+                    const response = await fetch(`${url}Events/?event_name=${eventName}&company_name=${Cname}&event_date=${Edate}&phone=${phoneNumber}&advert_text=${advertText}&created_by_user_id=${userID2}&latitude=${lat}&longitude=${lng}&genre_id=${genre_id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -140,8 +115,8 @@ const TEXTLinkPost = () => {
                         body: JSON.stringify(details),
                     });
                     const data = await response.json();
-                    console.log('company added:', data);
-                    await AsyncStorage.setItem('LL-866afa3572e9f6ca510cd75c79b8ff8f', data.company_id);
+                    console.log('event added:', data);
+                    await AsyncStorage.setItem('LL-866afa3572e9f6ca510cd75c79b8ff8f', data.event_id);
                     await AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
                     return data;
                 }
@@ -151,27 +126,27 @@ const TEXTLinkPost = () => {
                 }
             };
 
-            const companyData = await postAdvert();
+            const eventData = await postAdvert();
 
-            if (companyData) {
+            if (eventData) {
                 const showPreview = async () => {
                     try {
-                        await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f').then(async companyIdData => {
-                            const companyID = companyIdData;
-                            console.log('Company ID:', companyID);
-                            
-                            const response = await fetch(`${url}Companies/company/${companyID}/advertPreview`);
+                        await AsyncStorage.getItem('LL-866afa3572e9f6ca510cd75c79b8ff8f').then(async eventIdData => {
+                            const eventID = eventIdData;
+                            console.log('Event ID:', eventID);
+
+                            const response = await fetch(`${url}Events/${eventID}/advertPreview`);
                             const advertData = await response.json();
                             console.log('Advert preview:', advertData);
                             await AsyncStorage.setItem('LL-dc5d7d7557a8a2730c32bea281233f37', JSON.stringify(advertData));
-                            //await AsyncStorage.removeItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
+                            await AsyncStorage.removeItem('LL-866afa3572e9f6ca510cd75c79b8ff8f');
                             setAdvertPreview(advertData.advert_text); // Set the advert preview text
                         });
                     } catch (error) {
                         console.error('Error fetching advert preview:', error);
                     }
                 };
-    
+
                 await showPreview();
             }
 
@@ -181,54 +156,70 @@ const TEXTLinkPost = () => {
             setIsLoading(false); // Stop loading indicator
         }
     };
-    
+
     const handleBackClick = () => {
         console.log('Back clicked!');
         AsyncStorage.removeItem('LL-27792947ed5d5da7c0d1f43327ed9dab');
         navigation.goBack();
     };
 
-    const fetchCategories = async () => {
+    const fetchGenres = async () => {
         try {
-            const response = await fetch(`${url}Categories/category/0/children`);
+            const response = await fetch(`${url}Genres/genre/0/children`);
             const data = await response.json();
             await AsyncStorage.setItem('LL-b0b5ccb4a195a07fd3eed14affb8695f', JSON.stringify(data));
-            setCategories(data);
+            setGenres(data);
         } catch (error) {
-            console.error('Error fetching categories:', error);
+            console.error('Error fetching genres:', error);
         }
     };
 
-    const handleGenreClick  = () => {
+    const handleGenreClick = () => {
         setDropdownVisible(!dropdownVisible);
     };
 
-    const fetchCategoryChildren = async (category_id) => {
+    const fetchGenreChildren = async (genre_id) => {
         try {
-            const response = await fetch(`${url}Categories/category/${category_id}/children`);
+            const response = await fetch(`${url}Genres/genre/${genre_id}/children`);
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Error fetching categories:', error);
+            console.error('Error fetching genres:', error);
             return [];
         }
     };
 
-    const handleCategory = (category) => {
-        fetchCategoryChildren(category.category_id).then(children => {
+    const handleGenre = (genre) => {
+        fetchGenreChildren(genre.genre_id).then(children => {
             if (children.length > 0) {
-                setCategories(children);
+                setGenres(children);
             } else {
                 setDropdownVisible(false);
-                setSelectedCategory(category.category_name);
+                setSelectedGenre(genre.genre_name);
             }
         });
     };
 
-    const handleCategoryBackClick = () => {
+    const handleGenreBackClick = () => {
         AsyncStorage.getItem('LL-b0b5ccb4a195a07fd3eed14affb8695f').then(data => {
-            setCategories(JSON.parse(data));
+            setGenres(JSON.parse(data));
         });
+    };
+
+    const handlePostClick = async () => {
+        AsyncStorage.removeItem('LL-dc5d7d7557a8a2730c32bea281233f37');
+        try {
+            const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
+            const response = await fetch(`${url}Users/users/TypeChange?userID=${userId}&userType=Poster`, {
+                method: 'PUT'
+            });
+            const data = await response.json();
+            console.log('User type changed:', data);
+
+        } catch (error) {
+            console.error('Error changing user type:', error);
+        }
+        navigation.navigate('LocalLinkk');
     };
 
     const handleAdvertTextChange = (text) => {
@@ -238,47 +229,26 @@ const TEXTLinkPost = () => {
         }
     };
 
-    const renderCategoryDropdown = () => {
-        const filteredCategories = categories.filter(category =>
-            category.category_name.toLowerCase().includes(searchCategory.toLowerCase())
+
+    const renderGenreDropdown = () => {
+        const filteredGenres = genres.filter(genre =>
+            genre.genre_name.toLowerCase().includes(searchGenre.toLowerCase())
         );
 
         return (
             <ScrollView style={styles.dropdownScroll}>
                 <View style={styles.searchContainer}>
-                    <TouchableOpacity style={styles.back} onPress={handleCategoryBackClick}>
+                    <TouchableOpacity style={styles.back} onPress={handleGenreBackClick}>
                         <AntDesign name="back" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
-                {filteredCategories.map((category) => (
-                    <TouchableOpacity key={category.category_id} onPress={() => handleCategory(category)}>
-                        <Text style={styles.dropdownItem}>{category.category_name}</Text>
+                {filteredGenres.map((genre) => (
+                    <TouchableOpacity key={genre.genre_id} onPress={() => handleGenre(genre)}>
+                        <Text style={styles.dropdownItem}>{genre.genre_name}</Text>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
         );
-    };
-
-    const renderAdvertPreview = (advertPreview) => {
-        const renderPreviewLine = (line, index) => {
-            const regex = /(https?:\/\/[^\s]+)/g;
-            const parts = line.split(regex);
-            return (
-                <Text key={index} style={styles.previewText}>
-                    {parts.map((part, i) => (
-                        regex.test(part) ? (
-                            <Text key={i} style={styles.linkText} onPress={() => Linking.openURL(part)}>
-                                {part}
-                            </Text>
-                        ) : (
-                            part
-                        )
-                    ))}
-                </Text>
-            );
-        };
-
-        return advertPreview.split('\n').map((line, index) => renderPreviewLine(line, index));
     };
 
     return (
@@ -287,10 +257,10 @@ const TEXTLinkPost = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.text}>Your Events Details</Text>
+                <Text style={styles.text}>Your Event Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your Events details. They will be used to generate your text advert with your HyperLink.</Text>
+            <Text style={styles.instructionText}>Enter your Event details. They will be used to generate your text advert.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
@@ -348,19 +318,19 @@ const TEXTLinkPost = () => {
 
             <TextInput
                 style={styles.input}
+                placeholder="Website"
+                placeholderTextColor="#999"
+                value={website}
+                onChangeText={setWebsite}
+            />
+
+            <TextInput
+                style={styles.input}
                 placeholder="Town / City"
                 placeholderTextColor="#999"
                 value={townCity}
                 onChangeText={(text) => setTownCity(text.charAt(0).toUpperCase() + text.slice(1))}
                 autoCapitalize="words"
-            />
-
-            <TextInput
-                style={styles.input}
-                placeholder="Website"
-                placeholderTextColor="#999"
-                value={website}
-                onChangeText={setWebsite}
             />
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -394,11 +364,13 @@ const TEXTLinkPost = () => {
             {advertPreview && (
                 <>
                     <View style={styles.previewContainer}>
-                        {renderAdvertPreview(advertPreview)}
+                        {advertPreview.split('\n').map((line, index) => (
+                            <Text key={index} style={styles.previewText}>{line}</Text>
+                        ))}
                     </View>
                     <View style={styles.PostButton}>
-                        <TouchableOpacity style={styles.backNextButton} onPress={handleContinueClick}>
-                            <Text style={styles.backNextButtonText}>Continue</Text>
+                        <TouchableOpacity style={styles.backNextButton} onPress={handlePostClick}>
+                            <Text style={styles.backNextButtonText}>Post</Text>
                         </TouchableOpacity>
                     </View>
                 </>
@@ -434,7 +406,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#aaa',
         marginBottom: 10,
-        marginTop: 0,
         textAlign: 'center',
     },
     input: {
@@ -458,9 +429,7 @@ const styles = StyleSheet.create({
     buttonRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 20,
-        marginTop: 5,
-        marginBottom: 5,
+        marginVertical: 10,
     },
     backNextButton: {
         backgroundColor: '#4CAF50',
@@ -482,11 +451,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginHorizontal: 5,
-    },
-    dropdown: {
-        backgroundColor: '#333',
-        padding: 10,
-        borderRadius: 5,
     },
     dropdownScroll: {
         maxHeight: 470,
@@ -525,10 +489,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
-    },
-    linkText: {
-        color: '#4CAF50',
-        textDecorationLine: 'underline',
     },
     PostButton: {
         marginTop: 15,
