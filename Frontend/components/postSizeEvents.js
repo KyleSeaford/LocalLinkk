@@ -11,8 +11,10 @@ const PostSize = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const url = 'http://192.168.127.93:5500/';
+
     useEffect(() => {
-        axios.get('http://192.168.127.93:5500/Posts/posts')
+        axios.get(`${url}Posts/posts`)
             .then(response => {
                 console.log(response.data);
                 const formattedPostTypes = response.data 
