@@ -11,6 +11,8 @@ const TEXTLinkPost = () => {
     const [searchGenre, setSearchGenre] = useState('');
     const [Cname, setCname] = useState(""); // Company Name state
     const [Edate, setEdate] = useState(""); // Event Date state
+    const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
     const [advertText, setAdvertText] = useState(""); // Advert Text state
     const [charCount, setCharCount] = useState(0); // Character count for Advert Text
     const [eventName, setEventName] = useState("");
@@ -36,6 +38,16 @@ const TEXTLinkPost = () => {
         const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
         return phoneRegex.test(phoneNumber);
     };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    
+    const validateWebsite = (website) => {
+        const websiteRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+        return websiteRegex.test(website);
+    }; 
 
     const validateDate = (date) => {
         // Regular expression to match DD-MM-YYYY format
@@ -74,7 +86,7 @@ const TEXTLinkPost = () => {
     };
 
     const handleNextClick = async () => {
-        if (!eventName || !selectedGenre || !phoneNumber || !townCity || !Edate) {
+        if (!eventName || !selectedGenre || !phoneNumber || !townCity || !Edate || !advertText || !Cname || !email || !website) {
             setErrorMessage('Please fill in all fields');
             return;
         }
@@ -83,6 +95,16 @@ const TEXTLinkPost = () => {
             setErrorMessage('Invalid phone number');
             return;
         }
+
+        if (!validateEmail(email)) {
+            setErrorMessage('Invalid email address');
+            return;
+        };
+    
+        if (!validateWebsite(website)) {
+            setErrorMessage('Invalid website URL');
+            return;
+        };
 
         if (!validateDate(Edate)) {
             setErrorMessage('Invalid date format. Please use YYYY-MM-DD.');
@@ -260,7 +282,7 @@ const TEXTLinkPost = () => {
                 <Text style={styles.text}>Your Event Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your Event details. They will be used to generate your text advert.</Text>
+            <Text style={styles.instructionText}>Enter your Event details. They will be used to generate your text advert with your HyperLink.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
