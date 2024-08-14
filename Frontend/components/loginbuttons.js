@@ -29,7 +29,7 @@ const LoginPage = () => {
             return;
         }
 
-        const url = `http://192.168.127.93:5500/Users/users/login`;
+        const url = `http://192.168.127.93:5500/`;
 
         const requestBody = {
             userEmail: email,
@@ -37,7 +37,7 @@ const LoginPage = () => {
         };
 
         try {
-            const response = await fetch(url, {
+            const response = await fetch(`${url}Users/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

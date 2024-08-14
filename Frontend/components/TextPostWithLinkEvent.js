@@ -1,16 +1,21 @@
+// need to sort out the scroll view
+// need to navigate to the duration page after the post button is clicked
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { Octicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TEXTPost = () => {
+const TEXTLinkPost = () => {
     const navigation = useNavigation();
     const [genres, setGenres] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState("");
     const [searchGenre, setSearchGenre] = useState('');
     const [Cname, setCname] = useState(""); // Company Name state
     const [Edate, setEdate] = useState(""); // Event Date state
+    const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
     const [advertText, setAdvertText] = useState(""); // Advert Text state
     const [charCount, setCharCount] = useState(0); // Character count for Advert Text
     const [eventName, setEventName] = useState("");
@@ -36,6 +41,16 @@ const TEXTPost = () => {
         const phoneRegex = /^[0-9]{10,15}$/; // Adjust regex according to expected phone number format
         return phoneRegex.test(phoneNumber);
     };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    
+    const validateWebsite = (website) => {
+        const websiteRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+        return websiteRegex.test(website);
+    }; 
 
     const validateDate = (date) => {
         // Regular expression to match DD-MM-YYYY format
@@ -74,7 +89,7 @@ const TEXTPost = () => {
     };
 
     const handleNextClick = async () => {
-        if (!eventName || !selectedGenre || !phoneNumber || !townCity || !Edate) {
+        if (!eventName || !selectedGenre || !phoneNumber || !townCity || !Edate || !advertText || !Cname || !email || !website) {
             setErrorMessage('Please fill in all fields');
             return;
         }
@@ -83,6 +98,16 @@ const TEXTPost = () => {
             setErrorMessage('Invalid phone number');
             return;
         }
+
+        if (!validateEmail(email)) {
+            setErrorMessage('Invalid email address');
+            return;
+        };
+    
+        if (!validateWebsite(website)) {
+            setErrorMessage('Invalid website URL');
+            return;
+        };
 
         if (!validateDate(Edate)) {
             setErrorMessage('Invalid date format. Please use YYYY-MM-DD.');
@@ -95,10 +120,11 @@ const TEXTPost = () => {
 
         try {
             const { lat, lng } = await getCoordinates(townCity);
-            console.log(`Proceeding with details: ${eventName}, ${Cname}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Edate}`);
+            console.log(`Proceeding with details: ${eventName}, ${Cname}, ${selectedGenre}, ${phoneNumber}, ${townCity}, ${advertText}, ${Edate}, ${email}, ${website}`);
             console.log(`Coordinates: Latitude ${lat}, Longitude ${lng}`);
 
-            const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type: 'Text'});
+            const advert_type = 'TextCustom';
+            const details = JSON.stringify({ eventName, selectedGenre, phoneNumber, townCity, lat, lng, advert_type, Cname, email, website, Edate });
             await AsyncStorage.setItem('LL-27792947ed5d5da7c0d1f43327ed9dab', details);
 
             const postAdvert = async (details) => {
@@ -107,7 +133,7 @@ const TEXTPost = () => {
                     const userID2 = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
                     console.log('User ID:', userID2);
                     
-                    const response = await fetch(`${url}Events/?event_name=${eventName}&company_name=${Cname}&event_date=${Edate}&phone=${phoneNumber}&advert_text=${advertText}&created_by_user_id=${userID2}&latitude=${lat}&longitude=${lng}&genre_id=${genre_id}`, {
+                    const response = await fetch(`${url}/Events/?event_name=${eventName}&company_name=${Cname}&event_date=${Edate}&phone=${phoneNumber}&advert_text=${advertText}&created_by_user_id=${userID2}&latitude=${lat}&longitude=${lng}&genre_id=${genre_id}&website=${website}&email=${email}&advert_type=${advert_type}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -260,7 +286,7 @@ const TEXTPost = () => {
                 <Text style={styles.text}>Your Event Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Enter your Event details. They will be used to generate your text advert.</Text>
+            <Text style={styles.instructionText}>Your details will be used to generate a text advert with a HyperLink.</Text>
 
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
@@ -305,6 +331,23 @@ const TEXTPost = () => {
                 keyboardType="phone-pad"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
+            />
+
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#999"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+            />
+
+            <TextInput
+                style={styles.input}
+                placeholder="Website"
+                placeholderTextColor="#999"
+                value={website}
+                onChangeText={setWebsite}
             />
 
             <TextInput
@@ -367,6 +410,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingHorizontal: 20,
         backgroundColor: '#1A1A1A',
+        flexGrow: 1,
         paddingBottom: 20,
     },
     headerContainer: {
@@ -467,6 +511,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#333',
         borderRadius: 5,
         width: '100%',
+        flex: 2,
+        flexGrow: 2,
+
     },
     previewText: {
         color: '#fff',
@@ -496,4 +543,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TEXTPost;
+export default TEXTLinkPost;

@@ -46,7 +46,7 @@ const SignupPage = () => {
       return;
     }
 
-    const url = `http://192.168.127.93:5500/Users/users/signup`;
+    const url = `http://192.168.127.93:5500/`;
 
     const requestBody = {
       userFname: firstName,
@@ -57,7 +57,7 @@ const SignupPage = () => {
     };
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`${url}Users/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

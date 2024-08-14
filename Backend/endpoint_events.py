@@ -20,6 +20,7 @@ databaseTableSeries = 'series'
 databaseFieldEventId = 'event_id'
 databaseFieldSeriesId = 'series_id'
 databaseFieldEventName = 'event_name'
+databaseFieldCreatedCompanyName = 'company_name'
 databaseFieldCompanyId = 'company_id'
 databaseFieldGenreId = 'genre_id'
 databaseFieldEmail = 'email'
@@ -109,16 +110,23 @@ class PostSeries(Resource):
 @api.route('/', doc={"description": "Add a new event"}) 
 class PostEvent(Resource):
     parserAddEvent = reqparse.RequestParser()
+    # default fields
     parserAddEvent.add_argument(databaseFieldEventName, type=str, help='Event Name', required=True)
+    parserAddEvent.add_argument(databaseFieldCreatedCompanyName, type=str, help='Company Name', required=True)
+    parserAddEvent.add_argument(databaseFieldEventDate, type=str, help='Event Date', required=True)
+    parserAddEvent.add_argument(databaseFieldPhone, type=str, help='Phone', required=True)
+    parserAddEvent.add_argument(databaseFieldAdvertText, type=str, help='Advert Text', required=True)
+
     parserAddEvent.add_argument(databaseFieldCreatedBy, type=str, help='User Id', required=True)
     parserAddEvent.add_argument(databaseFieldLatitude, type=str, help='Latitude', required=True)
     parserAddEvent.add_argument(databaseFieldLongitude, type=str, help='Longitude', required=True)
-    parserAddEvent.add_argument(databaseFieldEventDate, type=str, help='Event Date', required=True)
+
     parserAddEvent.add_argument(databaseFieldGenreId, type=str, help='Genre Id', required=True)
-    parserAddEvent.add_argument(databaseFieldPhone, type=str, help='Phone', required=False)
+
     parserAddEvent.add_argument(databaseFieldWebsite, type=str, help='Website Link', required=False)
+    parserAddEvent.add_argument(databaseFieldEmail, type=str, help='Email', required=False)
+
     parserAddEvent.add_argument(databaseFieldAdvertType, type=str, help='Advert Type', required=False)
-    parserAddEvent.add_argument(databaseFieldAdvertText, type=str, help='Advert Text', required=False)
     parserAddEvent.add_argument(databaseFieldAdvertImage, type=str, help='Advert Image', required=False)
     parserAddEvent.add_argument(databaseFieldAdvertExpires, type=str, help='Advert Expiry Date', required=False)
     parserAddEvent.add_argument(databaseFieldCompanyId, type=str, help='Company Id', required=False)
@@ -147,14 +155,23 @@ class PostEvent(Resource):
         # Get event name
         eventName = args[databaseFieldEventName]
 
+        # Get company name
+        companyName = args[databaseFieldCreatedCompanyName]
+
         # Get event date
         eventDate = args[databaseFieldEventDate]
-        #TODO check that the date is a valid date
 
         # set the advert text
         advertText = args[databaseFieldAdvertText]
+
+        # set the phone number
+        phoneNumber = args[databaseFieldPhone]
+
         # set the advert link
         advertLink = args[databaseFieldWebsite]
+
+        # set the email
+        email = args[databaseFieldEmail]
 
         # set the advert type        
         advertType = args[databaseFieldAdvertType]
@@ -174,14 +191,13 @@ class PostEvent(Resource):
         if advertType not in advertTypes:
             return {'message': f'Invalid advert type: {advertType}, valid types are {", ".join(advertTypes)}'}, 400
         
-        # if the advert type is basic and the text is empty or None, generate a default advert
-        if advertType == "Text" and (advertText == "" or advertText == None):
-            city = "" 
-            advertText = generateDefaultTextAdvert(eventName, eventDate, phone)
+        # if the advert type is basic generate a default advert
+        if advertType == "Text":
+            advertText = generateDefaultEventAdvert(eventName, companyName, eventDate, phoneNumber, advertText)
 
         # if the advert type is custom and the text is empty or None, generate a custom advert
         if advertType == "TextCustom" and (advertText != "" or advertText != None):
-            advertText = generateTextAdvert(eventName, advertText, advertLink)
+            advertText = generateTextEventAdvert(eventName, companyName, eventDate, advertText, phoneNumber, email, advertLink)
 
         # check if the advert text is valid
         if advertType == "Text":
@@ -205,3 +221,44 @@ class PostEvent(Resource):
         sql += f"('{eventId}','{userId}','{createdDate}','{db.makeSafe(eventName)}', {args[databaseFieldLatitude]}, {args[databaseFieldLongitude]}, '{db.makeSafe(eventDate)}','{genreId}', '{advertType}', '{db.makeSafe(advertText)}', '{args[databaseFieldAdvertImage]}', '{advertDate}', '{args[databaseFieldCompanyId]}', '{args[databaseFieldRssEventId]}')"
         db.execute(sql) 
         return {'message': 'Event added successfully', 'event_id':eventId}, 201
+
+
+@api.route('/<event_id>/advertPreview')
+@api.param('event_id', 'Event id')
+class GetAdvertPreview(Resource):
+    def get(self, event_id):
+        logging.debug(f"Getting advert preview for {event_id}")        
+        result = db.fetchJson([databaseFieldAdvertText], databaseTableEvents, f"where {databaseFieldEventId}='{event_id}'", '')
+        if len(result) == 0:
+            return {'message': f'Event {event_id} does not exists'}, 400
+        return result[0]
+    
+@api.route('/<event_id>/PostType')
+@api.param('event_id', 'Event id')
+class GetCompanyAdvertType(Resource):
+    def get(self,event_id):
+        try:
+            logging.debug(f"Getting advert type for {event_id}")        
+            result = db.fetchSingleValue(f"SELECT {databaseFieldAdvertType} FROM {databaseTableEvents} WHERE {databaseFieldEventId}='{event_id}'")
+            if result == "Text":
+                return {'message': 'Text Post'}, 200
+
+            elif result == "TextCustom":
+                return {'message': 'Text Post With Web Link'}, 200
+
+            elif result == "ImageSmall":
+                return {'message': 'Small Image - Coming soon!'}, 200
+
+            elif result == "ImageMedium":
+                return {'message': 'Medium Image - Coming soon!'}, 200
+
+            elif result == "ImageLarge":
+                return {'message': 'Large Image - Coming soon!'}, 200
+
+            elif result == "ImageCustom":
+                return {'message': 'Custom Design - Coming soon!'}, 200
+            
+        except Exception as e:
+            return {'message': 'Error occurred while fetching advert type'}, 500
+
+
