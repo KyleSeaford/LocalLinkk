@@ -350,8 +350,8 @@ const NavbarSlide = ({ onClose }) => {
                 <View>
                     <Text style={styles.sectionItem}>Select a Category And Your Location</Text>
                     <TouchableOpacity onPress={handleLocationClick}>
-                        <View style={styles.menuContainer}>
-                            <Text style={styles.menuContainerTEXT}>Location</Text>
+                        <View style={styles.menuContainer2}>
+                            <Text style={styles.menuContainerTEXT2}>Location</Text>
                             <FontAwesome5 name="map-marked-alt" size={24} color="black" />
                         </View>
                     </TouchableOpacity>
@@ -363,8 +363,8 @@ const NavbarSlide = ({ onClose }) => {
                     )}
 
                     <TouchableOpacity onPress={handleCategoryClick}>
-                        <View style={styles.menuContainer}>
-                            <Text style={styles.menuContainerTEXT}>Category</Text>
+                        <View style={styles.menuContainer2}>
+                            <Text style={styles.menuContainerTEXT2}>Category</Text>
                             <MaterialIcons name="category" size={24} color="black" />
                         </View>
                     </TouchableOpacity>
@@ -381,8 +381,8 @@ const NavbarSlide = ({ onClose }) => {
                 <View>
                     <Text style={styles.sectionItem}>Select a Genre And Your Location</Text>
                     <TouchableOpacity onPress={handleLocationClick}>
-                        <View style={styles.menuContainer}>
-                            <Text style={styles.menuContainerTEXT}>Location</Text>
+                        <View style={styles.menuContainer2}>
+                            <Text style={styles.menuContainerTEXT2}>Location</Text>
                             <FontAwesome5 name="map-marked-alt" size={24} color="black" />
                         </View>
                     </TouchableOpacity>
@@ -394,7 +394,7 @@ const NavbarSlide = ({ onClose }) => {
                     )}
 
                     <TouchableOpacity onPress={handleGenreClick}>
-                        <View style={styles.menuContainer}>
+                        <View style={styles.menuContainer2}>
                             <Text style={styles.menuContainerTEXT2}>Genres</Text>
                             <MaterialIcons name="event" size={25} color="black" />                        
                         </View>
@@ -444,6 +444,24 @@ const NavbarSlide = ({ onClose }) => {
                     <ScrollView style={styles.contentContainer}>
                         {renderSectionContent()}
                     </ScrollView>
+
+                    <View style={styles.postContainer2}>
+                        <TouchableOpacity onPress={handlePostClick}>
+                            <Text style={styles.postContainerTEXT2}>Create a New Post</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.menu2Container2}>
+                        <TouchableOpacity onPress={handleSettingsClick} style={styles.menuItemContainer2}>
+                            <Text style={styles.menuContainerTEXT2}>Settings</Text>
+                            <FontAwesome5 name="cogs" size={24} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={handleHelpClick} style={styles.menuItemContainer2}>
+                            <Text style={styles.menuContainerTEXT2}>Help</Text>
+                            <Entypo name="help-with-circle" size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
             </Animated.View>
         </Modal>
     );
@@ -508,6 +526,128 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+    },
+
+    back: {
+        marginRight: 10,
+    },
+    menuContainer2: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    menu2Container2: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 0,
+        padding: 10,
+    },
+    inlineButtonsContainer2: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginBottom: 15,
+        padding: 5,
+    },
+    postContainer2: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    postContainerTEXT2: {
+        fontSize: 20,
+        color: 'black',
+        borderColor: 'black',
+        padding: 5,
+    },
+    menuItemContainer2: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 10,
+    },
+    menuContainerTEXT2: {
+        fontSize: 20,
+        color: '#222222',
+        padding: 3,
+    },
+    menuContainerTEXT2: {
+        fontSize: 20,
+        color: '#222222',
+        padding: 5,
+        marginLeft: 20,
+    },
+    slideOutMenu2: {
+        position: 'absolute',
+        top: 110,
+        left: 0,
+        width: width * 0.75, // size of menu
+        height: '100%',
+        backgroundColor: '#E4E4E4',
+        padding: 5,
+        zIndex: 1000,
+    },
+    menuItem2: {
+        fontSize: 18,
+        color: '#222222',
+        marginBottom: 20,
+        padding: 10,
+    },
+    dropdown2: {
+        backgroundColor: '#f9f9f9',
+        padding: 10,
+        marginTop: 0,
+        margin: 10,
+        borderRadius: 5,
+        maxHeight: height * 0.5, // Adjust max height as needed
+    },
+    dropdownScroll2: {
+        maxHeight: height * 0.6, // Adjust max height for scrollable content
+    },
+    dropdownItem2: {
+        padding: 10,
+        fontSize: 18,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    activeButton2: {
+        backgroundColor: '#d3d3d3',
+        borderRadius: 5,
+    },
+    activeButton2: {
+        backgroundColor: '#d3d3d3',
+        borderRadius: 5,
+        padding: 0,
+    },
+    button2: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        padding: 5,
+        marginBottom: 0,
+    },
+    searchContainer2: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    searchInput2: {
+        flex: 1,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        backgroundColor: '#fff',
+        color: '#000',
+    },
+    searchIcon2: {
+        padding: 10,
     },
 });
 
