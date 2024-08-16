@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbarTop';
+import NavbarSlide from '../components/navbarSlide';
 import Barsearch from '../components/searchbar';
 import Crumbs from '../components/breadcrumbs';
 

@@ -2,15 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import NavbarSlide from './navbarSlide';
+
 import menu from '../assets/menu.png';
 import user from '../assets/transparent_picture.png';
 
-const url = 'http://192.168.127.93:5500/'
+const url = 'http://192.168.127.93:5500/';
 
 const { width, height } = Dimensions.get('window');
 
 const Navbar = () => {
     const navigation = useNavigation();
+    const [showComponent, setShowComponent] = useState(false);
+    const [location, setLocation] = useState('Unknown');
+    const [userImage, setUserImage] = useState(null);
+
+    useEffect(() => {
+        fetchAndSetUserLocation();
+    }, []);
 
     const fetchUsersLocation = async () => {
         try {
@@ -18,58 +28,44 @@ const Navbar = () => {
             const response = await fetch(`${url}Users/users/locations/${userId}`);
             const userLOC = await response.json();
 
-            // Fetch user image
             const imageResponse = await fetch(`${url}Users/users/image/${userId}`);
             const imageBlob = await imageResponse.blob();
             const imageUrl = URL.createObjectURL(imageBlob);
             setUserImage(imageUrl);
 
             return userLOC.message;
-
         } catch (error) {
             console.error('Error fetching users location:', error);
-            return 'Unknown'; // Return a default value in case of an error
+            return 'Unknown';
         }
-    }
-
-    useEffect(() => {
-        fetchUsersLocation();
-        fetchAndSetUserLocation();
-    }, []);
-
-    const [location, setLocation] = useState('Unknown');
-    const [userImage, setUserImage] = useState(null);
+    };
 
     const fetchAndSetUserLocation = async () => {
         const userLocation = await fetchUsersLocation();
         setLocation(userLocation);
     };
 
+    const handleClickMenu = () => {
+        setShowComponent(!showComponent);
+    };
+
     const handleProfileClick = () => {
         navigation.navigate('LocalLinkk - Profile');
-        //setBreadcrumbs('');
     };
 
     const handleNameClick = () => {
-        //window.location.reload();
         navigation.navigate('LocalLinkk');
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.navBar}>
-                <TouchableOpacity>
-                    <Image
-                        source={menu}
-                        style={styles.menu}
-                    />
+                <TouchableOpacity onPress={handleClickMenu}>
+                    <Image source={menu} style={styles.menu} />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={handleProfileClick}>
-                    <Image
-                        source={userImage ? { uri: userImage } : user}
-                        style={styles.logo}
-                    />
+                    <Image source={userImage ? { uri: userImage } : user} style={styles.logo} />
                 </TouchableOpacity>
 
                 <View style={styles.titleContainer}>
@@ -80,9 +76,11 @@ const Navbar = () => {
                     </TouchableOpacity>
                 </View>
             </View>
+
+            {showComponent && <NavbarSlide onClose={handleClickMenu} />}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
