@@ -325,7 +325,6 @@ const NavbarSlide = ({ onClose }) => {
         );
     };
 
-
     const handleClose = () => {
         Animated.timing(slideAnim, {
             toValue: -width,
@@ -349,8 +348,32 @@ const NavbarSlide = ({ onClose }) => {
         if (activeSection === 'Business') {
             return (
                 <View>
-                    <Text style={styles.sectionItem}>Business Item 1</Text>
-                    {/* Add more business items here */}
+                    <Text style={styles.sectionItem}>Select a Category And Your Location</Text>
+                    <TouchableOpacity onPress={handleLocationClick}>
+                        <View style={styles.menuContainer}>
+                            <Text style={styles.menuContainerTEXT}>Location</Text>
+                            <FontAwesome5 name="map-marked-alt" size={24} color="black" />
+                        </View>
+                    </TouchableOpacity>
+
+                    {locationDropdownVisible && (
+                        <View style={styles.dropdown}>
+                            {renderLocationDropdown()}
+                        </View>
+                    )}
+
+                    <TouchableOpacity onPress={handleCategoryClick}>
+                        <View style={styles.menuContainer}>
+                            <Text style={styles.menuContainerTEXT}>Category</Text>
+                            <MaterialIcons name="category" size={24} color="black" />
+                        </View>
+                    </TouchableOpacity>
+
+                    {dropdownVisible && (
+                        <View style={styles.dropdown}>
+                            {renderCategoryDropdown()}
+                        </View>
+                    )}
                 </View>
             );
         } else if (activeSection === 'Events') {
