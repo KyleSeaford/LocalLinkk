@@ -40,25 +40,21 @@ databaseFieldEventDate = "event_date"
 databaseFieldRssEventId = "rss_event_id"
 
 
-#@api.route('/series/', defaults={'page_offset':'0', 'page_limit': '100'}, doc={"description": "Get all series with pagination"})
 @api.route('/series/<int:page_offset>/<int:page_limit>', doc={"description": "Get all series with pagination"})
 class GetSeriesPagination(Resource):
     def get(self, page_offset, page_limit):        
         return db.fetchJson([databaseFieldSeriesId, databaseFieldCreatedDate, databaseFieldCreatedBy, databaseFieldRecurrence], databaseTableSeries, '', f'ORDER BY {databaseFieldCreatedDate} ASC offset {page_offset} limit {page_limit}')
     
-#@api.route('/', defaults={'page_offset':'0', 'page_limit': '100'}, doc={"description": "Get all events with pagination"})
 @api.route('/<int:page_offset>/<int:page_limit>', doc={"description": "Get all events with pagination"})
 class GetEventsPagination(Resource):
     def get(self, page_offset, page_limit):        
         return db.fetchJson([databaseFieldEventId, databaseFieldEventName, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableEvents, '', f'ORDER BY {databaseFieldEventDate} ASC offset {page_offset} limit {page_limit}')
 
-#@api.route('/byuser/<string:user_id>/', defaults={'page_offset':'0', 'page_limit': '100'}, doc={"description": "Get all events created by user with pagination"})
 @api.route('/byuser/<string:user_id>/<int:page_offset>/<int:page_limit>', doc={"description": "Get all events created by user with pagination"})
 class GetEventsByUserPagination(Resource):
     def get(self, user_id, page_offset, page_limit):        
         return db.fetchJson([databaseFieldEventId, databaseFieldEventName, databaseFieldAdvertType, databaseFieldAdvertText, databaseFieldAdvertImage], databaseTableEvents, f"where {databaseFieldCreatedBy} = '{user_id}'", f'ORDER BY {databaseFieldEventDate} ASC offset {page_offset} limit {page_limit}')
 
-#@api.route('/byseries/<string:series_id>/', defaults={'page_offset':'0', 'page_limit': '100'}, doc={"description": "Get all events in series with pagination"})
 @api.route('/byseries/<string:series_id>/<int:page_offset>/<int:page_limit>', doc={"description": "Get all events in series with pagination"})
 class GetEventsBySeriesPagination(Resource):
     def get(self, series_id, page_offset, page_limit):        
