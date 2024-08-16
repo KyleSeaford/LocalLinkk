@@ -88,6 +88,32 @@ class TestExtractDatetime(unittest.TestCase):
 
         # Assert
         self.assertEqual(actual_datetime, expected_datetime)
+    
+    def test_extract_datetime_from_new_pattern(self):
+        # Arrange
+        event_string = "7th Oct 2024 - Teacher Training - Curriculum Links to Outdoor Learning (Foundation &amp; KS1)"
+        expected_datetime = datetime(2024, 10, 7)  # Year: 2024, Month: October, Day: 7
+
+        # Act
+        actual_datetime = extract_datetime(event_string)
+
+        # Assert
+        self.assertEqual(actual_datetime, expected_datetime)
+
+    def test_find_event_date_from_new_pattern_in_title(self):
+        # Arrange
+        title = "7th Oct 2024 - Teacher Training - Curriculum Links to Outdoor Learning (Foundation &amp; KS1)"
+        description = "Join us for an informative session."
+        pubdate = datetime(2024, 8, 1, 10, 0)
+
+        expected_datetime = datetime(2024, 10, 7)  # Year: 2024, Month: October, Day: 7
+
+        # Act
+        actual_datetime = find_event_date(title, description, pubdate)
+
+        # Assert
+        self.assertEqual(actual_datetime, expected_datetime)
+
 
 # Run the tests
 if __name__ == "__main__":

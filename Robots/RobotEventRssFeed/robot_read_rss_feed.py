@@ -7,18 +7,21 @@ from datetime import datetime
 from function_generate_default_text_advert import generateDefaultEventAdvert
 
 def find_event_date(title, description, pubdate):
-    for source in [title, description, pubdate]:
+    try:
+        eventDate = extract_datetime(title)
+    except:
         try:
-            if isinstance(source, str):
-                return extract_datetime(source)
-            return source
-        except ValueError:
-            continue
-    return pubdate
+            eventDate = extract_datetime(description)
+        except:
+            eventDate = pubdate
+    return eventDate
 
 def extract_datetime(event_string: str) -> datetime:
     # List of regular expression patterns to match date and time
     date_time_patterns = [
+        # Handles formats like "7th Oct 2024" or "7 Oct 2024"
+        r'(\d{1,2})(?:st|nd|rd|th)? (\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\b) (\d{4})',
+        # Handles formats like "Wednesday 21st August 19.15 - 20.30pm"
         r'(\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b) (\d{1,2})(?:st|nd|rd|th) (\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b) (\d{2})\.(\d{2})',
         # Add other patterns here as needed
     ]
@@ -26,21 +29,26 @@ def extract_datetime(event_string: str) -> datetime:
     for pattern in date_time_patterns:
         match = re.search(pattern, event_string)
         if match:
-            day_of_week = match.group(1)
-            day = int(match.group(2))
-            month = match.group(3)
-            hour = int(match.group(4))
-            minute = int(match.group(5))
-
-            month_number = datetime.strptime(month, '%B').month
-            current_year = datetime.now().year
-
-            date_time_obj = datetime(current_year, month_number, day, hour, minute)
-            return date_time_obj
+            if len(match.groups()) == 3:  # This handles the day-month-year format
+                day = int(match.group(1))
+                month = match.group(2)
+                year = int(match.group(3))
+                # Convert month name (abbreviated or full) to month number
+                month_number = datetime.strptime(month, '%b').month if len(month) <= 3 else datetime.strptime(month, '%B').month
+                date_time_obj = datetime(year, month_number, day)
+                return date_time_obj
+            elif len(match.groups()) == 5:  # This handles the full date-time format
+                day_of_week = match.group(1)
+                day = int(match.group(2))
+                month = match.group(3)
+                hour = int(match.group(4))
+                minute = int(match.group(5))
+                month_number = datetime.strptime(month, '%B').month
+                current_year = datetime.now().year
+                date_time_obj = datetime(current_year, month_number, day, hour, minute)
+                return date_time_obj
     
-    # If no pattern matched, raise an exception
     raise ValueError("No matching date and time format found in the string.")
-
 
 def findSeenEntries(companyId):
     seenEntries = []
@@ -99,7 +107,7 @@ def readRssFeeds():
                                 'event_name':entry.title, 
                                 'latitude':companyLatitude, 
                                 'longitude':companyLongitude, 
-                                'event_date':eventDate, 
+                                'event_date':str(eventDate), 
                                 'genre_id':rssGenreId,
                                 'phone':companyPhone,
                                 'website':webLink,
