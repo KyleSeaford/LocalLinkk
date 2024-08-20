@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const PostType = () => {
     const navigation = useNavigation();
-    const [selectedType, setSelectedType] = useState(null);
+    const [selectedType, setSelectedType] = useState('company');  // Default to 'company'
 
     const handleBackToHomeClick = () => {
         console.log("Back to Home Page clicked!");
@@ -17,17 +17,19 @@ const PostType = () => {
         setSelectedType(type);
     };
 
-    const handleBackClick = () => {
-        setSelectedType(null);
-    };
-
     const handleNextClick = () => {
-        if (selectedType === 'company') {
-            navigation.navigate('LocalLinkk - Company Post');
-        } else if (selectedType === 'event') {
-            navigation.navigate('LocalLinkk - Event Post');
+        if (selectedType) {
+            const screen = selectedType === 'company' ? 'LocalLinkk - Company Post' : 'LocalLinkk - Event Post';
+            navigation.navigate(screen);
         }
     };
+
+    const descriptions = {
+        company: 'Share relevant information about your company, including news, updates, and other insights. This option enables you to connect meaningfully with your audience by offering a glimpse into your organization, showcasing recent achievements, announcing new products, and sharing behind-the-scenes stories. It’s an excellent way to keep your customers and followers informed about what’s taking place in your company and engage with them on a deeper, more personal level. \n\nPrices start from £2.00 up to £45.00.',
+        
+        event: 'Promote an upcoming event by sharing engaging details that will attract attendees. This option is perfect for advertising conferences, workshops, webinars, or social gatherings. Highlight crucial information such as the event date, time, location, and what attendees can expect to experience. Use this opportunity to spark excitement, encourage registrations, and connect with potential participants who might benefit from your event. \n\nPrices start from £2.00 up to £45.00.'
+    };
+    
 
     return (
         <View style={styles.container}>
@@ -35,52 +37,46 @@ const PostType = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackToHomeClick}>
                     <Octicons name="home" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.text}>Select a Post Type</Text>
+                <Text style={styles.text}>Choose a Post Size</Text>
             </View>
 
             <Text style={styles.instructionText}>Please select the post type and continue to the next step</Text>
 
             <View style={styles.postTypeContainer}>
-                <TouchableOpacity 
-                    style={[
-                        styles.postTypeButton, 
-                        selectedType === 'company' && styles.selectedButton
-                    ]} 
-                    onPress={() => handleTypeSelect('company')}
-                >
-                    <MaterialIcons name="business" size={30} color="white" />
-                    <Text style={styles.postTypeText}>Company Post</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={[
-                        styles.postTypeButton, 
-                        selectedType === 'event' && styles.selectedButton
-                    ]} 
-                    onPress={() => handleTypeSelect('event')}
-                >
-                    <MaterialIcons name="event" size={30} color="white" />
-                    <Text style={styles.postTypeText}>Event Post</Text>
-                </TouchableOpacity>
+                {['company', 'event'].map((type) => (
+                    <TouchableOpacity
+                        key={type}
+                        style={[
+                            styles.postTypeButton,
+                            selectedType === type && styles.selectedButton
+                        ]}
+                        onPress={() => handleTypeSelect(type)}
+                        accessibilityLabel={`Select ${type} post type`}
+                    >
+                        <MaterialIcons
+                            name={type === 'company' ? 'business' : 'event'}
+                            size={30}
+                            color="white"
+                        />
+                        <Text style={styles.postTypeText}>{type === 'company' ? 'Company Post' : 'Event Post'}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
 
             {selectedType && (
                 <View style={styles.infoContainer}>
                     <View style={styles.speechBubble}>
-                        <Text style={styles.infoText}>
-                            {selectedType === 'company' 
-                                ? 'Company Post:\n Promote an upcoming event by sharing engaging details that will attract attendees. This option is perfect for advertising conferences, workshops, webinars, or social gatherings. Highlight crucial information such as the event date, time, location, and what attendees can expect to experience. Use this opportunity to spark excitement, encourage registrations, and connect with potential participants who might benefit from your event.'
-                                : 'Event Post:\n Share relevant information about your company, including news, updates, and other insights. This option enables you to connect meaningfully with your audience by offering a glimpse into your organization, showcasing recent achievements, announcing new products, and sharing behind-the-scenes stories. It’s an excellent way to keep your customers and followers informed about what’s taking place in your company and engage with them on a deeper, more personal level.'}
-                        </Text>
+                        <Text style={styles.infoText}>{descriptions[selectedType]}</Text>
                     </View>
 
                     <View style={styles.buttonRow}>
-                        <TouchableOpacity style={styles.backNextButton2} onPress={handleBackClick}>
-                            <Text style={styles.backNextButtonText}>Back</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.backNextButton} onPress={handleNextClick}>
+                        <TouchableOpacity style={styles.nextButton} onPress={handleNextClick} accessibilityLabel="Proceed to next step">
                             <Text style={styles.backNextButtonText}>Next</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <Text style={styles.instructionText}>Advertise for less than a cup of coffee.</Text>
+
                 </View>
             )}
         </View>
@@ -90,16 +86,17 @@ const PostType = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop: 55,
         paddingHorizontal: 20,
         backgroundColor: '#1A1A1A',
-        paddingBottom: 20,
     },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 20,
-        marginTop: 70,
+        paddingTop: 15,
+        backgroundColor: '#1A1A1A',
     },
     backButton: {
         padding: 10,
@@ -129,7 +126,9 @@ const styles = StyleSheet.create({
         width: '45%',
     },
     selectedButton: {
-        backgroundColor: '#2E7D32', // Different shade of green for selected button
+        backgroundColor: '#2E7D32',
+        borderColor: '#ffffff',
+        borderWidth: 2,
     },
     postTypeText: {
         color: '#fff',
@@ -164,14 +163,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    backNextButton2: {
-        backgroundColor: '#848884',
+    nextButton: {
+        backgroundColor: '#4CAF50',
         padding: 15,
         borderRadius: 5,
         alignItems: 'center',
         flex: 1,
         marginHorizontal: 5,
     },
+
 });
 
 export default PostType;

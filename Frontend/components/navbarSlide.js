@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
     buttonText2: {
         fontSize: 18,
         color: '#000', // Changed color to black
-        //fontWeight: 'bold',
+        fontWeight: 'lighter',
     },
     menuContainerTEXT2: {
         marginTop: 5,
