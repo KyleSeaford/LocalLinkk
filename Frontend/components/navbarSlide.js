@@ -20,9 +20,7 @@ const NavbarSlide = ({ onClose }) => {
     const [locations, setLocations] = useState([]);
     const [searchLocation, setSearchLocation] = useState('');
 
-    const [activeButton, setActiveButton] = useState('All');
     const [breadcrumbPath, setBreadcrumbPath] = useState('Category / Genre');
-    const [userImage, setUserImage] = useState(null);
 
     const [categories, setCategories] = useState([]);
     const [searchCategory, setSearchCategory] = useState('');
