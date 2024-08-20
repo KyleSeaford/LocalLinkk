@@ -418,33 +418,15 @@ const NavbarSlide = ({ onClose }) => {
             onRequestClose={handleClose}
         >
             <Animated.View style={[styles.slideOutMenu, { transform: [{ translateX: slideAnim }] }]}>
-                    <View style={styles.menuContainer}>
-                        <View style={styles.iconContainer}>
-                            <Text style={styles.iconContainerTEXT}>LocalLinkk Settings</Text>
-                            <TouchableOpacity onPress={handleMenuClick}>
-                                <Ionicons name="close" size={24} color="#1a1a1a" />
-                            </TouchableOpacity>
-                        </View>
-
-
-                        <TouchableOpacity
-                            onPress={() => handleSectionClick('Business')}
-                            style={[styles.button, activeSection === 'Business' ? styles.activeButton : null]}
-                        >
-                            <Text style={styles.menuContainerTEXT}>Business</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => handleSectionClick('Events')}
-                            style={[styles.button, activeSection === 'Events' ? styles.activeButton : null]}
-                        >
-                            <Text style={styles.menuContainerTEXT}>Events</Text>
+                <View style={styles.menuContainer}>
+                    <View style={styles.iconContainer}>
+                        <Text style={styles.iconContainerTEXT}>LocalLinkk Settings</Text>
+                        <TouchableOpacity onPress={handleMenuClick}>
+                            <Ionicons name="close" size={24} color="#1a1a1a" />
                         </TouchableOpacity>
                     </View>
 
-                    <ScrollView style={styles.contentContainer}>
-                        {renderSectionContent()}
-                    </ScrollView>
-
+                    
                     <View style={styles.postContainer2}>
                         <TouchableOpacity onPress={handlePostClick}>
                             <Text style={styles.postContainerTEXT2}>Create a New Post</Text>
@@ -462,6 +444,26 @@ const NavbarSlide = ({ onClose }) => {
                             <Entypo name="help-with-circle" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
+
+                    <View style={styles.buttonRow}>
+                        <TouchableOpacity
+                            onPress={() => handleSectionClick('Business')}
+                            style={[styles.button, activeSection === 'Business' ? styles.activeButton : null]}
+                        >
+                            <Text style={styles.menuContainerTEXT}>Business</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => handleSectionClick('Events')}
+                            style={[styles.button, activeSection === 'Events' ? styles.activeButton : null]}
+                        >
+                            <Text style={styles.menuContainerTEXT}>Events</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <ScrollView style={styles.contentContainer}>
+                    {renderSectionContent()}
+                </ScrollView>
             </Animated.View>
         </Modal>
     );
@@ -491,27 +493,29 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#222222',
     },
+    // New container for buttons to be in a row
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around', // evenly distribute buttons
+        alignItems: 'center',
+        marginBottom: 10,
+    },
     button: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 1,
         paddingVertical: 10,
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         borderRadius: 5,
-        marginBottom: 0,
+        marginHorizontal: 5, // Spacing between buttons
     },
     activeButton: {
         backgroundColor: '#d3d3d3',
         borderRadius: 5,
     },
-    menuItem: {
-        fontSize: 18,
-        color: '#222222',
-        marginBottom: 20,
-        padding: 10,
-    },
     menuContainer: {
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingBottom: 20,
     },
     menuContainerTEXT: {
         fontSize: 20,
@@ -519,7 +523,7 @@ const styles = StyleSheet.create({
         padding: 3,
     },
     contentContainer: {
-        padding: 10,
+        paddingHorizontal: 10,
     },
     sectionItem: {
         fontSize: 18,
@@ -537,107 +541,35 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    menu2Container2: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20,
-        marginTop: 0,
-        padding: 10,
-    },
-    inlineButtonsContainer2: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        marginBottom: 15,
-        padding: 5,
-    },
-    postContainer2: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    postContainerTEXT2: {
-        fontSize: 20,
-        color: 'black',
-        borderColor: 'black',
-        padding: 5,
-    },
-    menuItemContainer2: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        margin: 10,
-    },
-    menuContainerTEXT2: {
-        fontSize: 20,
-        color: '#222222',
-        padding: 3,
-    },
-    menuContainerTEXT2: {
-        fontSize: 20,
-        color: '#222222',
-        padding: 5,
-        marginLeft: 20,
-    },
-    slideOutMenu2: {
-        position: 'absolute',
-        top: 110,
-        left: 0,
-        width: width * 0.75, // size of menu
-        height: '100%',
-        backgroundColor: '#E4E4E4',
-        padding: 5,
-        zIndex: 1000,
-    },
-    menuItem2: {
-        fontSize: 18,
-        color: '#222222',
-        marginBottom: 20,
-        padding: 10,
-    },
-    dropdown2: {
+    dropdown: {
         backgroundColor: '#f9f9f9',
-        padding: 10,
+        padding: 15, // More padding for better spacing
         marginTop: 0,
         margin: 10,
-        borderRadius: 5,
-        maxHeight: height * 0.5, // Adjust max height as needed
+        borderRadius: 8,
+        shadowColor: '#000', // Shadow effect
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5, // For Android shadow
+        maxHeight: height * 0.5,
     },
-    dropdownScroll2: {
-        maxHeight: height * 0.6, // Adjust max height for scrollable content
+    dropdownScroll: {
+        maxHeight: height * 0.6,
     },
-    dropdownItem2: {
-        padding: 10,
+    dropdownItem: {
+        paddingVertical: 10,
+        paddingHorizontal: 15, // Add padding for better click area
         fontSize: 18,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    activeButton2: {
-        backgroundColor: '#d3d3d3',
-        borderRadius: 5,
-    },
-    activeButton2: {
-        backgroundColor: '#d3d3d3',
-        borderRadius: 5,
-        padding: 0,
-    },
-    button2: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        padding: 5,
-        marginBottom: 0,
-    },
-    searchContainer2: {
+    searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
     },
-    searchInput2: {
+    searchInput: {
         flex: 1,
         padding: 10,
         borderWidth: 1,
@@ -646,7 +578,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         color: '#000',
     },
-    searchIcon2: {
+    searchIcon: {
         padding: 10,
     },
 });
