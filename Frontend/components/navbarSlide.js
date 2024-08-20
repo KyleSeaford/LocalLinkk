@@ -206,11 +206,6 @@ const NavbarSlide = ({ onClose }) => {
         });
     };
 
-    const handleButtonClick = (buttonName) => {
-        console.log(`${buttonName} clicked!`);
-        setActiveButton(buttonName);
-    };
-
     const handleSettingsClick = () => {
         console.log("Settings clicked!");
         //navigation.navigate('LocalLinkk - Settings');
@@ -426,22 +421,19 @@ const NavbarSlide = ({ onClose }) => {
                         </TouchableOpacity>
                     </View>
 
-                    
-                    <View style={styles.postContainer2}>
-                        <TouchableOpacity onPress={handlePostClick}>
-                            <Text style={styles.postContainerTEXT2}>Create a New Post</Text>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity onPress={handlePostClick} style={styles.postButton}>
+                            <Text style={styles.buttonText}>Create a New Post</Text>
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.menu2Container2}>
-                        <TouchableOpacity onPress={handleSettingsClick} style={styles.menuItemContainer2}>
-                            <Text style={styles.menuContainerTEXT2}>Settings</Text>
-                            <FontAwesome5 name="cogs" size={24} color="black" />
+                    <View style={styles.buttonRow2}>
+                        <TouchableOpacity onPress={handleSettingsClick} style={styles.help_settingButton}>
+                            <Text style={styles.buttonText2}>Settings</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={handleHelpClick} style={styles.menuItemContainer2}>
-                            <Text style={styles.menuContainerTEXT2}>Help</Text>
-                            <Entypo name="help-with-circle" size={24} color="black" />
+                        <TouchableOpacity onPress={handleHelpClick} style={styles.help_settingButton}>
+                            <Text style={styles.buttonText2}>Help</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -498,14 +490,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around', // evenly distribute buttons
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: -5,
     },
     button: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 15,
+        paddingVertical: 5, // Decreased padding
+        paddingHorizontal: 10, // Decreased padding
         borderRadius: 5,
         marginHorizontal: 5, // Spacing between buttons
     },
@@ -518,9 +510,10 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     menuContainerTEXT: {
-        fontSize: 20,
+        fontSize: 25,
         color: '#222222',
         padding: 3,
+        fontWeight: 'bold',
     },
     contentContainer: {
         paddingHorizontal: 10,
@@ -531,7 +524,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-
     back: {
         marginRight: 10,
     },
@@ -543,16 +535,16 @@ const styles = StyleSheet.create({
     },
     dropdown: {
         backgroundColor: '#f9f9f9',
-        padding: 15, // More padding for better spacing
+        padding: 10, // More padding for better spacing
         marginTop: 0,
-        margin: 10,
+        margin: 5,
         borderRadius: 8,
         shadowColor: '#000', // Shadow effect
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 5, // For Android shadow
-        maxHeight: height * 0.5,
+        maxHeight: height * 0.47,
     },
     dropdownScroll: {
         maxHeight: height * 0.6,
@@ -580,6 +572,56 @@ const styles = StyleSheet.create({
     },
     searchIcon: {
         padding: 10,
+    },
+    buttonContainer: {
+        marginBottom: 20,
+    },
+    postButton: {
+        backgroundColor: '#4CAF50', // Green for the Post button
+        paddingVertical: 5, // Decreased padding
+        marginTop: -15, // Decreased margin
+        borderRadius: 10,
+        marginBottom: 5, // Decreased margin
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    buttonRow2: {
+        flexDirection: 'row',
+        justifyContent: 'space-around', // evenly distribute buttons
+        alignItems: 'center',
+        marginBottom: 10,
+        marginTop: -20,
+    },
+    help_settingButton: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 5, // Decreased padding
+        paddingHorizontal: 10, // Decreased padding
+        borderRadius: 5,
+        marginHorizontal: 5, // Spacing between buttons
+    },
+    buttonText: {
+        fontSize: 18,
+        color: '#fff', // Changed color to black
+        fontWeight: 'bold',
+    },
+    buttonText2: {
+        fontSize: 18,
+        color: '#000', // Changed color to black
+        //fontWeight: 'bold',
+    },
+    menuContainerTEXT2: {
+        marginTop: 5,
+        fontSize: 20,
+        color: '#000',
+        padding: 3,
+        //fontWeight: 'bold',
     },
 });
 
