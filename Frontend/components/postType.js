@@ -159,14 +159,6 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         width: '100%',
     },
-    backNextButton: {
-        backgroundColor: '#4CAF50',
-        padding: 15,
-        borderRadius: 5,
-        alignItems: 'center',
-        flex: 1,
-        marginHorizontal: 5,
-    },
     backNextButtonText: {
         color: '#fff',
         fontSize: 18,
