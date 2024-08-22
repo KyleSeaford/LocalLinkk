@@ -575,11 +575,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     postButton: {
-        backgroundColor: '#4CAF50', // Green for the Post button
-        paddingVertical: 5, // Decreased padding
-        marginTop: -15, // Decreased margin
+        backgroundColor: '#4CAF50',
+        paddingVertical: 5,
+        marginTop: -15, 
         borderRadius: 10,
-        marginBottom: 5, // Decreased margin
+        marginBottom: 5, 
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#000',
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
     },
     buttonRow2: {
         flexDirection: 'row',
-        justifyContent: 'space-around', // evenly distribute buttons
+        justifyContent: 'space-around',
         alignItems: 'center',
         marginBottom: 10,
         marginTop: -20,
