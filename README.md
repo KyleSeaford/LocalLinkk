@@ -54,5 +54,4 @@
 
 ## Contact Us
 - For any inquiries or support, please contact us at dev@locallinkk.com
-
 Join the LocalLinkk community today and start connecting with your neighbors!
