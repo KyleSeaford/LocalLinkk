@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import Navbar from '../components/navbar';
+import Navbar from '../components/navbarTop';
+import NavbarSlide from '../components/navbarSlide';
 import Profile from '../components/profile';
 import PastPosts from '../components/pastposts';
 
