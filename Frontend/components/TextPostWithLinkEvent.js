@@ -286,8 +286,6 @@ const TEXTLinkPost = () => {
                 <Text style={styles.text}>Your Event Details</Text>
             </View>
 
-            <Text style={styles.instructionText}>Your details will be used to generate a text advert with a HyperLink.</Text>
-
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
             <TextInput
