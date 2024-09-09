@@ -98,11 +98,13 @@ const NavbarSlide = ({ onClose }) => {
     const fetchLocations = async () => {
         try {
             // Fetch locations from location API
-            const response = await fetch(`${url}Locations/locations?ismajor=true`);
-            const Locations = await response.json();
+            const response = await fetch(`${url}Locations/locations/regions`);
+            const data = await response.json();
+
+            console.log('Response:', data);
     
             // Extract location names
-            const locationNames = Locations.map(location => location.name);
+            const locationNames = data.map(location => location.region);
             console.log('Location names:', locationNames);
     
             // Extract unique locations using Set

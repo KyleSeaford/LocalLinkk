@@ -85,6 +85,7 @@ const Profile = () => {
       }));
       setIsEditModalVisible(false);
       Alert.alert('Success', 'Name updated successfully');
+      window.location.reload();
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to update name');

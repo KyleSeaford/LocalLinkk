@@ -132,3 +132,13 @@ class GetLocation(Resource):
             return {"lat": lat, "lng": lng}
         else:
             raise Exception("Location not found")
+        
+@api.route('/locations/regions')
+class GetRegions(Resource):
+    def get(self):
+        return db.fetchJson(
+            [databaseFieldRegion],
+            databaseTableName,
+            f'GROUP BY {databaseFieldRegion} ORDER BY {databaseFieldRegion} ASC',
+            ''
+        )
