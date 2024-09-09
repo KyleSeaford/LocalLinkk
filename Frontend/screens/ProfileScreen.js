@@ -12,7 +12,7 @@ const ProfileScreen = ({ userImage, updateUserImage }) => {
       <View>
         <Navbar userImage={userImage} />
         <Profile userImage={userImage} updateUserImage={updateUserImage} />
-        <PastPosts />
+        {/*<PastPosts />*/}
       </View>
     </View>
   );

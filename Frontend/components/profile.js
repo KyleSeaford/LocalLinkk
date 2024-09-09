@@ -188,10 +188,14 @@ const Profile = () => {
         </TouchableOpacity>
       </View>
 
+      {/* <PastPosts Too be added later
       <View style={styles.pastContainer}>
         <Text style={styles.pastText}>Your Past Posts:</Text>
         <Text style={styles.pastText2}>Total Posts: {postCount}</Text>
       </View>
+      */}
+
+      <Text style={styles.TextSoon}>Your Past Posts Will Show Up Here In a Future update. Please Stay Tuned!</Text>
 
       <Modal
         visible={isModalVisible}
@@ -262,6 +266,8 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 80,
     marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#4CAF50',
   },
   Namecontainer: {
     fontSize: 28,
@@ -285,7 +291,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 5,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#4CAF50',
   },
   editButtonText: {
     fontSize: 18,
@@ -295,7 +301,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 5,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#4CAF50',
   },
   postButtonText: {
     fontSize: 18,
@@ -350,7 +356,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#E4E4E4',
     marginHorizontal: 50,
     marginVertical: 220,
     borderRadius: 10,
@@ -371,7 +377,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   saveButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#4CAF50',
     padding: 12,
     borderRadius: 5,
     marginTop: 10,
@@ -381,7 +387,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   chooseImageButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#4CAF50',
     padding: 12,
     borderRadius: 5,
     marginTop: 20,
@@ -389,6 +395,12 @@ const styles = StyleSheet.create({
   chooseImageButtonText: {
     color: '#fff',
     fontSize: 18,
+  },
+  TextSoon: {
+    color: '#D3D3D3',
+    fontSize: 15,
+    textAlign: 'center',
+    marginTop: 150,
   },
 });
 
