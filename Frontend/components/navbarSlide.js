@@ -4,13 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { setBreadcrumbs } from './breadcrumbs';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const url = 'http://192.168.127.93:5500/';
 
 const { width, height } = Dimensions.get('window');
 
 const NavbarSlide = ({ onClose }) => {
+    
     const navigation = useNavigation();
     const [menuVisible, setMenuVisible] = useState(true);
     const [activeSection, setActiveSection] = useState('Business');
@@ -18,14 +19,20 @@ const NavbarSlide = ({ onClose }) => {
 
     const [locationDropdownVisible, setLocationDropdownVisible] = useState(false);
     const [locations, setLocations] = useState([]);
+    const [location, setLocation] = useState('Unknown');
     const [searchLocation, setSearchLocation] = useState('');
 
-    const [breadcrumbPath, setBreadcrumbPath] = useState('Category / Genre');
+    //const [breadcrumbPathCat, setBreadcrumbPath] = useState(' ');
+    //const [breadcrumbPathGen, setBreadcrumbPathGen] = useState(' ');
+
+    //const breadcrumbPath = breadcrumbPathCat + breadcrumbPathGen;
 
     const [categories, setCategories] = useState([]);
     const [searchCategory, setSearchCategory] = useState('');
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
+    const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const [genres, setGenres] = useState([]);
     const [searchGenre, setSearchGenre] = useState('');
@@ -107,7 +114,7 @@ const NavbarSlide = ({ onClose }) => {
     };
 
     const handleCategoryClick = () => {
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         setGenreDropdownVisible(false);
         setLocationDropdownVisible(false);
         AsyncStorage.removeItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d');
@@ -116,7 +123,7 @@ const NavbarSlide = ({ onClose }) => {
     };
 
     const handleGenreClick = () => {
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         setDropdownVisible(false);
         setLocationDropdownVisible(false);
         AsyncStorage.removeItem('LL-7f80095aea4d66af1121f1fbe916066d');
@@ -125,7 +132,7 @@ const NavbarSlide = ({ onClose }) => {
     };
 
     const handleLocationClick = () => {
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         AsyncStorage.removeItem('LL-7f80095aea4d66af1121f1fbe916066d');
         AsyncStorage.removeItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d');
         setDropdownVisible(false);
@@ -136,6 +143,7 @@ const NavbarSlide = ({ onClose }) => {
     
     const ChangeUsersLocation = async (newLocation) => {
         try {
+            setLoading(true);
             const userId = await AsyncStorage.getItem('LL-8e44f0089b076e18a718eb9ca3d94674');
             const response = await fetch(`${url}Users/users/locations/change/${userId}/${newLocation}`, {
                 method: 'PUT',
@@ -144,9 +152,17 @@ const NavbarSlide = ({ onClose }) => {
                 },
                 body: JSON.stringify({ userLocation: newLocation }),
             });
+        
             const data = await response.json();
+
+            // Loading Screen
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000); // Simulate a 1-second delay for the payment process
+
             console.log('Location updated:', data.message);
             setLocation(newLocation);
+            window.location.reload();
         } catch (error) {
             console.error('Error updating location:', error);
         }
@@ -155,14 +171,14 @@ const NavbarSlide = ({ onClose }) => {
     const handlePredefinedLocationClick = (selectedLocation) => {
         console.log(`Selected location: ${selectedLocation}`);
         // set location in navbar top and close dropdown
-        //setLocation(selectedLocation);
+        setLocation(selectedLocation);
         setLocationDropdownVisible(false);
         ChangeUsersLocation(selectedLocation);
         setMenuVisible(!menuVisible);
     };
 
     const handleCategory = (category) => {
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         console.log(`Category clicked: ${category.category_name}`);
         console.log('Category ID:', category.category_id);
         AsyncStorage.setItem('LL-c4ef352f74e502ef5e7bc98e6f4e493d', category.category_id.toString());
@@ -172,11 +188,11 @@ const NavbarSlide = ({ onClose }) => {
                 setCategories(children);
                 console.log('Parent category:', category);
                 console.log('Children categories:', children);
-                setBreadcrumbPath(`prev => ${prev} >> ${category.category_name}`);
+                //setBreadcrumbPath(`prev => ${prev} >> ${category.category_name}`);
             } else {
                 console.log('No children categories found');
-                console.log(breadcrumbPath);
-                setBreadcrumbs(`${breadcrumbPath} >> ${category.category_name}`);
+                //console.log(breadcrumbPath);
+                //setBreadcrumbs(`${breadcrumbPath} >> ${category.category_name}`);
                 setDropdownVisible(false);
                 setMenuVisible(false);
             }
@@ -184,7 +200,7 @@ const NavbarSlide = ({ onClose }) => {
     };
 
     const handleGenre = (genre) => {
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         console.log(`Genre clicked: ${genre.genre_name}`);
         console.log('Genre ID:', genre.genre_id);
         AsyncStorage.setItem('LL-7f80095aea4d66af1121f1fbe916066d', genre.genre_id.toString());
@@ -193,11 +209,11 @@ const NavbarSlide = ({ onClose }) => {
                 setGenres(children);
                 console.log('Parent genre:', genre);
                 console.log('Children genres:', children);
-                setBreadcrumbPath(`prev => ${prev} >> ${genre.genre_name}`);
+                //setBreadcrumbPathGen(`prev => ${prev} >> ${genre.genre_name}`);
             } else {
                 console.log('No children genres found');
-                console.log(breadcrumbPath);
-                setBreadcrumbs(`${breadcrumbPath} >> ${genre.genre_name}`);
+                //console.log(breadcrumbPath);
+                //setBreadcrumbs(`${breadcrumbPath} >> ${genre.genre_name}`);
                 setGenreDropdownVisible(false);
                 setMenuVisible(false);
             }
@@ -208,21 +224,21 @@ const NavbarSlide = ({ onClose }) => {
         console.log("Settings clicked!");
         //navigation.navigate('LocalLinkk - Settings');
         navigation.navigate('LocalLinkk - Settings', { screen: 'SettingScreen' });
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
 
     const handleHelpClick = () => {
         console.log("Help clicked!");
         navigation.navigate('LocalLinkk - Help', { screen: 'HelpScreen' });
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
 
     const handlePostClick = () => {
         console.log("Post clicked!");
         navigation.navigate('LocalLinkk - Post Type');
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         setMenuVisible(!menuVisible);
     };
 
@@ -256,12 +272,12 @@ const NavbarSlide = ({ onClose }) => {
         AsyncStorage.getItem('LL-b0b5ccb4a195a07fd3eed14affb8695f').then(data => {
             setCategories(JSON.parse(data));
         });
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
         AsyncStorage.getItem('LL-f90f211700b6afeaafe2f8016ddfad3d').then(data => {
             setGenres(JSON.parse(data));
         }
         );
-        setBreadcrumbs('');
+        //setBreadcrumbs('');
     };
 
     const renderCategoryDropdown = () => {
@@ -454,6 +470,9 @@ const NavbarSlide = ({ onClose }) => {
                 <ScrollView style={styles.contentContainer}>
                     {renderSectionContent()}
                 </ScrollView>
+
+                <Spinner visible={loading} textContent={"Changing Location..."} textStyle={styles.spinnerTextStyle} />
+
             </Animated.View>
         </Modal>
     );
@@ -620,6 +639,9 @@ const styles = StyleSheet.create({
         color: '#000',
         padding: 3,
         //fontWeight: 'bold',
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     },
 });
 
