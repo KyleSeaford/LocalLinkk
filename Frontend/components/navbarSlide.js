@@ -413,7 +413,7 @@ const NavbarSlide = ({ onClose }) => {
             <Animated.View style={[styles.slideOutMenu, { transform: [{ translateX: slideAnim }] }]}>
                 <View style={styles.menuContainer}>
                     <View style={styles.iconContainer}>
-                        <Text style={styles.iconContainerTEXT}>LocalLinkk Settings</Text>
+                        <Text style={styles.iconContainerTEXT}>LocalLinkk's Open Beta</Text>
                         <TouchableOpacity onPress={handleMenuClick}>
                             <Ionicons name="close" size={24} color="#1a1a1a" />
                         </TouchableOpacity>

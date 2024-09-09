@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import Navbar from '../components/navbarTop';
 import NavbarSlide from '../components/navbarSlide';
-import Barsearch from '../components/searchbar';
+// import Barsearch from '../components/searchbar';
 import Crumbs from '../components/breadcrumbs';
 
 const HomeScreen = ({ userImage }) => {
@@ -11,7 +11,7 @@ const HomeScreen = ({ userImage }) => {
     <View style={styles.container}>
       <View>
         <Navbar userImage={userImage} />
-        <Barsearch />
+        {/*<Barsearch />*/}
         <Crumbs />
       </View>
     </View>
