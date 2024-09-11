@@ -8,7 +8,7 @@ import NavbarSlide from './navbarSlide';
 import menu from '../assets/menu.png';
 import user from '../assets/transparent_picture.png';
 
-const url = 'http://192.168.127.93:5500/';
+const url = 'http://192.168.127.93:5000/';
 
 const { width, height } = Dimensions.get('window');
 

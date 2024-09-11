@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-// const url = 'http://192.168.127.93:5500/';
+// const url = 'http://192.168.127.93:5000/';
 
 // export const setBreadcrumbs = (breadcrumbs) => {
 //     //  function can be used to set the breadcrumbs state
@@ -43,7 +43,7 @@ import axios from 'axios';
 //     );
 // };
 
-const url = 'http://192.168.127.93:5500/';
+const url = 'http://192.168.127.93:5000/';
 
 const Crumbs = () => {
     const [breadcrumbs, setBreadcrumbs] = useState('');

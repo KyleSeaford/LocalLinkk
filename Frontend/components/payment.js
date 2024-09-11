@@ -8,7 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 const Payment = () => {
     const navigation = useNavigation();
 
-    const url = 'http://192.168.127.93:5500/';
+    const url = 'http://192.168.127.93:5000/';
 
     const [nameOnCard, setNameOnCard] = useState('');
     const [cardNumber, setCardNumber] = useState('');

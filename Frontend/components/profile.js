@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import user from '../assets/transparent_picture.png';
 
-const url = 'http://192.168.127.93:5500/';
+const url = 'http://192.168.127.93:5000/';
 
 const Profile = () => {
   const navigation = useNavigation();

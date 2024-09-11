@@ -6,7 +6,7 @@ import { Ionicons, FontAwesome5, MaterialIcons, Entypo } from '@expo/vector-icon
 import { AntDesign } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const url = 'http://192.168.127.93:5500/';
+const url = 'http://192.168.127.93:5000/';
 
 const { width, height } = Dimensions.get('window');
 

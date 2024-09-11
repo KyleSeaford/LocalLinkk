@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Duration = () => {
     
-    const url = 'http://192.168.127.93:5500/';
+    const url = 'http://192.168.127.93:5000/';
 
     const navigation = useNavigation();
     const today = new Date();

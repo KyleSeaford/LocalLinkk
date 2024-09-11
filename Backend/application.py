@@ -34,6 +34,6 @@ api.add_namespace(namespaceEvents)
 if __name__ == '__main__':
     logging.info("=== Application Start ===")
     try:
-        app.run(host='0.0.0.0', port=5500, debug=True)
+        app.run(host='0.0.0.0', port=5000, debug=True)
     except Exception as ex:
         logging.error(f"ERROR in application: {ex}")

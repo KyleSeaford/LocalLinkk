@@ -19,7 +19,7 @@ const TEXTPost = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const url = 'http://192.168.127.93:5500/';
+    const url = 'http://192.168.127.93:5000/';
 
     useEffect(() => {
         fetchCategories();

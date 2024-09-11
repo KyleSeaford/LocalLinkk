@@ -21,7 +21,7 @@ const TEXTLinkPost = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [charCount, setCharCount] = useState(0);
 
-    const url = 'http://192.168.127.93:5500/';
+    const url = 'http://192.168.127.93:5000/';
 
     useEffect(() => {
         fetchCategories();

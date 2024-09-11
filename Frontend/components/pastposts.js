@@ -9,7 +9,7 @@ const PastPosts = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     
-    const url = 'http://192.168.127.93:5500/';
+    const url = 'http://192.168.127.93:5000/';
 
     // Function to fetch past posts
     const GetPastPosts = async () => {

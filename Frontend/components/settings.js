@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 const Settings= () => {
     const navigation = useNavigation();
     
-    const url = 'http://192.168.127.93:5500/'
+    const url = 'http://192.168.127.93:5000/'
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

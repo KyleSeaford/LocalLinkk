@@ -11,7 +11,7 @@ const PostSize = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const url = 'http://192.168.127.93:5500/';
+    const url = 'http://192.168.127.93:5000/';
 
     useEffect(() => {
         axios.get(`${url}Posts/posts`)
