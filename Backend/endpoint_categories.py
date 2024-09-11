@@ -56,7 +56,7 @@ class GetCategoryChildren(Resource):
 @api.param('id', 'Category id')
 class GetCategoryBreadCrumbs(Resource):
     def get(self, id):
-        bread = " >> ".join(bread_crumbs(id))
+        bread = (bread_crumbs(id))
         return {'bread_crumbs': bread}
 
 @api.route('/category', doc={"description": "Add a new category"}) 

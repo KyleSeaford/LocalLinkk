@@ -56,7 +56,7 @@ class GetgenreChildren(Resource):
 @api.param('id', 'genre id')
 class GetgenreBreadCrumbs(Resource):
     def get(self, id):
-        bread = " >> ".join(bread_crumbs(id))
+        bread = bread_crumbs(id)
         return {'bread_crumbs': bread}
 
 @api.route('/genre', doc={"description": "Add a new genre"}) 
