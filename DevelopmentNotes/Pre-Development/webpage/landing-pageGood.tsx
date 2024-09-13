@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { button } from "@/components/ui/button"
+import { input } from "@/components/ui/input"
 import { MapPin, Clock, Newspaper, Users, ArrowRight, ChevronDown, Mail } from "lucide-react"
 import Image from "next/image"
 import { useEffect } from 'react'
@@ -41,12 +41,12 @@ export default function LandingPage() {
                 Discover local businesses, events, and connect with your neighbors. Join LocalLinkk to build a stronger, more vibrant community.
               </p>
               <div className="space-x-4">
-                <Button className="bg-white text-[#1A1A1A] hover:bg-gray-200 px-8 py-3 rounded-full text-lg transition-colors">
+                <button className="bg-white text-[#1A1A1A] hover:bg-gray-200 px-8 py-3 rounded-full text-lg transition-colors">
                   Add User
-                </Button>
-                <Button className="bg-[#2A2A2A] text-white hover:bg-[#3A3A3A] px-8 py-3 rounded-full text-lg transition-colors">
+                </button>
+                <button className="bg-[#2A2A2A] text-white hover:bg-[#3A3A3A] px-8 py-3 rounded-full text-lg transition-colors">
                   Add Business
-                </Button>
+                </button>
               </div>
             </div>
             <div className="md:w-1/2 max-w-md w-full">
@@ -55,19 +55,19 @@ export default function LandingPage() {
                 <form className="space-y-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
-                    <Input id="name" type="text" placeholder="John Doe" className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500" />
+                    <input id="name" type="text" placeholder="John Doe" className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500" />
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
-                    <Input id="email" type="email" placeholder="john@example.com" className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500" />
+                    <input id="email" type="email" placeholder="john@example.com" className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500" />
                   </div>
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                    <Input id="password" type="password" placeholder="••••••••" className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500" />
+                    <input id="password" type="password" placeholder="••••••••" className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500" />
                   </div>
-                  <Button type="submit" className="w-full bg-white text-[#1A1A1A] hover:bg-gray-200 py-2 rounded-md transition-colors">
+                  <button type="submit" className="w-full bg-white text-[#1A1A1A] hover:bg-gray-200 py-2 rounded-md transition-colors">
                     Sign Up <ArrowRight className="ml-2 h-4 w-4 inline" />
-                  </Button>
+                  </button>
                 </form>
                 <p className="text-gray-400 text-sm mt-4 text-center">
                   Already have an account? <a href="#" className="text-white hover:underline">Log in</a>
@@ -130,9 +130,9 @@ export default function LandingPage() {
                   <li>Opportunities to build meaningful relationships with neighbors</li>
                   <li>Tools for businesses to engage with their local customer base</li>
                 </ul>
-                <Button className="mt-4 bg-white text-[#1A1A1A] hover:bg-gray-200 px-6 py-2 rounded-full transition-colors">
+                <button className="mt-4 bg-white text-[#1A1A1A] hover:bg-gray-200 px-6 py-2 rounded-full transition-colors">
                   Learn More About Us
-                </Button>
+                </button>
               </div>
             </div>
           </div>
@@ -164,14 +164,14 @@ export default function LandingPage() {
                 </div>
                 <div className="md:w-1/2 w-full max-w-md">
                   <form className="space-y-4">
-                    <Input 
+                    <input 
                       type="email" 
                       placeholder="Enter your email" 
                       className="w-full bg-[#3A3A3A] border-gray-600 text-white placeholder-gray-500"
                     />
-                    <Button type="submit" className="w-full bg-white text-[#1A1A1A] hover:bg-gray-200 transition-colors">
+                    <button type="submit" className="w-full bg-white text-[#1A1A1A] hover:bg-gray-200 transition-colors">
                       Subscribe to Updates
-                    </Button>
+                    </button>
                   </form>
                 </div>
               </div>
