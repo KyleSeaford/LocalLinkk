@@ -44,17 +44,17 @@ const Help = () => {
 
                     <Text style={styles.sectionTitle}>Privacy & Legal</Text>
                     <Text style={styles.subSectionTitle}>Privacy Policy</Text>
-                    <Text style={styles.policyText}>Our privacy policy outlines how we handle your personal data, including what information we collect, how we use it, and how you can control its use. Please click here for more information:</Text>
+                    <Text style={styles.policyText}>Our privacy policy outlines how we handle your personal data, including what information we collect, how we use it, and how you can control its use. Please click <a href="https://example.com/privacy-policy">here</a> for more information</Text>
                     <Text style={styles.subSectionTitle}>Terms of Service</Text>
-                    <Text style={styles.policyText}>Our terms of service explain the rules of using our app and what is expected of users. Please click here for more information:</Text>
+                    <Text style={styles.policyText}>Our terms of service explain the rules of using our app and what is expected of users. Please click <a href="https://example.com/terms-of-service">here</a> for more information</Text>
                     <Text style={styles.subSectionTitle}>Data Storage</Text>
-                    <Text style={styles.policyText}>We take data security seriously and store all data securely. For more information on our data storage practices, please click here:</Text>
+                    <Text style={styles.policyText}>We take data security seriously and store all data securely. For more information on our data storage practices, please click <a href="https://example.com/data-storage">here</a></Text>
 
                     <Text style={styles.sectionTitle}>Miscellaneous</Text>
                     <Text style={styles.subSectionTitle}>About Us</Text>
-                    <Text style={styles.miscText}>Learn more about our company, team, and mission by clicking here: </Text>
+                    <Text style={styles.miscText}>Learn more about our company, team, and mission by clicking <a href="http://locallinkk.com/">here</a></Text>
                     <Text style={styles.subSectionTitle}>Version History</Text>
-                    <Text style={styles.miscText}>View the version history of our app by clicking here:</Text>
+                    <Text style={styles.miscText}>View the version history of our app by clicking <a href="https://example.com/version-history">here</a></Text>
                 </View>
             </ScrollView>
         </View>
