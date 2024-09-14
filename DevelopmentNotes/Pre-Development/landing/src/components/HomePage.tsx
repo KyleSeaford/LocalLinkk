@@ -25,7 +25,7 @@ export default function LandingPage() {
             <a href="/" className="hover:underline transition-colors">Home</a>
             <a href="#features" className="hover:underline transition-colors">Features</a>
             <a href="#about" className="hover:underline transition-colors">About</a>
-            <a href="/help" className="hover:underline transition-colors">Help</a> 
+            <a href="#help" className="hover:underline transition-colors">Help</a> 
           </nav>
         </div>
       </header>
@@ -169,13 +169,191 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
+          </div >
+          <div  id="help"></div>
+        </section >
+
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-center mb-12" data-aos="fade-up">Help & FAQs</h1>
+
+        {/* FAQs Section */ }
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-6 text-center" data-aos="fade-up">FAQs</h2>
+          <div className="space-y-6" data-aos="fade-right">
+            {/* FAQ Item 1 */}
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold flex items-center">
+                <ChevronDown className="w-6 h-6 mr-2" /> Q1: How do I choose my location?
+              </h3>
+              <p className="mt-2 text-gray-600">
+                A: To select your location, go to the settings menu and tap on 'Location'. You can then choose from a list of available locations.
+              </p>
+            </div>
+
+            {/* FAQ Item 2 */}
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold flex items-center">
+                <ChevronDown className="w-6 h-6 mr-2" /> Q2: How do I update my profile picture?
+              </h3>
+              <p className="mt-2 text-gray-600">
+                A: To update your profile picture, go to your profile page, tap the edit button, and select a new profile picture from your device's photo library.
+              </p>
+            </div>
+
+            {/* FAQ Item 3 */}
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold flex items-center">
+                <ChevronDown className="w-6 h-6 mr-2" /> Q3: How do I change my profile name?
+              </h3>
+              <p className="mt-2 text-gray-600">
+                A: To change your profile name, go to the settings page, tap on 'Change Profile Name', and enter your new name in the text field.
+              </p>
+            </div>
+
+            {/* FAQ Item 4 */}
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold flex items-center">
+                <ChevronDown className="w-6 h-6 mr-2" /> Q4: How do I report a bug or issue?
+              </h3>
+              <p className="mt-2 text-gray-600">
+                A: To report a bug or issue, go to the settings page, tap on 'Report Issue', and describe the problem you're experiencing. Our support team will investigate and resolve the issue as soon as possible.
+              </p>
+            </div>
+
+            {/* FAQ Item 5 */}
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+              <h3 className="text-2xl font-semibold flex items-center">
+                <ChevronDown className="w-6 h-6 mr-2" /> Q5: How do I delete my account?
+              </h3>
+              <p className="mt-2 text-gray-600">
+                A: To delete your account, go to the settings page, tap on 'Delete Account', and follow the instructions to permanently remove your account and data from our servers.
+              </p>
+            </div>
           </div>
         </section>
+
+
+          {/* Troubleshooting Guides */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">Troubleshooting Guides</h2>
+            <div className="space-y-6" data-aos="fade-right">
+              <div>
+                <h3 className="text-2xl font-semibold">App not loading?</h3>
+                <p>Try restarting the app or check if there are any updates available for download. If the issue persists, please contact our support team for assistance.</p>
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold">Profile picture not updating?</h3>
+                <p>Make sure that the image is less than 5MB in size and in a supported format (jpg, png). If you're still having issues, try clearing the app's cache or restarting the app.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Privacy & Legal */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">Privacy & Legal</h2>
+            <div className="space-y-6" data-aos="fade-right">
+            <div>
+                <h3 className="text-2xl font-semibold mb-4">Privacy Policy</h3>
+                <p className="mb-4">
+                  At LocalLinkk, we prioritize the privacy and security of your personal information. This Privacy Policy outlines how we collect, use, and protect your data when you use our app and services.
+                </p>
+                <h4 className="text-xl font-semibold mb-2">1. Information We Collect</h4>
+                <ul className="list-disc list-inside mb-4">
+                  <li>
+                    <strong>Personal Information</strong>: When you register for an account or use certain features, we may collect your name, email address, and location data.
+                  </li>
+                  <li>
+                    <strong>Usage Data</strong>: We collect information about how you interact with the app, such as the pages you visit, features you use, and any content you engage with.
+                  </li>
+                  <li>
+                    <strong>Location Data</strong>: With your permission, we collect your device’s location to provide localized services such as nearby events, businesses, and promotions.
+                  </li>
+                </ul>
+
+                <h4 className="text-xl font-semibold mb-2">2. How We Use Your Information</h4>
+                <ul className="list-disc list-inside mb-4">
+                  <li>Personalize your experience by showing relevant local events and services.</li>
+                  <li>Send notifications about upcoming events, promotions, or updates.</li>
+                  <li>Improve the app and provide customer support.</li>
+                  <li>Analyze app usage to improve performance and add new features.</li>
+                </ul>
+
+                <h4 className="text-xl font-semibold mb-2">3. Sharing of Information</h4>
+                <p className="mb-4">
+                  We do not sell or share your personal information with third parties, except:
+                </p>
+                <ul className="list-disc list-inside mb-4">
+                  <li>To comply with legal obligations or protect our rights.</li>
+                  <li>With trusted service providers who assist us in operating the app (e.g., hosting providers), under strict confidentiality agreements.</li>
+                </ul>
+
+                <h4 className="text-xl font-semibold mb-2">4. Data Security</h4>
+                <p className="mb-4">
+                  We use industry-standard security measures to protect your data. However, no method of transmission over the internet or electronic storage is 100% secure, so we cannot guarantee absolute security.
+                </p>
+
+                <h4 className="text-xl font-semibold mb-2">5. Your Choices</h4>
+                <ul className="list-disc list-inside mb-4">
+                  <li>
+                    <strong>Location Services</strong>: You can choose to enable or disable location tracking at any time through your device settings.
+                  </li>
+                  <li>
+                    <strong>Communication</strong>: You can opt-out of receiving notifications or promotional emails by following the unsubscribe instructions.
+                  </li>
+                </ul>
+
+                <h4 className="text-xl font-semibold mb-2">6. Contact Us</h4>
+                <p className="mb-4">
+                  If you have any questions about this Privacy Policy, please contact us at: <a href="mailto:dev@locallinkk.com"><strong>dev@locallinkk.com</strong></a>
+
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold mb-4">Terms of Service</h3>
+                <p className="mb-4">
+                  By using LocalLinkk, you agree to comply with our terms and conditions. These rules govern the use of our app, including user conduct, content ownership, and limitations of liability. 
+                  You are responsible for any activity on your account and must adhere to local laws while using the app. Unauthorized use, including harmful or fraudulent activity, is strictly prohibited.
+                  For a detailed overview of our terms, including user responsibilities and rights.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold mb-4">Data Storage</h3>
+                <p className="mb-4">
+                  At LocalLinkk, we take the protection of your data seriously. All personal information and usage data are stored securely using industry-standard encryption and security practices. 
+                  We regularly review our data storage procedures to ensure your information remains safe from unauthorized access or breaches.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          {/* Miscellaneous */}
+          <section>
+            <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">Miscellaneous</h2>
+            <div className="space-y-6" data-aos="fade-right">
+              <div>
+                <h3 className="text-2xl font-semibold">About Us</h3>
+                <p className="text-gray-300">
+                  LocalLinkk is an innovative platform designed to strengthen local communities by facilitating connections between businesses and residents. Our mission is to create vibrant, connected neighborhoods where everyone can thrive.
+                </p>
+                <p className="text-gray-300">
+                  We believe in the power of local connections to transform communities and improve lives. By bringing together businesses, residents, and local events, we're fostering a sense of belonging and mutual support.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold">Version History</h3>
+                <p className="text-gray-300">The current version of the LocalLinkk app is designated as 0.1</p>
+              </div>
+            </div>
+          </section>
+        </div>
       </main>
 
       <footer className="bg-gray-800 py-6">
         <div className="container mx-auto px-4 text-center" data-aos="fade-up">
-          <p>&copy; 2024 LocalLinkk. All rights reserved. By <a href="https://insightxpert.co.uk/" target="blank">InsightXpert</a></p>
+          <p>&copy; 2024 LocalLinkk. All rights reserved. Made By <a href="https://insightxpert.co.uk/" target="blank">InsightXpert</a></p>
         </div>
       </footer>
     </div>
