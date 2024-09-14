@@ -235,15 +235,43 @@ export default function LandingPage() {
 
           {/* Troubleshooting Guides */}
           <section className="mb-16">
-            <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">Troubleshooting Guides</h2>
-            <div className="space-y-6" data-aos="fade-right">
-              <div>
-                <h3 className="text-2xl font-semibold">App not loading?</h3>
-                <p>Try restarting the app or check if there are any updates available for download. If the issue persists, please contact our support team for assistance.</p>
+            <h2 className="text-3xl font-bold mb-6 text-center" data-aos="fade-up">Troubleshooting Guides</h2>
+
+            <div className="space-y-6" data-aos="fade-left">
+
+              <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <h3 className="text-2xl font-semibold flex items-center">
+                  <ChevronDown className="w-6 h-6 mr-2" /> App not loading?
+                </h3>
+                <p className="mt-2 text-gray-600">Try restarting the app or check if there are any updates available for download. If the issue persists, please contact our support team for assistance.</p>
               </div>
-              <div>
-                <h3 className="text-2xl font-semibold">Profile picture not updating?</h3>
-                <p>Make sure that the image is less than 5MB in size and in a supported format (jpg, png). If you're still having issues, try clearing the app's cache or restarting the app.</p>
+
+              <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <h3 className="text-2xl font-semibold flex items-center">
+                  <ChevronDown className="w-6 h-6 mr-2" /> Profile picture not updating?
+                </h3>
+                <p className="mt-2 text-gray-600">Make sure that the image is less than 5MB in size and in a supported format (jpg, png). If you're still having issues, try clearing the app's cache or restarting the app.</p>
+              </div>
+
+              <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <h3 className="text-2xl font-semibold flex items-center">
+                  <ChevronDown className="w-6 h-6 mr-2" /> Notifications not working?
+                </h3>
+                <p className="mt-2 text-gray-600">Check your device settings to ensure that notifications are enabled for the LocalLinkk app. If notifications are enabled and you're still not receiving them, try reinstalling the app.</p>
+              </div>
+
+              <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <h3 className="text-2xl font-semibold flex items-center">
+                  <ChevronDown className="w-6 h-6 mr-2" /> Account login issues?
+                </h3>
+                <p className="mt-2 text-gray-600">If you're having trouble logging into your account, try resetting your password or using the 'Forgot Password' feature. If the issue persists, contact our support team for further assistance.</p>
+              </div>
+
+              <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <h3 className="text-2xl font-semibold flex items-center">
+                  <ChevronDown className="w-6 h-6 mr-2" /> Location services not working?
+                </h3>
+                <p className="mt-2 text-gray-600">Ensure that location services are enabled for the LocalLinkk app in your device settings. If location services are enabled and you're still experiencing issues, try restarting your device or reinstalling the app.</p>
               </div>
             </div>
           </section>
