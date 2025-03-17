@@ -95,7 +95,7 @@ function App() {
                 <div className="absolute -inset-4 bg-[#6c63ff]/20 rounded-full blur-xl animate-pulse"></div>
                 <div className="relative bg-[#252525]/80 p-6 rounded-2xl shadow-2xl backdrop-blur-sm border border-[#6c63ff]/20">
                   <img 
-                    src="icon.png" 
+                    src="https://api.metaboost.dev/icon.png" 
                     alt="LocalLinkk Community" 
                     className="w-full h-80 object-cover rounded-lg"
                   />
