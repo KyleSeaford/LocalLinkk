@@ -99,6 +99,9 @@ function App() {
                     alt="LocalLinkk Community" 
                     className="w-full h-80 object-cover rounded-lg"
                   />
+
+                  <p className="text-center mt-4 mb-4 text-2xl font-bold text-[#6c63ff]">Coming Soon!!!</p>
+                  
                   <div className="mt-4 flex gap-2">
                     <div className="bg-[#252525] p-3 rounded-lg flex-1">
                       <Calendar className="h-6 w-6 text-[#6c63ff] mb-2" />
@@ -390,6 +393,7 @@ function App() {
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
             <p>© {new Date().getFullYear()} LocalLinkk. All rights reserved.</p>
+            <p>Made by <a href="https://insightxpert.co.uk/" target="_blank" rel="noopener noreferrer" className="text-[#6c63ff] hover:text-[#5a52d5] transition-colors">InsightXpert</a></p>
           </div>
         </div>
       </footer>
