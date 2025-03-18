@@ -100,7 +100,7 @@ function App() {
                     className="w-full h-80 object-cover rounded-lg"
                   />
 
-                  <p className="text-center mt-4 mb-4 text-2xl font-bold text-[#6c63ff]">Coming Soon!!!</p>
+                  <p className="text-center mt-4 mb-4 text-2xl font-bold text-[#6c63ff]">LocalLinkk Coming Soon!</p>
                   
                   <div className="mt-4 flex gap-2">
                     <div className="bg-[#252525] p-3 rounded-lg flex-1">
