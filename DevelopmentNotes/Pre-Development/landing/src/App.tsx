@@ -30,7 +30,7 @@ function App() {
               rel="noopener noreferrer"
               className="bg-[#6c63ff] hover:bg-[#5a52d5] px-4 py-2 rounded-full transition-colors"
             >
-              Get Started
+              Coming Soon
             </a>
           </nav>
           
@@ -58,7 +58,7 @@ function App() {
                 className="bg-[#6c63ff] hover:bg-[#5a52d5] px-4 py-2 rounded-full transition-colors text-center"
                 onClick={toggleMenu}
               >
-                Get Started
+                Coming Soon
               </a>
             </div>
           </div>
@@ -85,7 +85,7 @@ function App() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-[#6c63ff] hover:bg-[#5a52d5] px-6 py-3 rounded-full text-white font-medium transition-all transform hover:scale-105"
                 >
-                  Learn More
+                  Coming Soon
                   <ChevronRight size={18} />
                 </a>
               </div>
@@ -357,7 +357,7 @@ function App() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#6c63ff] hover:bg-[#5a52d5] px-8 py-4 rounded-full text-white font-medium transition-all transform hover:scale-105 text-lg"
           >
-            Get Started Now
+            Coming Soon
             <ChevronRight size={20} />
           </a>
         </div>
