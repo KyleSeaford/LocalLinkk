@@ -6,6 +6,8 @@
     <title>LocalLinkk</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://locallinkk.com/assets/favicon-BmM8e7OO.png">
+
     <!-- Custom CSS -->
     <style>
         :root {
@@ -63,6 +65,7 @@
         .user-profile {
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
         
         .user-avatar {
@@ -125,6 +128,130 @@
             background-color: #6a59d1;
             color: white;
         }
+        
+        /* Profile Modal Styles */
+        .profile-modal {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 350px;
+            background-color: var(--dark-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .profile-modal.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-header h5 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 15px 20px;
+        }
+        
+        .create-post-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px;
+            font-weight: 500;
+            width: 100%;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .create-post-btn:hover {
+            background-color: #3e8e41;
+        }
+        
+        .settings-help {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .settings-help a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .tab-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--text-light);
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .location-select, .category-select {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255,255,255,0.1);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .select-heading {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+        
+        .icon-container {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -154,7 +281,7 @@
             </div>
             
             <!-- User Profile -->
-            <div class="user-profile">
+            <div class="user-profile" id="profile-toggle">
                 <img src="https://api.metaboost.dev/icon.png" alt="User" class="user-avatar">
                 <div class="d-none d-md-block">
                     <div>Kyle Seaford</div>
@@ -164,6 +291,48 @@
           </div>
         </div>
     </nav>
+    
+    <!-- Profile Modal -->
+    <div class="profile-modal" id="profile-modal">
+        <div class="modal-header">
+            <h5>LocalLinkk's Open Beta</h5>
+            <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <button class="create-post-btn">Create a New Post</button>
+            
+            <div class="settings-help">
+                <a href="/settings">Settings</a>
+                <a href="/help">Help</a>
+            </div>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active">Business</button>
+                <button class="tab-btn">Events</button>
+            </div>
+            
+            <div class="select-heading">Select a Category And Your Location</div>
+            
+            <div class="location-select">
+                <div>Location</div>
+                <div class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="category-select">
+                <div>Category</div>
+                <div class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Main Content -->
     <div class="container content-area">
@@ -254,5 +423,40 @@
     
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript for Modal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileToggle = document.getElementById('profile-toggle');
+            const profileModal = document.getElementById('profile-modal');
+            const closeModal = document.getElementById('close-modal');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            // Toggle modal when clicking on profile
+            profileToggle.addEventListener('click', function() {
+                profileModal.classList.toggle('show');
+            });
+            
+            // Close modal when clicking close button
+            closeModal.addEventListener('click', function() {
+                profileModal.classList.remove('show');
+            });
+            
+            // Close modal when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!profileModal.contains(event.target) && !profileToggle.contains(event.target)) {
+                    profileModal.classList.remove('show');
+                }
+            });
+            
+            // Tab button functionality
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -8,3 +8,9 @@ def login_view(request):
 
 def signup_view(request):
     return render(request, 'signup.html')
+
+def settings_view(request):
+    return render(request, 'settings.html')
+
+def help_view(request):
+    return render(request, 'help.html')
