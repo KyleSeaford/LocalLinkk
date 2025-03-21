@@ -30,29 +30,51 @@
           </div>
         </div>
     </nav>
-      
+
     <!-- Login Form -->
     <div class="content-container">
-        <div class="login-card">
-            <div class="text-center mb-4">
-                <a href="https://locallinkk.com/">
-                    <img src="https://api.metaboost.dev/icon.png" alt="LocalLinkk" width="100" class="rounded-circle">
-                </a>
-                <div class="mt-2 mb-3" style="font-size: 22px; font-weight: bold;"><span style="color: #1A1A1A;">Local</span><span style="color: #6c63ff;">Linkk</span><span style="color: #1A1A1A;"> Log In</span></div>
-
-            </div>
-            <form>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Email@Email.com">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Log In</button>
-            </form>
+      <div class="login-card">
+        <div class="text-center mb-4">
+          <a href="https://locallinkk.com/">
+            <img src="https://api.metaboost.dev/icon.png" alt="LocalLinkk" width="100" class="rounded-circle">
+          </a>
+          <div class="mt-2 mb-3" style="font-size: 22px; font-weight: bold;"><span style="color: #1A1A1A;">Local</span><span style="color: #6c63ff;">Linkk</span><span style="color: #1A1A1A;"> Log In</span></div>
         </div>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="loginUsername" class="form-label">Username</label>
+            <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Enter your username" required>
+            {% if login_form.username.errors %}
+            <div class="text-danger">
+              {% for error in login_form.username.errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="loginPassword" name="password" placeholder="••••••••" required>
+             
+            </div>
+            {% if login_form.password.errors %}
+            <div class="text-danger">
+              {% for error in login_form.password.errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% if error_message %}
+          <div class="text-danger text-center mb-3">
+            <p>{{ error_message }}</p>
+          </div>
+          {% endif %}
+          <button type="submit" class="btn btn-primary w-100">Log In</button>
+        </form>
+      </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

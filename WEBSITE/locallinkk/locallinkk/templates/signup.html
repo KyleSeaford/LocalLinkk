@@ -30,7 +30,7 @@
       </div>
     </div>
   </nav>
-    
+
   <!-- Sign Up Form -->
   <div class="content-container">
     <div class="signup-card">
@@ -43,18 +43,52 @@
           <span style="color: #1A1A1A;"> Sign Up</span>
         </div>
       </div>
-      <form>
+      <form method="post">
+        {% csrf_token %}
         <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" placeholder="Your Name">
+          <label for="signupName" class="form-label">Username</label>
+          <input class="form-control" type="text" placeholder="Username" name="username" id="signupName" required>
+          {% if signup_form.username.errors %}
+          <div class="text-danger">
+            {% for error in signup_form.username.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
         <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="Email@Email.com">
+          <label for="signupEmail" class="form-label">Email</label>
+          <input class="form-control" type="email" placeholder="Email@Email.com" name="email" id="signupEmail" required>
+          {% if signup_form.email.errors %}
+          <div class="text-danger">
+            {% for error in signup_form.email.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="••••••••">
+          <label for="signupPassword" class="form-label">Password</label>
+          <div class="input-group">
+            <input class="form-control" type="password" placeholder="••••••••" name="password" id="signupPassword" required>
+          </div>
+          {% if signup_form.password.errors %}
+          <div class="text-danger">
+            {% for error in signup_form.password.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <script>function togglePasswordVisibility(){var a=document.getElementById("signupPassword");var b=document.getElementById("togglePasswordIcon");if(a.type==="password"){a.type="text";b.classList.remove("fa-eye");b.classList.add("fa-eye-slash")}else{a.type="password";b.classList.remove("fa-eye-slash");b.classList.add("fa-eye")}};</script>
+        <div class="form-check">          
+          {% if signup_form %}
+          <div class="text-danger">
+            {% for error in signup_form.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
         <button type="submit" class="btn btn-primary w-100">Sign Up</button>
       </form>
