@@ -1,13 +1,13 @@
-
 :root {
     --primary-color: #7B68EE;
     --dark-bg: #1E1E1E;
     --card-bg: #2A2A2A;
     --text-light: #FFFFFF;
+    --text-secondary: #ccc;
 }
 
 body {
-    background-color: #333;
+    background-color: #1A1A1A;
     color: var(--text-light);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -28,27 +28,6 @@ body {
 .logo-icon {
     color: var(--primary-color);
     margin-right: 8px;
-}
-
-.search-container {
-    position: relative;
-    max-width: 300px;
-}
-
-.search-input {
-    background-color: #fff;
-    border-radius: 50px;
-    padding: 6px 15px;
-    border: none;
-    width: 100%;
-}
-
-.search-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
 }
 
 .user-profile {
@@ -73,50 +52,105 @@ body {
     padding: 20px 0;
 }
 
-.placeholder-box {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+/* Help Page Specific Styles */
+.help-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    min-height: 120px;
+    margin-bottom: 20px;
+    padding-top: 15px;
+}
+
+.help-title {
+    font-size: 25px;
+    margin-left: 15px;
+}
+
+.home-button {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 24px;
+    color: var(--text-light);
     margin-bottom: 15px;
-}
-
-.placeholder-image {
-    opacity: 0.2;
-    width: 50px;
-}
-
-.breadcrumbs {
-    background-color: var(--dark-bg);
-    padding: 8px 15px;
+    background-color: #222;
     border-radius: 5px;
-    font-size: 0.9rem;
+    padding: 10px;
+}
+
+.sub-section-title {
+    font-size: 20px;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.question {
+    font-size: 18px;
+    color: var(--text-light);
+    margin-bottom: 5px;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.answer {
+    font-size: 16px;
+    color: var(--text-secondary);
     margin-bottom: 15px;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 10px;
 }
 
-.main-content-placeholder {
-    min-height: 200px;
+.guide-title {
+    font-size: 18px;
+    color: var(--text-light);
+    margin-bottom: 5px;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 8px;
 }
 
-.sidebar-placeholder {
-    min-height: 80px;
+.guide-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 10px;
 }
 
-.btn-coming-soon {
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 50px;
-    padding: 8px 20px;
+.policy-text, .misc-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    background-color: #222;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+a {
+    color: var(--primary-color);
     text-decoration: none;
-    font-weight: 500;
 }
 
-.btn-coming-soon:hover {
-    background-color: #6a59d1;
-    color: white;
+a:hover {
+    text-decoration: underline;
+    color: #6a59d1;
 }
+
 
 /* Profile Modal Styles */
 .profile-modal {
@@ -240,4 +274,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1A1A1A;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
